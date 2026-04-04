@@ -1,6 +1,6 @@
 ---
 name: cjl-slides
-description: 创建视觉精美的 HTML 演示文稿，支持 24 种国际设计风格，可转换为 .pptx 文件。
+description: Create stunning HTML presentations with 24 international design styles. Export to .pptx for PowerPoint editing. Strict design rules: font whitelist, color variables, container ratios, chart standards.
 allowed-tools:
   - Write
   - Read
