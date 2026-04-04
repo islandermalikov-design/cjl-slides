@@ -9,7 +9,7 @@ allowed-tools:
   - Glob
   - AskUserQuestion
   - WebFetch
-origin: 基于 zarazhangrui/frontend-slides，融合专精 HTML 演示文稿的顶级视觉设计师
+origin: https://github.com/0xcjl/cjl-slides | 基于 zarazhangrui/frontend-slides，融合专精 HTML 演示文稿的顶级视觉设计师
 ---
 
 # HTML Slides
