@@ -1,6 +1,30 @@
 ---
 name: cjl-slides
-description: Create stunning HTML presentations with 24 international design styles. Export to .pptx for PowerPoint editing. Strict design rules: font whitelist, color variables, container ratios, chart standards.
+description: |
+  Create stunning HTML presentations in 24 international design styles with strict design rules.
+  Export to .pptx for PowerPoint editing.
+
+  ## Design Philosophy
+  - Aesthetic-first: each style is a curated visual system, not just colors
+  - Font whitelist enforcement: prevents AI-generic typography
+  - Container ratio lock (16:9): ensures consistent rendering across devices
+  - Zero external dependencies: pure HTML/CSS/JS, works offline
+
+  ## Usage
+  1. Activate → Select style by name/number or browse 24 options
+  2. Provide content (topic, audience, key points) or upload .pptx for conversion
+  3. Review generated HTML slides → request modifications (color/font/layout)
+  4. Optionally export .pptx for manual editing in PowerPoint
+
+  ## Precautions
+  - Fonts are restricted to a whitelist; custom fonts require adding to the allowed list first
+  - Chart.js CDN is used; if blocked, falls back to jsdelivr mirror
+  - HTML files must retain their relative structure when shared
+  - .pptx export preserves exact colors and fonts but layout uses pptx-native elements
+
+  ## Credits
+  Design rules adapted from "专精 HTML 演示文稿的顶级视觉设计师" (24 design styles reference).
+  Base HTML structure and tooling inspired by zarazhangrui/frontend-slides.
 allowed-tools:
   - Write
   - Read
