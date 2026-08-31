@@ -2,10 +2,14 @@
 """Build the Algoritm branded deck as a native PPTX (hand-mapped from the HTML deck)."""
 
 from pptx import Presentation
+from pptx.chart.data import CategoryChartData
 from pptx.util import Inches, Pt, Emu
 from pptx.dml.color import RGBColor
+from pptx.dml.line import LineFormat
+from pptx.enum.dml import MSO_LINE_DASH_STYLE
+from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION, XL_LABEL_POSITION
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
-from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
 from pptx.oxml.ns import qn
 
 PRIMARY = RGBColor(0xB7, 0x2E, 0x26)
@@ -111,6 +115,116 @@ def page_no(s, text, on_dark=False):
 def kicker(s, l, t, w, text, color):
     _, tf = textbox(s, l, t, w, Inches(0.3))
     add_para(tf, text, 11, color, bold=True, first=True, letter_caps=True)
+
+
+def connector(s, x1, y1, x2, y2, color, dashed=False, width=1.0):
+    ln = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, x1, y1, x2, y2)
+    ln.shadow.inherit = False
+    ln.line.color.rgb = color
+    ln.line.width = Pt(width)
+    if dashed:
+        ln.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+    return ln
+
+
+def node_box(s, l, t, w, h, color, label, label_size=11):
+    box = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, l, t, w, h)
+    box.shadow.inherit = False
+    box.fill.solid()
+    box.fill.fore_color.rgb = color
+    box.line.fill.background()
+    try:
+        box.adjustments[0] = 0.18
+    except Exception:
+        pass
+    tf = box.text_frame
+    tf.word_wrap = True
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    tf.margin_left = Inches(0.04)
+    tf.margin_right = Inches(0.04)
+    lines = label.split("\n")
+    add_para(tf, lines[0], label_size, WHITE, bold=True, align=PP_ALIGN.CENTER, first=True, spacing=1.05)
+    for extra in lines[1:]:
+        add_para(tf, extra, label_size, WHITE, bold=True, align=PP_ALIGN.CENTER, spacing=1.05)
+    return box
+
+
+def gateway_diagram(s, bx, by, bw, bh, wireless, gateway_label, protocol_label):
+    """Sensors -> gateway -> server schematic (own drawing, not a factory photo)."""
+    line_color = PRIMARY if wireless else RGBColor(0x6E, 0x6A, 0x69)
+    bh_half = Emu(int(bh / 2))
+    mid_y = by + bh_half
+    sensor_x = bx + Inches(0.28)
+    sensor_r = Inches(0.075)
+    sensor_ys = [by + Inches(0.15), mid_y, by + bh - Inches(0.15)]
+
+    gw_w, gw_h = Inches(1.15), Inches(0.48)
+    gw_x = bx + Inches(1.0)
+    gw_y = mid_y - Emu(int(gw_h / 2))
+
+    srv_w, srv_h = Inches(1.15), Inches(0.48)
+    srv_x = bx + bw - srv_w - Inches(0.15)
+    srv_y = mid_y - Emu(int(srv_h / 2))
+
+    for sy in sensor_ys:
+        connector(s, sensor_x + sensor_r, sy, gw_x, mid_y, line_color, dashed=wireless, width=1.1)
+
+    for sy in sensor_ys:
+        dot = s.shapes.add_shape(MSO_SHAPE.OVAL, sensor_x, sy - sensor_r, sensor_r * 2, sensor_r * 2)
+        dot.shadow.inherit = False
+        dot.fill.solid()
+        dot.fill.fore_color.rgb = SECONDARY
+        dot.line.fill.background()
+
+    _, tf = textbox(s, sensor_x - Inches(0.35), by + bh - Inches(0.02), Inches(1.0), Inches(0.2))
+    add_para(tf, "Датчики", 6.5, INK_MUTED, align=PP_ALIGN.CENTER, first=True)
+
+    _, tf = textbox(s, gw_x - Inches(0.2), gw_y - Inches(0.2), gw_w + Inches(0.4), Inches(0.18))
+    add_para(tf, protocol_label, 6, INK_MUTED, align=PP_ALIGN.CENTER, first=True)
+
+    node_box(s, gw_x, gw_y, gw_w, gw_h, line_color if wireless else SECONDARY, gateway_label, label_size=10.5)
+    _, tf = textbox(s, gw_x - Inches(0.2), gw_y + gw_h + Inches(0.02), gw_w + Inches(0.4), Inches(0.18))
+    add_para(tf, "Шлюз", 6, INK_MUTED, align=PP_ALIGN.CENTER, first=True)
+
+    connector(s, gw_x + gw_w, mid_y, srv_x, mid_y,
+              PRIMARY if not wireless else SECONDARY, width=1.1)
+
+    node_box(s, srv_x, srv_y, srv_w, srv_h, PRIMARY if not wireless else SECONDARY,
+             "СЕРВЕР\nАСУ ТП", label_size=8.5)
+    _, tf = textbox(s, srv_x - Inches(0.3), srv_y + srv_h + Inches(0.02), srv_w + Inches(0.6), Inches(0.18))
+    add_para(tf, "Хранение и анализ", 6, INK_MUTED, align=PP_ALIGN.CENTER, first=True)
+
+
+def bar_chart(s, x, y, w, h, title_lines, categories, values, bar_color, first_color, cat_color, val_color):
+    _, tf = textbox(s, x, y, w, Inches(0.5))
+    add_para(tf, title_lines[0], 11.5, val_color, bold=True, first=True, spacing=1.15, space_after=1)
+    for extra in title_lines[1:]:
+        add_para(tf, extra, 11.5, val_color, bold=True, spacing=1.15)
+
+    title_h = Inches(0.15) * len(title_lines) + Inches(0.35)
+    top = y + title_h
+    y_base = y + h - Inches(0.32)
+    avail_h = y_base - top - Inches(0.28)
+    max_val = max(values)
+
+    connector(s, x, y_base, x + w, y_base, RGBColor(0x8A, 0x86, 0x85), width=0.75)
+
+    n = len(values)
+    slot_w = Emu(int(w / n))
+    bar_w = Emu(int(slot_w * 0.5))
+    for i, (cat, val) in enumerate(zip(categories, values)):
+        bar_h = Emu(int(avail_h * (val / max_val)))
+        slot_x = x + Emu(slot_w * i)
+        bar_x = slot_x + Emu(int((slot_w - bar_w) / 2))
+        bar_y = y_base - bar_h
+        color = first_color if i == 0 else bar_color
+        rect(s, bar_x, bar_y, bar_w, bar_h, color)
+
+        _, tf = textbox(s, bar_x - Inches(0.15), bar_y - Inches(0.28), bar_w + Inches(0.3), Inches(0.24))
+        add_para(tf, f"{val}%", 11, color, bold=True, align=PP_ALIGN.CENTER, first=True)
+
+        _, tf = textbox(s, slot_x, y_base + Inches(0.05), slot_w, Inches(0.3))
+        add_para(tf, cat, 8, cat_color, bold=True, align=PP_ALIGN.CENTER, first=True, spacing=1.1)
 
 
 # ============================================================ SLIDE 1 — COVER
@@ -254,13 +368,13 @@ add_para(tf, "Беспроводные и проводные схемы сбор
 picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.62))
 
 cards = [
-    (Inches(0.6), "Беспроводной шлюз", "RH570", PRIMARY,
+    (Inches(0.6), "Беспроводной шлюз", "RH570", PRIMARY, True, "LoRaWAN · Wi-Fi",
      "Развёртывание без прокладки кабельных трасс — для распределённого и труднодоступного оборудования."),
-    (Inches(6.75), "Проводной шлюз", "RH2000", SECONDARY,
+    (Inches(6.75), "Проводной шлюз", "RH2000", SECONDARY, False, "RS-485 · Ethernet",
      "Стационарная схема для ответственных агрегатов с высокой частотой опроса и постоянным питанием."),
 ]
 card_w = Inches(6.0)
-for x, tag, title, rule_color, body in cards:
+for x, tag, title, rule_color, wireless, protocol, body in cards:
     rect(s, x, Inches(2.15), card_w, Inches(0.045), rule_color)
     rect(s, x, Inches(2.2), card_w, Inches(2.75), WHITE)
     _, tf = textbox(s, x + Inches(0.35), Inches(2.42), card_w - Inches(0.7), Inches(0.3))
@@ -268,22 +382,15 @@ for x, tag, title, rule_color, body in cards:
     _, tf = textbox(s, x + Inches(0.35), Inches(2.72), card_w - Inches(0.7), Inches(0.5))
     add_para(tf, title, 22, INK, bold=True, first=True)
 
-    ph = rect(s, x + Inches(0.35), Inches(3.35), card_w - Inches(0.7), Inches(1.15), RGBColor(0xF6, 0xE3, 0xE1))
-    ph.line.fill.solid()
-    ph.line.fill.fore_color.rgb = PRIMARY
-    ph.line.width = Pt(0.75)
-    tf = ph.text_frame
-    tf.word_wrap = True
-    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    tf.margin_left = Inches(0.15)
-    tf.margin_right = Inches(0.15)
-    add_para(tf, "Схема из исходной презентации (слайды 12–14).", 10.5, ACCENT, bold=True,
-             align=PP_ALIGN.CENTER, first=True, spacing=1.2)
-    add_para(tf, "Логотипы завода-изготовителя на корпусах приборов удаляются.", 10.5, ACCENT,
-             bold=True, align=PP_ALIGN.CENTER, spacing=1.2)
+    diagram_w = card_w - Inches(0.7)
+    diagram_h = Inches(1.2)
+    diagram_y = Inches(3.3)
+    rect(s, x + Inches(0.35), diagram_y, diagram_w, diagram_h, GREY_BG)
+    gateway_diagram(s, x + Inches(0.35), diagram_y + Inches(0.15), diagram_w, diagram_h - Inches(0.3),
+                     wireless, title, protocol)
 
-    _, tf = textbox(s, x + Inches(0.35), Inches(4.7), card_w - Inches(0.7), Inches(0.7))
-    add_para(tf, body, 12.5, INK_MUTED, first=True, spacing=1.3)
+    _, tf = textbox(s, x + Inches(0.35), Inches(4.55), card_w - Inches(0.7), Inches(0.42))
+    add_para(tf, body, 12, INK_MUTED, first=True, spacing=1.25)
 
 page_no(s, "12")
 
@@ -309,6 +416,15 @@ for heading, body in services:
     add_para(tf, heading, 15, INK, bold=True, first=True, spacing=1.1, space_after=3)
     add_para(tf, body, 12.5, INK_MUTED, spacing=1.3)
     sy = sy + Inches(0.95)
+
+badge_cx, badge_cy, badge_r = Inches(10.8), Inches(5.15), Inches(0.28)
+badge = s.shapes.add_shape(MSO_SHAPE.OVAL, badge_cx - badge_r, badge_cy - badge_r, badge_r * 2, badge_r * 2)
+badge.shadow.inherit = False
+badge.fill.background()
+badge.line.color.rgb = WHITE
+badge.line.width = Pt(1.5)
+connector(s, badge_cx - Inches(0.12), badge_cy, badge_cx - Inches(0.02), badge_cy + Inches(0.1), WHITE, width=2.2)
+connector(s, badge_cx - Inches(0.02), badge_cy + Inches(0.1), badge_cx + Inches(0.15), badge_cy - Inches(0.12), WHITE, width=2.2)
 
 _, tf = textbox(s, Inches(10.45), Inches(5.55), Inches(2.6), Inches(1.6), anchor=MSO_ANCHOR.BOTTOM)
 add_para(tf, "Сертификация и соответствие", 15.5, WHITE, bold=True, first=True, spacing=1.1, space_after=8)
@@ -364,6 +480,18 @@ rect(s, Inches(0.6), Inches(6.15), Inches(0.035), Inches(0.6), PINK)
 _, tf = textbox(s, Inches(0.82), Inches(6.15), Inches(5.6), Inches(0.7))
 add_para(tf, "Слайды 27–33 исходной презентации собираются под этим заголовком. "
              "На слайде 29 фотография убирается — остаётся только график.", 10.5, PINK, first=True, spacing=1.3)
+
+bar_chart(
+    s, Inches(9.05), Inches(1.2), Inches(3.65), Inches(2.55),
+    ["Снижение внеплановых простоев,", "по направлениям внедрения"],
+    ["Добыча", "Металлургия", "Энергетика", "Цемент"],
+    [34, 28, 22, 19],
+    bar_color=RGBColor(0xF3, 0xD6, 0xD3), first_color=WHITE,
+    cat_color=RGBColor(0xE8, 0xD8, 0xD6), val_color=WHITE,
+)
+_, tf = textbox(s, Inches(9.05), Inches(3.95), Inches(3.65), Inches(0.6))
+add_para(tf, "Иллюстративные данные — приводятся как референс и уточняются по факту внедрения.",
+         9, RGBColor(0xC9, 0xAE, 0xAC), first=True, spacing=1.3)
 
 picture_h(s, LOGO_WHITE, Inches(11.75), Inches(0.5), Inches(0.62))
 
