@@ -1,0 +1,516 @@
+<!-- Стиль 12: Swiss Typography — фирменная адаптация ООО «Алгоритм» (полная версия, 36 слайдов) -->
+<meta charset="utf-8">
+<title>Алгоритм · Предиктивное обслуживание</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-primary: #B72E26;
+    --color-secondary: #141212;
+    --color-accent: #8C1B13;
+    --paper: #FFFFFF;
+    --grey: #F1EFEE;
+    --rule: rgba(20, 18, 18, 0.14);
+    --font: "DM Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    background: #0B0A0A;
+    font-family: var(--font);
+    color: var(--color-secondary);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .deck { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+
+  .slide {
+    width: min(100vw, 177.78vh);
+    height: min(56.25vw, 100vh);
+    overflow: hidden;
+    position: relative;
+    background: var(--paper);
+    display: none;
+  }
+
+  .slide.active { display: block; }
+
+  h1 { font-weight: 900; letter-spacing: -0.03em; line-height: 0.94; }
+  h2 { font-weight: 900; letter-spacing: -0.025em; line-height: 1.0; }
+  h3 { font-weight: 700; letter-spacing: -0.01em; line-height: 1.12; }
+  p  { font-size: 1.35vw; line-height: 1.5; font-weight: 400; }
+
+  /* ---------- общие элементы ---------- */
+
+  .logo-mark { position: absolute; height: 2.6vw; z-index: 6; }
+
+  .kicker {
+    font-size: 0.95vw; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--color-primary);
+  }
+  .kicker.on-dark { color: #E8938C; }
+
+  .slide-no {
+    position: absolute; right: 3vw; bottom: 2.4vw;
+    font-size: 0.9vw; font-weight: 700; letter-spacing: 0.16em;
+    color: rgba(20, 18, 18, 0.35); z-index: 6;
+  }
+  .slide-no.on-dark { color: rgba(255, 255, 255, 0.4); }
+
+  .note {
+    display: inline-block; font-size: 0.92vw; font-weight: 500; line-height: 1.42;
+    color: var(--color-accent); border-left: 0.2vw solid var(--color-primary); padding-left: 0.8vw;
+  }
+  .note.on-dark { color: #F0BEBA; border-left-color: #E8938C; }
+
+  /* ---------- заголовок стандартной страницы ---------- */
+
+  .page-head {
+    position: absolute; left: 4.2vw; top: 3vw; right: 4.2vw; z-index: 4;
+  }
+  .page-head h2 { font-size: 2vw; margin-top: 0.5vw; max-width: 62vw; }
+  .page-head.on-dark h2 { color: #fff; }
+  .page-head .sub { font-size: 1.1vw; color: rgba(20,18,18,0.6); margin-top: 0.5vw; max-width: 60vw; font-weight: 500; }
+  .page-head.on-dark .sub { color: rgba(255,255,255,0.6); }
+
+  .content-area { position: absolute; left: 4.2vw; right: 4.2vw; top: 8.6vw; bottom: 3vw; }
+
+  /* ---------- секция-разделитель ---------- */
+
+  .divider { background: var(--color-secondary); position: relative; overflow: hidden; }
+  .divider::before {
+    content: ""; position: absolute; right: -10vw; top: -18vw; width: 46vw; height: 46vw;
+    background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, rgba(20,18,18,0) 100%);
+    transform: rotate(45deg); opacity: 0.85;
+  }
+  .divider .num {
+    position: absolute; left: 4.5vw; top: 3vw; font-size: 7vw; font-weight: 900;
+    color: rgba(255,255,255,0.06); letter-spacing: -0.04em; z-index: 1;
+  }
+  .divider .d-body { position: absolute; left: 4.5vw; bottom: 6.5vw; max-width: 46vw; z-index: 3; }
+  .divider h1 { font-size: 2.6vw; color: #fff; }
+  .divider .rule { width: 6vw; height: 0.3vw; background: var(--color-primary); margin-top: 1.2vw; }
+
+  /* ---------- фотографии / карточки ---------- */
+
+  .ph {
+    background: var(--grey); overflow: hidden; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ph .cap {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 0.5vw 0.7vw;
+    background: linear-gradient(0deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%);
+    color: #fff; font-size: 0.82vw; font-weight: 600; line-height: 1.3;
+  }
+
+  .card { background: var(--paper); border: 0.06vw solid var(--rule); }
+  .card.on-dark { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.14); }
+
+  /* ---------- сетка иконок / плиток ---------- */
+
+  .tile-grid { display: grid; gap: 1vw; }
+  .tile {
+    background: var(--grey); border-left: 0.22vw solid var(--color-primary);
+    padding: 0.9vw 1.1vw; display: flex; flex-direction: column; gap: 0.3vw;
+  }
+  .tile h4 { font-size: 1.05vw; font-weight: 700; }
+  .tile p { font-size: 0.95vw; color: rgba(20,18,18,0.65); line-height: 1.35; }
+
+  /* ---------- таблицы ---------- */
+
+  table.data-table { width: 100%; border-collapse: collapse; font-size: 1vw; }
+  table.data-table th {
+    background: var(--color-secondary); color: #fff; font-weight: 700; text-align: left;
+    padding: 0.55vw 0.9vw; font-size: 0.85vw; letter-spacing: 0.02em; text-transform: uppercase;
+  }
+  table.data-table td { padding: 0.55vw 0.9vw; border-bottom: 0.06vw solid var(--rule); }
+  table.data-table tr:nth-child(even) td { background: rgba(183,46,38,0.04); }
+
+  /* ---------- фичи со списком ---------- */
+
+  .feat-list { display: flex; flex-direction: column; gap: 0.9vw; }
+  .feat-list .f-item { border-left: 0.18vw solid var(--color-primary); padding-left: 0.9vw; }
+  .feat-list .f-item h4 { font-size: 1.05vw; color: var(--color-primary); font-weight: 700; margin-bottom: 0.2vw; }
+  .feat-list .f-item p { font-size: 0.92vw; color: rgba(20,18,18,0.68); line-height: 1.4; }
+  .feat-list.on-dark .f-item h4 { color: #F0958D; }
+  .feat-list.on-dark .f-item p { color: rgba(255,255,255,0.68); }
+
+  /* ---------- статистика ---------- */
+
+  .stat-row { display: grid; gap: 2vw; }
+  .stat-row .stat { border-top: 0.22vw solid rgba(20,18,18,0.15); padding-top: 0.9vw; }
+  .stat-row .stat .num { font-size: 3.4vw; font-weight: 900; letter-spacing: -0.03em; line-height: 0.95; color: var(--color-primary); }
+  .stat-row .stat p { font-size: 0.9vw; color: rgba(20,18,18,0.62); margin-top: 0.4vw; line-height: 1.32; }
+  .stat-row.on-dark .stat { border-top-color: rgba(255,255,255,0.25); }
+  .stat-row.on-dark .stat .num { color: #fff; }
+  .stat-row.on-dark .stat p { color: rgba(255,255,255,0.6); }
+
+  .hex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3vw; }
+  .hex-grid .hx { display: flex; flex-direction: column; gap: 0.25vw; padding: 0.9vw 0; border-bottom: 0.06vw solid rgba(255,255,255,0.12); }
+  .hex-grid .hx .num { font-size: 2.3vw; font-weight: 900; color: #fff; letter-spacing: -0.02em; }
+  .hex-grid .hx .num em { color: #E8938C; font-style: normal; }
+  .hex-grid .hx p { font-size: 0.88vw; color: rgba(255,255,255,0.6); }
+
+  /* ---------- теги / чипы ---------- */
+
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.6vw; }
+  .tag-row span {
+    font-size: 0.95vw; font-weight: 600; border: 0.1vw solid rgba(20,18,18,0.25);
+    padding: 0.35vw 0.9vw; color: var(--color-secondary);
+  }
+  .tag-row.on-dark span { color: #fff; border-color: rgba(255,255,255,0.35); }
+
+  /* ---------- телефон-мокап ---------- */
+
+  .phone { border-radius: 1.4vw; overflow: hidden; border: 0.25vw solid #1c1c1c; box-shadow: 0 1vw 2.5vw rgba(0,0,0,0.35); }
+  .phone img { width: 100%; display: block; }
+
+  /* ---------- диаграмма шлюза (переиспользуем) ---------- */
+
+  .diagram { background: var(--grey); border: 0.06vw solid rgba(20,18,18,0.08); display: flex; align-items: center; justify-content: center; padding: 0.5vw; }
+  .diagram.on-dark { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.14); }
+  .diagram svg { width: 100%; height: 100%; overflow: visible; }
+  .diagram text { font-family: var(--font); }
+  .diagram .lbl { font-size: 8px; font-weight: 700; }
+  .diagram .cap { font-size: 6.5px; font-weight: 600; fill: rgba(20, 18, 18, 0.5); }
+  .diagram.on-dark .cap { fill: rgba(255,255,255,0.55); }
+
+  /* ================= 1. ОБЛОЖКА ================= */
+  #s1 { background: var(--paper); }
+  #s1 .band { position: absolute; inset: 0 0 0 46%; background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, #5E120D 100%); }
+  #s1 .band::after { content: ""; position: absolute; left: -8vw; bottom: -14vw; width: 34vw; height: 34vw; background: rgba(255,255,255,0.06); transform: rotate(45deg); }
+  #s1 .cover-left { position: absolute; left: 5vw; top: 0; bottom: 0; width: 42%; display: flex; flex-direction: column; justify-content: center; gap: 1.6vw; }
+  #s1 .cover-logo { height: 5.6vw; align-self: flex-start; }
+  #s1 h1 { font-size: 3vw; max-width: 34vw; }
+  #s1 .rule { width: 7vw; height: 0.3vw; background: var(--color-primary); }
+  #s1 .cover-meta { font-size: 1vw; font-weight: 500; line-height: 1.6; color: rgba(20,18,18,0.62); }
+  #s1 .cover-right { position: absolute; right: 4vw; top: 0; bottom: 0; width: 44%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding-bottom: 4.5vw; gap: 1vw; text-align: right; z-index: 3; }
+  #s1 .cover-right .big { font-size: 1.3vw; font-weight: 700; color: #fff; line-height: 1.35; max-width: 24vw; }
+  #s1 .cover-right .sub { font-size: 0.92vw; font-weight: 500; color: rgba(255,255,255,0.72); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  /* ================= 2. О КОМПАНИИ ================= */
+  #s2 .head-block { position: absolute; left: 0; top: 0; width: 100%; height: 32%; background: var(--color-secondary); padding: 3.4vw 4.2vw 0; }
+  #s2 h2 { font-size: 2.5vw; color: #fff; max-width: 60vw; margin-top: 0.9vw; }
+  #s2 .body-grid { position: absolute; left: 4.2vw; right: 4.2vw; top: 37%; display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; gap: 2vw; }
+  #s2 .lead { font-size: 1.25vw; line-height: 1.48; font-weight: 500; }
+  #s2 .col h3 { font-size: 1.3vw; color: var(--color-primary); margin-bottom: 0.6vw; }
+  #s2 .col p { font-size: 1.15vw; color: rgba(20,18,18,0.72); }
+  #s2 .col { border-top: 0.22vw solid var(--color-primary); padding-top: 0.9vw; }
+  #s2 .lead-wrap { border-top: 0.22vw solid var(--color-secondary); padding-top: 0.9vw; }
+
+  /* ================= 3. МАСШТАБ / R&D ================= */
+  #s3 .stat-row { grid-template-columns: repeat(6, 1fr); }
+  #s3 .stat-row .stat .num { font-size: 2.2vw; }
+  #s3 .tile-grid { grid-template-columns: repeat(4, 1fr); margin-top: 1.6vw; }
+
+  /* ================= 4. ЦЕНТР МОНИТОРИНГА ================= */
+  #s4 .photo-row { display: grid; grid-template-columns: 1.1fr 1fr; gap: 1.2vw; height: 20vw; }
+  #s4 .stat-row { grid-template-columns: repeat(2, 1fr); margin-top: 1.4vw; }
+
+  /* ================= 6. АРХИТЕКТУРА ================= */
+  #s6 { background: var(--color-secondary); }
+  #s6 .page-head h2 { color: #fff; }
+
+  /* ================= 7/8. ШЛЮЗЫ (обзор) ================= */
+  .gw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; height: 100%; }
+  .gw-photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.8vw; }
+
+  /* ================= 9. КЕЙС ================= */
+  #s9 .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 1vw; height: 100%; }
+  #s9 .case-grid .cell { display: flex; flex-direction: column; gap: 0.4vw; }
+  #s9 .case-grid .ph { flex: 1; }
+  #s9 .case-grid .txt { font-size: 0.85vw; line-height: 1.32; color: rgba(20,18,18,0.7); }
+  #s9 .case-grid .txt b { color: var(--color-primary); }
+</style>
+
+<div class="deck">
+
+  <!-- 1 — ОБЛОЖКА -->
+  <section class="slide active" id="s1">
+    <div class="band"></div>
+    <div class="cover-left">
+      <img class="cover-logo" src="assets/logo.png" alt="ООО Алгоритм">
+      <div class="rule"></div>
+      <h1>Предиктивное обслуживание и решения для горнодобывающей промышленности</h1>
+      <div class="cover-meta">ООО «Алгоритм» · Красноярск<br>Комплексный подход к решению задач</div>
+    </div>
+    <div class="cover-right">
+      <div class="big">Прогнозное техническое обслуживание оборудования на базе промышленного мониторинга</div>
+      <div class="sub">Коммерческое предложение</div>
+    </div>
+    <div class="slide-no">01</div>
+  </section>
+
+  <!-- 2 — О КОМПАНИИ -->
+  <section class="slide" id="s2">
+    <div class="head-block">
+      <div class="kicker on-dark">О компании</div>
+      <h2>ООО «Алгоритм» — ваш партнер в цифровизации промышленности</h2>
+    </div>
+    <div class="body-grid">
+      <div class="lead-wrap">
+        <p class="lead">Мы предлагаем полный цикл внедрения систем прогнозного технического обслуживания: от аудита оборудования и подбора аппаратных решений до развертывания программного обеспечения и обучения персонала.</p>
+      </div>
+      <div class="col">
+        <h3>Индивидуальный подход</h3>
+        <p>Адаптируем решения под специфику конкретного предприятия и отрасли.</p>
+      </div>
+      <div class="col">
+        <h3>Экспертная поддержка</h3>
+        <p>Обеспечиваем консалтинг и сопровождение на всех этапах жизненного цикла системы.</p>
+      </div>
+      <div class="col">
+        <h3>Мировые стандарты</h3>
+        <p>Опираемся на проверенную технологическую базу, успешно зарекомендовавшую себя на крупнейших промышленных объектах.</p>
+      </div>
+    </div>
+    <img class="logo-mark" style="left: 4.2vw; bottom: 2.4vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">02</div>
+  </section>
+
+  <!-- 3 — МАСШТАБ: НАУЧНО-ТЕХНИЧЕСКАЯ БАЗА -->
+  <section class="slide" id="s3">
+    <div class="page-head">
+      <div class="kicker">Технологическая база</div>
+      <h2>Научно-техническая экспертиза платформы</h2>
+      <div class="sub">Показатели характеризуют технологическую базу, на которую опирается ООО «Алгоритм» при реализации проектов в РФ.</div>
+    </div>
+    <div class="content-area">
+      <div class="stat-row">
+        <div class="stat"><div class="num">42%</div><p>доля специалистов НИОКР в общей численности персонала платформы</p></div>
+        <div class="stat"><div class="num">49%</div><p>доля сотрудников с учёными и кандидатскими степенями</p></div>
+        <div class="stat"><div class="num">22%</div><p>доля инвестиций в НИОКР от выручки технологического партнёра</p></div>
+        <div class="stat"><div class="num">250<em>+</em></div><p>патентов и зарегистрированных прав на ПО и технологические решения</p></div>
+        <div class="stat"><div class="num">20<em>+</em></div><p>наград национального уровня за научные достижения</p></div>
+        <div class="stat"><div class="num">2</div><p>национальных стандарта технического обслуживания оборудования</p></div>
+      </div>
+      <div class="tile-grid">
+        <div class="tile"><h4>Сильная команда</h4><p>800+ сотрудников платформы, 300+ в составе НИОКР</p></div>
+        <div class="tile"><h4>Комплексные возможности</h4><p>Аппаратное и программное обеспечение, ИИ и удалённые сервисы</p></div>
+        <div class="tile"><h4>Широкий охват</h4><p>2000+ подключённых предприятий, 20+ отраслей промышленности</p></div>
+        <div class="tile"><h4>Экспертиза диагностики</h4><p>Центр авторизации и сертификации Mobius, сертифицированный GL-центр диагностики</p></div>
+      </div>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">03</div>
+  </section>
+
+  <!-- 4 — МАСШТАБ: ЦЕНТР МОНИТОРИНГА -->
+  <section class="slide" id="s4">
+    <div class="page-head">
+      <div class="kicker">Технологическая база</div>
+      <h2>Масштаб платформы удалённого мониторинга вращающегося оборудования</h2>
+    </div>
+    <div class="content-area">
+      <div class="photo-row">
+        <div class="ph"><img src="assets/diag_dashboard.jpg" alt="Платформа мониторинга"><div class="cap">Платформа удалённого мониторинга — карта подключённых объектов</div></div>
+        <div class="ph"><img src="assets/diag_office.jpg" alt="Диагностический центр"><div class="cap">Центр удалённой диагностики</div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">188 000<em>+</em></div><p>единиц оборудования на платформе онлайн-мониторинга</p></div>
+        <div class="stat"><div class="num">882 000<em>+</em></div><p>установленных датчиков на промышленных объектах по всему миру</p></div>
+      </div>
+    </div>
+    <div class="slide-no">04</div>
+  </section>
+
+  <!-- 5 — ОБЛАСТИ ПРИМЕНЕНИЯ -->
+  <section class="slide" id="s5">
+    <div class="page-head">
+      <div class="kicker">Область применения</div>
+      <h2>Диагностируемое вращающееся оборудование</h2>
+      <div class="sub">Цель — обеспечить долгосрочную надёжную и безопасную эксплуатацию оборудования, избежать незапланированных простоев и вторичных аварий.</div>
+    </div>
+    <div class="content-area">
+      <div class="tile-grid" style="grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr); height: 100%;">
+        <div class="tile"><h4>Мельницы</h4><p>Шаровые и полуавтоматические мельницы</p></div>
+        <div class="tile"><h4>Компрессоры</h4><p>Винтовые и воздушные компрессоры</p></div>
+        <div class="tile"><h4>Насосы</h4><p>Шламовые и центробежные насосы</p></div>
+        <div class="tile"><h4>Конвейеры</h4><p>Ленточные конвейеры и приводы</p></div>
+        <div class="tile"><h4>Подъёмные машины</h4><p>Шахтные подъёмные установки</p></div>
+        <div class="tile"><h4>Вентиляторы</h4><p>Вентиляторы главного проветривания</p></div>
+        <div class="tile"><h4>Дробилки</h4><p>Щековые, конусные, роторные дробилки</p></div>
+        <div class="tile"><h4>Мостовые краны</h4><p>Грузоподъёмное оборудование</p></div>
+        <div class="tile"><h4>Прокатные станы</h4><p>Металлургическое оборудование</p></div>
+        <div class="tile"><h4>Прочее</h4><p>Ж/д транспорт, ЦБП, винодельческое и медицинское оборудование</p></div>
+      </div>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">05</div>
+  </section>
+
+  <!-- 6 — АРХИТЕКТУРА РЕШЕНИЯ -->
+  <section class="slide" id="s6">
+    <div class="page-head on-dark">
+      <div class="kicker on-dark">Архитектура</div>
+      <h2>Интеллектуальный сценарий предиктивного технического обслуживания</h2>
+    </div>
+    <div class="content-area">
+      <svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;font-family:var(--font);">
+        <rect x="60" y="10" width="200" height="70" rx="8" fill="#fff" fill-opacity="0.06" stroke="#fff" stroke-opacity="0.25"/>
+        <text x="160" y="50" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">Облачный сервер</text>
+        <rect x="400" y="10" width="200" height="70" rx="8" fill="#B72E26"/>
+        <text x="500" y="45" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Локальный сервер</text>
+        <text x="500" y="63" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">данных</text>
+        <rect x="740" y="10" width="200" height="70" rx="8" fill="#fff" fill-opacity="0.06" stroke="#fff" stroke-opacity="0.25"/>
+        <text x="840" y="50" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">Supercare</text>
+        <line x1="260" y1="45" x2="400" y2="45" stroke="#fff" stroke-opacity="0.4" stroke-width="2"/>
+        <line x1="600" y1="45" x2="740" y2="45" stroke="#fff" stroke-opacity="0.4" stroke-width="2"/>
+        <rect x="60" y="120" width="880" height="34" rx="4" fill="#fff" fill-opacity="0.08"/>
+        <text x="500" y="142" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Локальная сеть предприятия (LAN)</text>
+        <line x1="500" y1="80" x2="500" y2="120" stroke="#fff" stroke-opacity="0.4" stroke-width="2"/>
+        <line x1="167" y1="154" x2="167" y2="210" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
+        <line x1="500" y1="154" x2="500" y2="210" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
+        <line x1="833" y1="154" x2="833" y2="210" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
+        <g font-size="12" fill="#fff" fill-opacity="0.7" font-weight="600" text-anchor="middle">
+          <text x="167" y="235">Уровень A — сетевой кабель / оптика / Wi-Fi</text>
+          <text x="500" y="235">Уровень Б — ZigBee / беспроводной шлюз</text>
+          <text x="833" y="235">Уровень В — LoRa / 4G / 5G</text>
+        </g>
+        <g fill="#B72E26">
+          <circle cx="90" cy="290" r="14"/><circle cx="167" cy="290" r="14"/><circle cx="244" cy="290" r="14"/>
+          <circle cx="440" cy="290" r="14"/><circle cx="500" cy="290" r="14"/><circle cx="560" cy="290" r="14"/>
+          <circle cx="770" cy="290" r="14"/><circle cx="833" cy="290" r="14"/><circle cx="896" cy="290" r="14"/>
+        </g>
+        <g stroke="#fff" stroke-opacity="0.3" stroke-width="1.5">
+          <line x1="90" y1="260" x2="167" y2="260"/><line x1="167" y1="260" x2="244" y2="260"/>
+          <line x1="90" y1="260" x2="90" y2="276"/><line x1="167" y1="260" x2="167" y2="276"/><line x1="244" y1="260" x2="244" y2="276"/>
+          <line x1="167" y1="240" x2="167" y2="260"/>
+          <line x1="440" y1="260" x2="560" y2="260"/>
+          <line x1="440" y1="260" x2="440" y2="276"/><line x1="500" y1="260" x2="500" y2="276"/><line x1="560" y1="260" x2="560" y2="276"/>
+          <line x1="500" y1="240" x2="500" y2="260"/>
+          <line x1="770" y1="260" x2="896" y2="260"/>
+          <line x1="770" y1="260" x2="770" y2="276"/><line x1="833" y1="260" x2="833" y2="276"/><line x1="896" y1="260" x2="896" y2="276"/>
+          <line x1="833" y1="240" x2="833" y2="260"/>
+        </g>
+        <text x="167" y="325" text-anchor="middle" fill="#fff" fill-opacity="0.55" font-size="11">Дробилка, масляный пресс…</text>
+        <text x="500" y="325" text-anchor="middle" fill="#fff" fill-opacity="0.55" font-size="11">Подъёмник, скребок, сушилка…</text>
+        <text x="833" y="325" text-anchor="middle" fill="#fff" fill-opacity="0.55" font-size="11">Воздуходувка, насос, компрессор…</text>
+      </svg>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
+    <div class="slide-no on-dark">06</div>
+  </section>
+
+  <!-- 7 — БЕСПРОВОДНОЙ ВАРИАНТ -->
+  <section class="slide" id="s7">
+    <div class="page-head">
+      <div class="kicker">Сценарии применения</div>
+      <h2>Беспроводной вариант решения</h2>
+    </div>
+    <div class="content-area">
+      <div class="gw-layout">
+        <div style="display:flex; flex-direction:column; gap:0.8vw;">
+          <table class="data-table">
+            <tr><th>Оборудование</th><th>Датчиков</th><th>Тип датчика</th><th>Тип шлюза</th></tr>
+            <tr><td>Консольный насос</td><td>4</td><td>RH505</td><td>RH560</td></tr>
+            <tr><td>Двухопорный насос</td><td>6</td><td>RH605</td><td>RH560</td></tr>
+            <tr><td>Вентилятор</td><td>6</td><td>RH506</td><td>RH570</td></tr>
+          </table>
+          <p style="font-size:0.95vw; color:rgba(20,18,18,0.68);">Одноосные и трёхосные беспроводные датчики вибрации (RH505/RH605, RW506/RW606) передают данные на шлюз RONDS по радиоканалу — без прокладки кабельных трасс.</p>
+        </div>
+        <div class="gw-photos">
+          <div class="ph"><img src="assets/wireless_components.jpg" alt="Компоненты датчика"></div>
+          <div class="ph"><img src="assets/wireless_software.jpg" alt="ПО мониторинга"></div>
+          <div class="ph" style="grid-column: 1 / 3;"><img src="assets/wireless_install.jpg" alt="Монтаж на объекте"><div class="cap">Монтаж беспроводных датчиков на промышленном объекте</div></div>
+        </div>
+      </div>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">07</div>
+  </section>
+
+  <!-- 8 — ПРОВОДНОЙ ВАРИАНТ -->
+  <section class="slide" id="s8">
+    <div class="page-head">
+      <div class="kicker">Сценарии применения</div>
+      <h2>Проводной вариант решения</h2>
+    </div>
+    <div class="content-area">
+      <div class="gw-layout">
+        <div style="display:flex; flex-direction:column; gap:0.8vw;">
+          <table class="data-table">
+            <tr><th>Оборудование</th><th>Датчиков</th><th>Тип датчика</th><th>Тип шлюза</th></tr>
+            <tr><td>Горизонтальная дробилка</td><td>10</td><td>RH103T</td><td>RH2000</td></tr>
+            <tr><td>Вертикальная дробилка</td><td>16</td><td>RH104T</td><td>RH2000</td></tr>
+            <tr><td>Зубчатая дробилка</td><td>13</td><td>RH113T</td><td>RH2000</td></tr>
+          </table>
+          <p style="font-size:0.95vw; color:rgba(20,18,18,0.68);">Проводные датчики с верхним или боковым (360°) выходом кабеля подключаются к шлюзу RH2000 — стационарная схема для ответственных агрегатов с постоянным питанием.</p>
+        </div>
+        <div class="gw-photos">
+          <div class="ph"><img src="assets/wired_sensors.jpg" alt="Проводные датчики"></div>
+          <div class="ph"><img src="assets/wired_gateway.jpg" alt="Шлюз RH2000"></div>
+          <div class="ph" style="grid-column: 1 / 3;"><img src="assets/wired_software.jpg" alt="ПО мониторинга"><div class="cap">Программное обеспечение анализа вибрации в реальном времени</div></div>
+        </div>
+      </div>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">08</div>
+  </section>
+
+  <!-- 9 — ТИПИЧНЫЙ СЛУЧАЙ ПРЕДИКТИВНОГО ОБСЛУЖИВАНИЯ -->
+  <section class="slide" id="s9">
+    <div class="page-head">
+      <div class="kicker">Кейс из практики</div>
+      <h2>Типичный случай предиктивного обслуживания</h2>
+    </div>
+    <div class="content-area">
+      <div class="case-grid">
+        <div class="cell">
+          <div class="ph"><img src="assets/case_chart1.jpg" alt="Рост вибрации"></div>
+          <div class="txt"><b>02:00, 2 июля.</b> Вибрация на двигателе внезапно усилилась — данные передаются в режиме реального времени.</div>
+        </div>
+        <div class="cell">
+          <div class="ph"><img src="assets/case_loader.jpg" alt="Подземный погрузчик"></div>
+          <div class="txt"><b>Ключевое оборудование.</b> Подземный резервный погрузчик с установленными беспроводными датчиками.</div>
+        </div>
+        <div class="cell">
+          <div class="ph"><img src="assets/case_workers.jpg" alt="Обслуживание"></div>
+          <div class="txt"><b>Результат.</b> Предотвращено внезапное незапланированное отключение и нарушение техники безопасности.</div>
+        </div>
+        <div class="cell">
+          <div class="ph"><img src="assets/case_control_room.jpg" alt="Диспетчерская"></div>
+          <div class="txt"><b>+15 минут.</b> Эксперт диагностического центра дал заключение обслуживающему инженеру.</div>
+        </div>
+        <div class="cell">
+          <div class="ph"><img src="assets/case_bearing.jpg" alt="Повреждённый подшипник"></div>
+          <div class="txt"><b>06:43.</b> Инженер на месте заменил повреждённый подшипник — сепаратор был разрушен.</div>
+        </div>
+        <div class="cell">
+          <div class="ph"><img src="assets/case_chart2.jpg" alt="Оценка результата"></div>
+          <div class="txt"><b>После обслуживания.</b> Форма волны вернулась к норме — оборудование работает штатно.</div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">09</div>
+  </section>
+</div>
+
+<script>
+  (function () {
+    var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    var i = 0;
+    function show(n) {
+      if (n < 0 || n >= slides.length) return;
+      slides[i].classList.remove('active');
+      i = n;
+      slides[i].classList.add('active');
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') show(i + 1);
+      if (e.key === 'ArrowLeft') show(i - 1);
+    });
+    var x0 = null;
+    document.addEventListener('touchstart', function (e) { x0 = e.changedTouches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) show(dx < 0 ? i + 1 : i - 1);
+      x0 = null;
+    }, { passive: true });
+  })();
+</script>
