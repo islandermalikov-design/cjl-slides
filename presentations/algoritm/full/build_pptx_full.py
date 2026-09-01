@@ -17,6 +17,7 @@ DEEPEST = RGBColor(0x3D, 0x16, 0x0E)
 SECONDARY = RGBColor(0x14, 0x12, 0x12)
 GREY_BG = RGBColor(0xF1, 0xEF, 0xEE)
 STEEL = RGBColor(0xE7, 0xE9, 0xEA)
+STEEL_DARK = RGBColor(0x38, 0x3D, 0x42)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 INK = RGBColor(0x14, 0x12, 0x12)
 INK_MUTED = RGBColor(0x5A, 0x57, 0x57)
@@ -315,7 +316,7 @@ def page_no(s, on_dark=False):
 
 def divider_slide(title_lines):
     s = slide()
-    rect(s, 0, 0, SW, SH, SECONDARY)
+    rect(s, 0, 0, SW, SH, STEEL_DARK)
     diamond = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(7.0), Inches(-3.0), Inches(9.5), Inches(9.5))
     diamond.rotation = 45
     diamond.shadow.inherit = False
@@ -325,7 +326,7 @@ def divider_slide(title_lines):
     dstops[0].position = 0.0
     dstops[0].color.rgb = PRIMARY
     dstops[-1].position = 1.0
-    dstops[-1].color.rgb = SECONDARY
+    dstops[-1].color.rgb = STEEL_DARK
     try:
         diamond.fill.gradient_angle = 135
     except Exception:
@@ -484,7 +485,7 @@ page_no(s)
 # ============================================================ SLIDE 3 — ABOUT
 s = slide()
 rect(s, 0, 0, SW, SH, WHITE)
-rect(s, 0, 0, SW, Inches(2.4), SECONDARY)
+rect(s, 0, 0, SW, Inches(2.4), STEEL_DARK)
 kicker(s, ML, Inches(0.4), Inches(5), "О компании", PRIMARY)
 _, tf = textbox(s, ML, Inches(0.76), Inches(10.5), Inches(1.4))
 add_para(tf, "ООО «Алгоритм» — ваш партнер в цифровизации", 22, WHITE, bold=True, first=True, spacing=1.02)
@@ -923,7 +924,7 @@ divider_slide(["Международный опыт", "применения те
 
 # ============================================================ SLIDE 25 — GEOGRAPHY
 s = slide()
-rect(s, 0, 0, SW, SH, SECONDARY)
+rect(s, 0, 0, SW, SH, STEEL_DARK)
 page_head(s, "Масштаб", "Продукты и услуги на базе технологии внедрены более чем в 35 странах",
           on_dark=True, title_size=19)
 _, tf = textbox(s, ML, Inches(3.0), Inches(4), Inches(2))
@@ -1092,7 +1093,7 @@ page_no(s)
 # ============================================================ SLIDE 36 — CONTACTS
 s = slide()
 rect(s, 0, 0, SW, SH, WHITE)
-rect(s, 0, 0, Inches(5.87), SH, SECONDARY)
+rect(s, 0, 0, Inches(5.87), SH, STEEL_DARK)
 picture_h(s, LOGO_WHITE, Inches(0.6), Inches(2.95), Inches(0.85))
 _, tf = textbox(s, Inches(0.6), Inches(4.05), Inches(4.4), Inches(0.6))
 add_para(tf, "ООО «Алгоритм»", 20, WHITE, bold=True, first=True)
