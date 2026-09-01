@@ -51,7 +51,7 @@
 
   /* ---------- общие элементы ---------- */
 
-  .logo-mark { position: absolute; height: 2.6vw; z-index: 6; }
+  .logo-mark { position: absolute; height: 1.5vw; z-index: 6; }
 
   .kicker {
     font-size: 0.95vw; font-weight: 700; letter-spacing: 0.2em;
@@ -99,6 +99,29 @@
   .divider .d-body { position: absolute; left: 4.5vw; bottom: 6.5vw; max-width: 46vw; z-index: 3; }
   .divider h1 { font-size: 2.6vw; color: #fff; }
   .divider .rule { width: 6vw; height: 0.3vw; background: var(--color-primary); margin-top: 1.2vw; }
+  .divider .d-sub { font-size: 1.05vw; font-weight: 500; color: rgba(255,255,255,0.72); margin-top: 1vw; max-width: 40vw; line-height: 1.4; }
+
+  #s10 { background: #454B51; }
+  #s10 .d-body { max-width: 40vw; }
+  #s10 .d-stats { position: absolute; right: 5.5vw; top: 50%; transform: translateY(-50%); z-index: 3; text-align: right; display: flex; flex-direction: column; gap: 1.6vw; }
+  #s10 .d-stats .d-stat-num { font-size: 3.4vw; font-weight: 900; color: #fff; letter-spacing: -0.02em; line-height: 1; }
+  #s10 .d-stats .d-stat-cap { font-size: 0.95vw; font-weight: 600; color: rgba(255,255,255,0.8); margin-top: 0.4vw; }
+  #s10 .logo-mark { height: 2.3vw; }
+
+  #s11 .content-area { top: 10.2vw; display: flex; flex-direction: column; justify-content: center; gap: 2.4vw; }
+  #s11 .content-area .stat-row { grid-template-columns: repeat(3, 1fr); border-top: 0.22vw solid rgba(20,18,18,0.15); padding-top: 0.9vw; }
+  #s11 .content-area .stat-row .stat { border-top: none; padding-top: 0; }
+  #s11 .content-area .tile-grid { grid-template-columns: repeat(3, 1fr); }
+
+  #s6 .content-area { display: flex; flex-direction: column; justify-content: center; }
+  #s6 .arch-flow { display: flex; flex-direction: column; gap: 0.4vw; }
+  #s6 .arch-tier-label { font-size: 0.82vw; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 0.5vw; }
+  #s6 .arch-tier-row { display: grid; gap: 1vw; }
+  #s6 .arch-arrow { text-align: center; font-size: 1.2vw; color: rgba(20,18,18,0.28); line-height: 1; margin: 0.1vw 0; }
+  #s6 .tile { padding: 0.7vw 0.9vw; gap: 0.25vw; }
+  #s6 .tile h4 { font-size: 0.92vw; line-height: 1.25; }
+  #s6 .tile p { font-size: 0.8vw; line-height: 1.32; }
+  #s6 .tile p strong { color: var(--color-secondary); }
 
   /* ---------- фотографии / карточки ---------- */
 
@@ -198,20 +221,30 @@
 
   /* ================= 1. ОБЛОЖКА ================= */
   #s1 { background: var(--paper); }
-  #s1 .band { position: absolute; inset: 0 0 0 46%; background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, #3D160E 100%); }
+  #s1 .band { position: absolute; inset: 0 0 0 50%; background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, #3D160E 100%); }
   #s1 .band::after { content: ""; position: absolute; left: -8vw; bottom: -14vw; width: 34vw; height: 34vw; background: rgba(255,255,255,0.06); transform: rotate(45deg); }
-  #s1 .cover-left { position: absolute; left: 5vw; top: 0; bottom: 0; width: 42%; display: flex; flex-direction: column; justify-content: center; gap: 1.6vw; }
-  #s1 .cover-logo { height: 5.6vw; align-self: flex-start; }
-  #s1 h1 { font-size: 3vw; max-width: 34vw; }
-  #s1 .rule { width: 7vw; height: 0.3vw; background: var(--color-primary); }
-  #s1 .cover-meta { font-size: 1vw; font-weight: 500; line-height: 1.6; color: rgba(20,18,18,0.62); }
-  #s1 .cover-right { position: absolute; right: 4vw; top: 0; bottom: 0; width: 44%; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-end; padding-bottom: 4.5vw; gap: 1vw; text-align: right; z-index: 3; }
-  #s1 .cover-right .big { font-size: 1.3vw; font-weight: 700; color: #fff; line-height: 1.35; max-width: 24vw; }
-  #s1 .cover-right .sub { font-size: 0.92vw; font-weight: 500; color: rgba(255,255,255,0.72); letter-spacing: 0.14em; text-transform: uppercase; }
+
+  #s1 .cover-top-left { position: absolute; left: 4.2vw; top: 2.6vw; display: flex; align-items: center; gap: 0.9vw; z-index: 3; }
+  #s1 .cover-logo-sm { height: 2.3vw; }
+  #s1 .cover-motto { font-size: 0.82vw; font-weight: 600; color: rgba(20,18,18,0.55); border-left: 0.15vw solid var(--rule); padding-left: 0.7vw; line-height: 1.3; max-width: 8vw; }
+
+  #s1 .cover-left { position: absolute; left: 4.2vw; top: 0; bottom: 0; width: 44%; display: flex; flex-direction: column; justify-content: center; gap: 1.5vw; z-index: 3; }
+  #s1 h1 { font-size: 2.7vw; max-width: 30vw; line-height: 1.06; }
+  #s1 .cover-sub-row { display: flex; align-items: center; gap: 1vw; }
+  #s1 .cover-sub-label { font-size: 1vw; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(20,18,18,0.55); }
+  #s1 .cover-year-badge { font-size: 0.95vw; font-weight: 700; color: #fff; background: var(--color-primary); padding: 0.32vw 0.9vw; border-radius: 0.2vw; }
+
+  #s1 .cover-monitor { position: absolute; right: 4.5vw; top: 50%; transform: translateY(-54%); width: 34vw; z-index: 3; }
+  #s1 .monitor-frame { background: #1B1B1B; border-radius: 0.5vw; padding: 0.6vw; box-shadow: 0 1.5vw 3vw rgba(0,0,0,0.35); }
+  #s1 .monitor-frame img { width: 100%; display: block; border-radius: 0.15vw; }
+  #s1 .monitor-stand { width: 5vw; height: 1.4vw; background: #1B1B1B; margin: 0 auto; clip-path: polygon(30% 0, 70% 0, 92% 100%, 8% 100%); }
+  #s1 .monitor-base { width: 10vw; height: 0.35vw; background: #1B1B1B; margin: 0 auto; border-radius: 0.15vw; }
+
+  #s1 .cover-footer { position: absolute; left: 4.2vw; bottom: 2.2vw; font-size: 0.85vw; font-weight: 500; color: rgba(20,18,18,0.5); z-index: 3; }
 
   /* ================= 2. О КОМПАНИИ ================= */
-  #s2 .head-block { position: absolute; left: 0; top: 0; width: 100%; height: 32%; background: var(--steel-dark); padding: 3.4vw 4.2vw 0; }
-  #s2 h2 { font-size: 2.5vw; color: #fff; max-width: 60vw; margin-top: 0.9vw; }
+  #s2 .head-block { position: absolute; left: 0; top: 0; width: 100%; height: 32%; background: var(--steel); padding: 3.4vw 4.2vw 0; }
+  #s2 h2 { font-size: 2.5vw; color: var(--color-secondary); max-width: 60vw; margin-top: 0.9vw; }
   #s2 .body-grid { position: absolute; left: 4.2vw; right: 4.2vw; top: 37%; display: grid; grid-template-columns: 1.25fr 1fr 1fr 1fr; gap: 2vw; }
   #s2 .lead { font-size: 1.25vw; line-height: 1.48; font-weight: 500; }
   #s2 .col h3 { font-size: 1.3vw; color: var(--color-primary); margin-bottom: 0.6vw; }
@@ -232,16 +265,30 @@
   #s6 { background: var(--paper); }
 
   /* ================= 7/8. ШЛЮЗЫ (обзор) ================= */
-  .gw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; height: 100%; }
+  .gw-layout { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 2vw; height: 100%; min-height: 0; }
+  .gw-layout > * { min-height: 0; }
   #s20 .gw-layout { height: 34vw; }
-  .gw-photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.8vw; }
+  .gw-photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.8vw; height: 100%; min-height: 0; }
+  .gw-photos .ph { min-height: 0; }
 
   /* ================= 9. КЕЙС ================= */
-  #s9 .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 1vw; height: 100%; }
-  #s9 .case-grid .cell { display: flex; flex-direction: column; gap: 0.4vw; }
-  #s9 .case-grid .ph { flex: 1; }
-  #s9 .case-grid .txt { font-size: 0.85vw; line-height: 1.32; color: rgba(20,18,18,0.7); }
-  #s9 .case-grid .txt b { color: var(--color-primary); }
+  #s9 .content-area { top: 11.4vw; display: flex; flex-direction: column; justify-content: center; gap: 2.2vw; }
+  #s9 .timeline-4 { display: flex; align-items: stretch; gap: 0.6vw; }
+  #s9 .tl-step { flex: 1; display: flex; flex-direction: column; gap: 0.5vw; }
+  #s9 .tl-arrow { align-self: center; font-size: 1.4vw; font-weight: 700; color: rgba(20,18,18,0.22); }
+  #s9 .tl-head { display: flex; align-items: center; gap: 0.5vw; }
+  #s9 .tl-badge {
+    width: 1.7vw; height: 1.7vw; border-radius: 50%; background: var(--color-primary); color: #fff;
+    font-weight: 900; font-size: 0.9vw; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  #s9 .tl-time { font-size: 0.85vw; font-weight: 700; color: var(--color-secondary); }
+  #s9 .tl-step .ph { height: 9.6vw; }
+  #s9 .tl-step h4 { font-size: 1.05vw; font-weight: 700; line-height: 1.22; }
+  #s9 .tl-step p { font-size: 0.85vw; line-height: 1.38; color: rgba(20,18,18,0.65); }
+  #s9 .tl-result { display: flex; align-items: center; gap: 1.2vw; background: var(--grey); border-left: 0.28vw solid var(--color-primary); padding: 1.3vw 1.6vw; }
+  #s9 .tl-result-icon { font-size: 2.6vw; flex-shrink: 0; }
+  #s9 .tl-result-title { font-size: 1.1vw; font-weight: 800; color: var(--color-primary); margin-bottom: 0.35vw; }
+  #s9 .tl-result p { font-size: 1vw; color: rgba(20,18,18,0.75); line-height: 1.4; }
 
   /* ================= 12-14. КЛАССЫ ОБОРУДОВАНИЯ ================= */
   .class-layout { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2vw; height: 100%; }
@@ -300,6 +347,7 @@
   #sAch .hero-stat .proof { font-size: 0.76vw; color: rgba(20,18,18,0.48); margin-top: 1.1vw; line-height: 1.4; }
 
   /* ================= МАСШТАБ И ТЕХНОЛОГИЧЕСКАЯ БАЗА (объединённый слайд) ================= */
+  #sScale { background: var(--steel); }
   #sScale .split { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2vw; height: 100%; position: relative; }
   #sScale .split::before {
     content: ""; position: absolute; left: 50%; top: 0; bottom: 8vw; width: 0.06vw; background: var(--rule);
@@ -340,16 +388,23 @@
 <div class="deck">
   <section class="slide active" id="s1">
     <div class="band"></div>
+    <div class="cover-top-left">
+      <img class="cover-logo-sm" src="assets/logo.png" alt="ООО Алгоритм">
+      <div class="cover-motto">Комплексный подход к решению задач</div>
+    </div>
     <div class="cover-left">
-      <img class="cover-logo" src="assets/logo.png" alt="ООО Алгоритм">
-      <div class="rule"></div>
-      <h1>Предиктивное обслуживание и решения для горнодобывающей промышленности</h1>
-      <div class="cover-meta">ООО «Алгоритм» · Красноярск<br>Комплексный подход к решению задач</div>
+      <h1>Промышленный мониторинг и предиктивное обслуживание оборудования ГОК</h1>
+      <div class="cover-sub-row">
+        <span class="cover-sub-label">Коммерческое предложение</span>
+        <span class="cover-year-badge">2026</span>
+      </div>
     </div>
-    <div class="cover-right">
-      <div class="big">Прогнозное техническое обслуживание оборудования на базе промышленного мониторинга</div>
-      <div class="sub">Коммерческое предложение</div>
+    <div class="cover-monitor">
+      <div class="monitor-frame"><img src="assets/supercare_left.jpg" alt="SuperCare"></div>
+      <div class="monitor-stand"></div>
+      <div class="monitor-base"></div>
     </div>
+    <div class="cover-footer">Инженерно-сервисный центр: г. Красноярск, 2026.</div>
     <div class="slide-no">01</div>
   </section>
 
@@ -379,13 +434,13 @@
         </div>
       </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">02</div>
   </section>
 
   <section class="slide" id="s2">
     <div class="head-block">
-      <div class="kicker on-dark">О компании</div>
+      <div class="kicker">О компании</div>
       <h2>ООО «Алгоритм» — ваш партнер в цифровизации промышленности</h2>
     </div>
     <div class="body-grid">
@@ -419,19 +474,21 @@
       <div class="split">
         <div class="side">
           <h3>Масштаб внедрения</h3>
-          <div class="bignum"><div class="num">882 000+</div><p>установленных датчиков на промышленных объектах по всему миру</p></div>
-          <div class="bignum"><div class="num">188 000+</div><p>единиц оборудования на платформе онлайн-мониторинга</p></div>
-          <div class="bignum"><div class="num">3.0 ТБ+</div><p>данных телеметрии обрабатывается ежедневно</p></div>
+          <div class="bignum"><div class="num">35+</div><p>стран — география работы технологической платформы на крупнейших промышленных объектах мира</p></div>
+          <div class="bignum"><div class="num">188 000+</div><p>единиц оборудования находится под непрерывным онлайн-мониторингом платформы</p></div>
+          <div class="bignum"><div class="num">882 000+</div><p>успешно установленных и работающих датчиков вибрации и температуры</p></div>
+          <div class="bignum"><div class="num">3.0 ТБ+</div><p>данных телеметрии обрабатывается интеллектуальными ИИ-алгоритмами ежедневно</p></div>
         </div>
         <div class="side" style="padding-left: 0.4vw;">
           <h3>Научный потенциал платформы</h3>
-          <div class="bignum"><div class="num">42%</div><p>специалистов НИОКР в общей численности персонала платформы</p></div>
-          <div class="bignum"><div class="num">250+</div><p>патентов и зарегистрированных технологических решений</p></div>
-          <div class="bignum"><div class="num">35+</div><p>стран внедрения технологии, 800+ сотрудников платформы</p></div>
+          <div class="bignum"><div class="num">42%</div><p>команды — доля специалистов НИОКР (R&D) в общей численности персонала платформы</p></div>
+          <div class="bignum"><div class="num">250+</div><p>патентов и зарегистрированных прав на собственное программное обеспечение и аппаратные решения</p></div>
+          <div class="bignum"><div class="num">800+</div><p>сотрудников — общий штат экосистемы платформы, включая сильную команду инженеров-диагностов</p></div>
+          <div class="bignum"><div class="num">2</div><p>национальных стандарта, разработанных на базе технологии, включая стандарты техобслуживания оборудования</p></div>
         </div>
       </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">04</div>
   </section>
 
@@ -455,75 +512,43 @@
         <div class="tile"><h4>Прочее</h4><p>Ж/д транспорт, ЦБП, винодельческое и медицинское оборудование</p></div>
       </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">05</div>
   </section>
 
   <section class="slide" id="s6">
     <div class="page-head">
       <div class="kicker">Архитектура</div>
-      <h2>Архитектура сбора данных: гибкая интеграция в локальную сеть предприятия (LAN)</h2>
+      <h2>Архитектура системы: надёжная передача данных и гибкая интеграция</h2>
     </div>
     <div class="content-area">
-      <svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;font-family:var(--font);">
-        <rect x="60" y="10" width="200" height="70" rx="8" fill="#fff" stroke="#93402B" stroke-opacity="0.35" stroke-width="1.5"/>
-        <text x="160" y="50" text-anchor="middle" fill="#141212" font-size="16" font-weight="700">Облачный сервер</text>
-        <rect x="400" y="10" width="200" height="70" rx="8" fill="#93402B"/>
-        <text x="500" y="45" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Локальный сервер</text>
-        <text x="500" y="63" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">данных</text>
-        <rect x="740" y="10" width="200" height="70" rx="8" fill="#fff" stroke="#93402B" stroke-opacity="0.35" stroke-width="1.5"/>
-        <text x="840" y="50" text-anchor="middle" fill="#141212" font-size="16" font-weight="700">Supercare</text>
-        <line x1="260" y1="45" x2="400" y2="45" stroke="#141212" stroke-opacity="0.3" stroke-width="2"/>
-        <line x1="600" y1="45" x2="740" y2="45" stroke="#141212" stroke-opacity="0.3" stroke-width="2"/>
-        <rect x="60" y="120" width="880" height="34" rx="4" fill="#F1EFEE"/>
-        <text x="500" y="142" text-anchor="middle" fill="#141212" font-size="14" font-weight="700">Локальная сеть предприятия (LAN)</text>
-        <line x1="500" y1="80" x2="500" y2="120" stroke="#141212" stroke-opacity="0.3" stroke-width="2"/>
-        <line x1="167" y1="154" x2="167" y2="205" stroke="#141212" stroke-opacity="0.25" stroke-width="2"/>
-        <line x1="500" y1="154" x2="500" y2="205" stroke="#141212" stroke-opacity="0.25" stroke-width="2"/>
-        <line x1="833" y1="154" x2="833" y2="205" stroke="#141212" stroke-opacity="0.25" stroke-width="2"/>
-
-        <!-- Уровень A: проводное подключение -->
-        <g>
-          <rect x="127" y="205" width="80" height="60" rx="10" fill="#fff" stroke="#141212" stroke-opacity="0.55" stroke-width="1.5"/>
-          <line x1="147" y1="225" x2="187" y2="225" stroke="#141212" stroke-width="2.5"/>
-          <line x1="147" y1="235" x2="187" y2="235" stroke="#141212" stroke-width="2.5"/>
-          <line x1="147" y1="245" x2="175" y2="245" stroke="#141212" stroke-width="2.5"/>
-          <rect x="177" y="192" width="42" height="20" rx="10" fill="#141212"/>
-          <text x="198" y="206" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">×N</text>
-        </g>
-        <text x="167" y="290" text-anchor="middle" fill="#141212" font-size="13" font-weight="700">Уровень A</text>
-        <text x="167" y="307" text-anchor="middle" fill="#93402B" font-size="10.5" font-weight="700">Кабель / оптика / Wi-Fi</text>
-        <text x="167" y="326" text-anchor="middle" fill="#141212" fill-opacity="0.55" font-size="10.5">Дробилка, масляный пресс…</text>
-
-        <!-- Уровень Б: ZigBee -->
-        <g>
-          <rect x="460" y="205" width="80" height="60" rx="10" fill="#fff" stroke="#93402B" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <circle cx="500" cy="235" r="5" fill="#93402B"/>
-          <path d="M508,235 A8,8 0 0 1 508,225" fill="none" stroke="#93402B" stroke-width="1.6"/>
-          <path d="M513,240 A15,15 0 0 1 513,220" fill="none" stroke="#93402B" stroke-width="1.6" stroke-opacity="0.6"/>
-          <rect x="510" y="192" width="42" height="20" rx="10" fill="#93402B"/>
-          <text x="531" y="206" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">×N</text>
-        </g>
-        <text x="500" y="290" text-anchor="middle" fill="#141212" font-size="13" font-weight="700">Уровень Б</text>
-        <text x="500" y="307" text-anchor="middle" fill="#93402B" font-size="10.5" font-weight="700">ZigBee / беспроводной шлюз</text>
-        <text x="500" y="326" text-anchor="middle" fill="#141212" fill-opacity="0.55" font-size="10.5">Подъёмник, скребок, сушилка…</text>
-
-        <!-- Уровень В: LoRa/4G/5G -->
-        <g>
-          <rect x="793" y="205" width="80" height="60" rx="10" fill="#fff" stroke="#93402B" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <circle cx="833" cy="235" r="5" fill="#93402B"/>
-          <path d="M841,235 A8,8 0 0 1 841,225" fill="none" stroke="#93402B" stroke-width="1.6"/>
-          <path d="M846,240 A15,15 0 0 1 846,220" fill="none" stroke="#93402B" stroke-width="1.6" stroke-opacity="0.6"/>
-          <path d="M851,245 A22,22 0 0 1 851,215" fill="none" stroke="#93402B" stroke-width="1.6" stroke-opacity="0.35"/>
-          <rect x="843" y="192" width="42" height="20" rx="10" fill="#93402B"/>
-          <text x="864" y="206" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">×N</text>
-        </g>
-        <text x="833" y="290" text-anchor="middle" fill="#141212" font-size="13" font-weight="700">Уровень В</text>
-        <text x="833" y="307" text-anchor="middle" fill="#93402B" font-size="10.5" font-weight="700">LoRa / 4G / 5G</text>
-        <text x="833" y="326" text-anchor="middle" fill="#141212" fill-opacity="0.55" font-size="10.5">Воздуходувка, насос, компрессор…</text>
-      </svg>
+      <div class="arch-flow">
+        <div class="arch-tier">
+          <div class="arch-tier-label">Верхний уровень — куда собираются данные</div>
+          <div class="arch-tier-row" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="tile"><h4>Локальный сервер предприятия (On-Premise) / облачный сервер</h4><p>Обеспечивает 100% безопасность данных внутри закрытого периметра завода или гибкий доступ через облако.</p></div>
+            <div class="tile"><h4>Программный комплекс SuperCare</h4><p>Интеллектуальный центр анализа больших данных и ИИ-диагностики.</p></div>
+          </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-tier">
+          <div class="arch-tier-label">Центральный уровень — инфраструктура</div>
+          <div class="arch-tier-row" style="grid-template-columns: 1fr;">
+            <div class="tile"><h4>Интеграция в локальную сеть предприятия (LAN / ВОЛС)</h4><p>Передача данных на сервер по защищённым промышленным протоколам.</p></div>
+          </div>
+        </div>
+        <div class="arch-arrow">↓</div>
+        <div class="arch-tier">
+          <div class="arch-tier-label">Нижний уровень — три варианта сбора данных с агрегатов</div>
+          <div class="arch-tier-row" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="tile"><h4>Вариант 1. Высокоскоростной проводной сбор (кабель / оптика / Wi-Fi)</h4><p><strong>Для оборудования:</strong> критически важные и энергонасыщенные агрегаты с постоянным питанием — дробилки, главные приводы, масляные прессы.</p></div>
+            <div class="tile"><h4>Вариант 2. Беспроводная сеть малой дальности (ZigBee)</h4><p><strong>Для оборудования:</strong> компактные узлы и конвейерные линии на средних дистанциях — шахтные подъёмники, скребки, сушильные барабаны.</p></div>
+            <div class="tile"><h4>Вариант 3. Дальнобойная беспроводная сеть (LoRa / 4G / 5G)</h4><p><strong>Для оборудования:</strong> удалённые объекты в радиусе до 1 км без прокладки кабельных трасс — воздуходувки, насосные станции, компрессоры.</p></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">06</div>
   </section>
 
@@ -542,6 +567,11 @@
             <tr><td>Вентилятор</td><td>6</td><td>RH506</td><td>RH570</td></tr>
           </table>
           <p style="font-size:0.95vw; color:rgba(20,18,18,0.68);">Одноосные и трёхосные беспроводные датчики вибрации (RH505/RH605, RW506/RW606) передают данные на шлюз RONDS по радиоканалу — без прокладки кабельных трасс.</p>
+          <div class="feat-list" style="margin-top:0.3vw;">
+            <div class="f-item"><h4>🛠️ Монтаж за 15 минут</h4><p>Одноосные и трёхосные датчики вибрации фиксируются на оборудовании с помощью шпилек, магнитов или промышленного клея. Никаких кабельных трасс и штробления.</p></div>
+            <div class="f-item"><h4>🔋 До 3 лет автономной работы</h4><p>Датчики оснащены встроенными промышленными батареями повышенной ёмкости. Замена элементов питания производится быстро и не требует демонтажа самого датчика.</p></div>
+            <div class="f-item"><h4>📡 Помехозащищённый радиоканал</h4><p>Данные передаются на промышленный шлюз в автоматическом режиме. Система устойчива к электромагнитным помехам от мощных электродвигателей.</p></div>
+          </div>
         </div>
         <div class="gw-photos">
           <div class="ph"><img src="assets/wireless_components.jpg" alt="Компоненты датчика"></div>
@@ -550,7 +580,7 @@
         </div>
       </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">07</div>
   </section>
 
@@ -569,76 +599,103 @@
             <tr><td>Зубчатая дробилка</td><td>13</td><td>RH113T</td><td>RH2000</td></tr>
           </table>
           <p style="font-size:0.95vw; color:rgba(20,18,18,0.68);">Проводные датчики с верхним или боковым (360°) выходом кабеля подключаются к шлюзу RH2000 — стационарная схема для ответственных агрегатов с постоянным питанием.</p>
+          <div class="feat-list" style="margin-top:0.3vw;">
+            <div class="f-item"><h4>⚡ Постоянное питание и непрерывный сбор</h4><p>Стационарная схема с подключением к шлюзу RH2000 обеспечивает ежесекундный мониторинг без задержек. Идеально для агрегатов класса «А», где секунда простоя стоит миллионы рублей.</p></div>
+            <div class="f-item"><h4>🛡️ Защита кабеля на 360°</h4><p>Проводные датчики поставляются с верхним или боковым выходом кабеля в металлической бронерукаве. Система полностью защищена от механических повреждений кусками руды, пыли, влаги и вибрации.</p></div>
+            <div class="f-item"><h4>🎯 Анализ переходных процессов</h4><p>Проводная схема позволяет ловить дефекты в моменты пуска и останова агрегата, когда нагрузка на подшипники и редукторы максимальна.</p></div>
+          </div>
         </div>
         <div class="gw-photos">
           <div class="ph"><img src="assets/wired_sensors.jpg" alt="Проводные датчики"></div>
           <div class="ph"><img src="assets/wired_gateway.jpg" alt="Шлюз RH2000"></div>
-          <div class="ph" style="grid-column: 1 / 3;"><img src="assets/wired_software.jpg" alt="ПО мониторинга"><div class="cap">Программное обеспечение анализа вибрации в реальном времени</div></div>
+          <div class="ph" style="grid-column: 1 / 3;"><img src="assets/wired_software.jpg" alt="ПО мониторинга"><div class="cap">Программный комплекс обеспечивает глубокий спектральный анализ формы волны вибрации в реальном времени, выявляя скрытые трещины и микросколы задолго до их визуального проявления.</div></div>
         </div>
       </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">08</div>
   </section>
 
   <section class="slide" id="s9">
     <div class="page-head">
       <div class="kicker">Кейс из практики</div>
-      <h2>Типичный случай предиктивного обслуживания</h2>
+      <h2>От аномалии до устранения дефекта — за 5 часов</h2>
+      <div class="sub">Объект: подземный резервный погрузчик (критически важное оборудование шахты)</div>
     </div>
     <div class="content-area">
-      <div class="case-grid">
-        <div class="cell">
+      <div class="timeline-4">
+        <div class="tl-step">
+          <div class="tl-head"><span class="tl-badge">1</span><span class="tl-time">🛑 02:00 ночи</span></div>
           <div class="ph"><img src="assets/case_chart1.jpg" alt="Рост вибрации"></div>
-          <div class="txt"><b>02:00, 2 июля.</b> Вибрация на двигателе внезапно усилилась — данные передаются в режиме реального времени.</div>
+          <h4>Внезапный скачок вибрации</h4>
+          <p>Телеметрия в реальном времени зафиксировала резкое аномальное усиление вибрации на двигателе работающего под землёй погрузчика. Система автоматически отправила сигнал тревоги.</p>
         </div>
-        <div class="cell">
-          <div class="ph"><img src="assets/case_loader.jpg" alt="Подземный погрузчик"></div>
-          <div class="txt"><b>Ключевое оборудование.</b> Подземный резервный погрузчик с установленными беспроводными датчиками.</div>
-        </div>
-        <div class="cell">
-          <div class="ph"><img src="assets/case_workers.jpg" alt="Обслуживание"></div>
-          <div class="txt"><b>Результат.</b> Предотвращено внезапное незапланированное отключение и нарушение техники безопасности.</div>
-        </div>
-        <div class="cell">
+        <div class="tl-arrow">→</div>
+        <div class="tl-step">
+          <div class="tl-head"><span class="tl-badge">2</span><span class="tl-time">🧠 +15 минут</span></div>
           <div class="ph"><img src="assets/case_control_room.jpg" alt="Диспетчерская"></div>
-          <div class="txt"><b>+15 минут.</b> Эксперт диагностического центра дал заключение обслуживающему инженеру.</div>
+          <h4>Мгновенный экспертный анализ</h4>
+          <p>Дежурный эксперт удалённого диагностического центра проанализировал спектр волны и выдал заключение инженеру ГОКа: «Критический дефект подшипника. Риск заклинивания двигателя».</p>
         </div>
-        <div class="cell">
+        <div class="tl-arrow">→</div>
+        <div class="tl-step">
+          <div class="tl-head"><span class="tl-badge">3</span><span class="tl-time">🛠️ 06:43 утра</span></div>
           <div class="ph"><img src="assets/case_bearing.jpg" alt="Повреждённый подшипник"></div>
-          <div class="txt"><b>06:43.</b> Инженер на месте заменил повреждённый подшипник — сепаратор был разрушен.</div>
+          <h4>Точечный плановый ремонт</h4>
+          <p>Бригада заехала в шахту и оперативно заменила повреждённый узел. Сепаратор подшипника был полностью разрушен — до заклинивания и пожара оставались считанные часы.</p>
         </div>
-        <div class="cell">
+        <div class="tl-arrow">→</div>
+        <div class="tl-step">
+          <div class="tl-head"><span class="tl-badge">4</span><span class="tl-time">✅ 07:00 утра</span></div>
           <div class="ph"><img src="assets/case_chart2.jpg" alt="Оценка результата"></div>
-          <div class="txt"><b>После обслуживания.</b> Форма волны вернулась к норме — оборудование работает штатно.</div>
+          <h4>Возврат в штатный режим</h4>
+          <p>После замены подшипника форма волны и графики вибрации мгновенно вернулись к норме. Погрузчик запущен в работу.</p>
+        </div>
+      </div>
+      <div class="tl-result">
+        <div class="tl-result-icon">📈</div>
+        <div>
+          <div class="tl-result-title">Главный вывод: результат для заказчика</div>
+          <p>Предотвращено внезапное аварийное отключение, исключены миллионные экономические потери от простоя линии и ликвидирована угроза нарушению техники безопасности (ТБ) под землёй.</p>
         </div>
       </div>
     </div>
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">09</div>
   </section>
 
   <section class="slide divider" id="s10">
     <div class="num">02</div>
     <div class="d-body">
-      <h1>Проекты внедрения технологии<br>(открытый карьер)</h1>
+      <h1>Как сократить простои и затраты на контроле оборудования в открытом карьере</h1>
       <div class="rule"></div>
+      <div class="d-sub">Пилотное внедрение системы мониторинга: эффект от 30% снижения внеплановых остановок</div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
+    <div class="d-stats">
+      <div class="d-stat"><div class="d-stat-num">−30%</div><div class="d-stat-cap">простоев</div></div>
+      <div class="d-stat"><div class="d-stat-num">11 мес.</div><div class="d-stat-cap">окупаемость</div></div>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 2.6vw; bottom: auto;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
   <section class="slide" id="s11">
     <div class="page-head">
       <div class="kicker">Область применения</div>
-      <h2>Сценарии для добычи, переработки и плавки полезных ископаемых</h2>
-      <div class="sub">Цель — обеспечить надёжную эксплуатацию оборудования, избежать экономических потерь и вторичных аварий из-за незапланированного простоя.</div>
+      <h2>Сценарии применения: контроль оборудования на всех этапах — от добычи до плавки</h2>
+      <div class="sub">Сокращаем внеплановые простои на 30–40%, окупаемость — 11–14 месяцев</div>
     </div>
     <div class="content-area">
-      <div class="tile-grid" style="grid-template-columns: repeat(3, 1fr); height: 100%;">
-        <div class="tile"><h4>Добыча полезных ископаемых</h4><p>Подъёмные машины, конвейеры, буровые установки, вентиляторы главного проветривания</p></div>
-        <div class="tile"><h4>Переработка полезных ископаемых</h4><p>Дробилки, мельницы, флотационное и обогатительное оборудование</p></div>
-        <div class="tile"><h4>Плавка и металлургия</h4><p>Прокатные станы, компрессоры, насосные станции, мостовые краны</p></div>
+      <div class="stat-row">
+        <div class="stat"><div class="num">−30–40%</div><p>простоев оборудования</p></div>
+        <div class="stat"><div class="num">11 мес.</div><p>средняя окупаемость проекта</p></div>
+        <div class="stat"><div class="num">до 50 ед.</div><p>оборудования на участке под контролем</p></div>
       </div>
-      <div class="tag-row" style="margin-top: 2vw;">
+      <div class="tile-grid">
+        <div class="tile"><h4>Добыча полезных ископаемых</h4><p>Шахтные подъёмные машины, ленточные конвейеры, буровые установки, вентиляторы главного проветривания</p></div>
+        <div class="tile"><h4>Переработка полезных ископаемых</h4><p>Щёковые и конусные дробилки, шаровые мельницы, флотационное и обогатительное оборудование</p></div>
+        <div class="tile"><h4>Плавка и металлургия</h4><p>Прокатные станы, винтовые компрессоры, насосные станции, мостовые краны</p></div>
+      </div>
+      <div class="tag-row">
         <span>Мельница</span><span>Дробилка</span><span>Насос</span><span>Вентилятор</span>
         <span>Конвейер</span><span>Подъёмная машина</span><span>Компрессор</span><span>Мостовой кран</span>
       </div>
@@ -797,7 +854,7 @@
       <h1>Программные решения для предиктивного технического обслуживания</h1>
       <div class="rule"></div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
   <section class="slide" id="s17">
@@ -819,7 +876,7 @@
         <div class="tile"><h4>Совместимость</h4><p>Интеграция с DCS/PLC/MES/SCADA и другими системами</p></div>
       </div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">15</div>
   </section>
 
@@ -885,7 +942,7 @@
       <h1>Сервисы для обеспечения предиктивного технического обслуживания</h1>
       <div class="rule"></div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
   <section class="slide" id="s22">
@@ -942,7 +999,7 @@
       <h1>Международный опыт применения технологии</h1>
       <div class="rule"></div>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
+    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
   <section class="slide" id="s25">
