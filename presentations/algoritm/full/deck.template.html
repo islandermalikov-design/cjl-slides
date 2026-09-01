@@ -6,11 +6,15 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --color-primary: #B72E26;
+    --color-primary: #93402B;
     --color-secondary: #141212;
-    --color-accent: #8C1B13;
+    --color-accent: #5A2417;
+    --color-deepest: #3D160E;
+    --color-tint: #D9A88F;
+    --color-tint-light: #E3C4B3;
     --paper: #FFFFFF;
     --grey: #F1EFEE;
+    --steel: #E7E9EA;
     --rule: rgba(20, 18, 18, 0.14);
     --font: "DM Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
@@ -51,7 +55,7 @@
     font-size: 0.95vw; font-weight: 700; letter-spacing: 0.2em;
     text-transform: uppercase; color: var(--color-primary);
   }
-  .kicker.on-dark { color: #E8938C; }
+  .kicker.on-dark { color: #D9A88F; }
 
   .slide-no {
     position: absolute; right: 3vw; bottom: 2.4vw;
@@ -64,7 +68,7 @@
     display: inline-block; font-size: 0.92vw; font-weight: 500; line-height: 1.42;
     color: var(--color-accent); border-left: 0.2vw solid var(--color-primary); padding-left: 0.8vw;
   }
-  .note.on-dark { color: #F0BEBA; border-left-color: #E8938C; }
+  .note.on-dark { color: #E3C4B3; border-left-color: #D9A88F; }
 
   /* ---------- заголовок стандартной страницы ---------- */
 
@@ -97,13 +101,16 @@
   /* ---------- фотографии / карточки ---------- */
 
   .ph {
-    background: var(--grey); overflow: hidden; position: relative;
+    background: var(--steel); overflow: hidden; position: relative;
     display: flex; align-items: center; justify-content: center;
+    padding: 0.4vw;
+    box-shadow: 0 0.5vw 1.2vw rgba(20, 18, 18, 0.16), 0 0.06vw 0.3vw rgba(20, 18, 18, 0.09);
   }
-  .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .ph img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .ph.cover img { object-fit: cover; }
   .ph .cap {
-    position: absolute; left: 0; right: 0; bottom: 0; padding: 0.5vw 0.7vw;
-    background: linear-gradient(0deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%);
+    position: absolute; left: 0.4vw; right: 0.4vw; bottom: 0.4vw; padding: 0.5vw 0.7vw;
+    background: rgba(20, 18, 18, 0.78);
     color: #fff; font-size: 0.82vw; font-weight: 600; line-height: 1.3;
   }
 
@@ -122,13 +129,21 @@
 
   /* ---------- таблицы ---------- */
 
-  table.data-table { width: 100%; border-collapse: collapse; font-size: 1vw; }
+  table.data-table {
+    width: 100%; border-collapse: collapse; font-size: 1vw;
+    box-shadow: 0 0.4vw 1vw rgba(20, 18, 18, 0.12);
+  }
   table.data-table th {
     background: var(--color-secondary); color: #fff; font-weight: 700; text-align: left;
-    padding: 0.55vw 0.9vw; font-size: 0.85vw; letter-spacing: 0.02em; text-transform: uppercase;
+    padding: 0.6vw 0.9vw; font-size: 0.85vw; letter-spacing: 0.03em; text-transform: uppercase;
+    border-bottom: 0.16vw solid var(--color-primary);
   }
-  table.data-table td { padding: 0.55vw 0.9vw; border-bottom: 0.06vw solid var(--rule); }
-  table.data-table tr:nth-child(even) td { background: rgba(183,46,38,0.04); }
+  table.data-table td {
+    padding: 0.6vw 0.9vw; border-bottom: 0.06vw solid var(--rule); font-weight: 600;
+    color: var(--color-secondary);
+  }
+  table.data-table tr:nth-child(even) td { background: rgba(147, 64, 43, 0.09); }
+  table.data-table td:first-child { font-weight: 700; }
 
   /* ---------- фичи со списком ---------- */
 
@@ -136,7 +151,7 @@
   .feat-list .f-item { border-left: 0.18vw solid var(--color-primary); padding-left: 0.9vw; }
   .feat-list .f-item h4 { font-size: 1.05vw; color: var(--color-primary); font-weight: 700; margin-bottom: 0.2vw; }
   .feat-list .f-item p { font-size: 0.92vw; color: rgba(20,18,18,0.68); line-height: 1.4; }
-  .feat-list.on-dark .f-item h4 { color: #F0958D; }
+  .feat-list.on-dark .f-item h4 { color: #D9A88F; }
   .feat-list.on-dark .f-item p { color: rgba(255,255,255,0.68); }
 
   /* ---------- статистика ---------- */
@@ -152,7 +167,7 @@
   .hex-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3vw; }
   .hex-grid .hx { display: flex; flex-direction: column; gap: 0.25vw; padding: 0.9vw 0; border-bottom: 0.06vw solid rgba(255,255,255,0.12); }
   .hex-grid .hx .num { font-size: 2.3vw; font-weight: 900; color: #fff; letter-spacing: -0.02em; }
-  .hex-grid .hx .num em { color: #E8938C; font-style: normal; }
+  .hex-grid .hx .num em { color: #D9A88F; font-style: normal; }
   .hex-grid .hx p { font-size: 0.88vw; color: rgba(255,255,255,0.6); }
 
   /* ---------- теги / чипы ---------- */
@@ -181,7 +196,7 @@
 
   /* ================= 1. ОБЛОЖКА ================= */
   #s1 { background: var(--paper); }
-  #s1 .band { position: absolute; inset: 0 0 0 46%; background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, #5E120D 100%); }
+  #s1 .band { position: absolute; inset: 0 0 0 46%; background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, #3D160E 100%); }
   #s1 .band::after { content: ""; position: absolute; left: -8vw; bottom: -14vw; width: 34vw; height: 34vw; background: rgba(255,255,255,0.06); transform: rotate(45deg); }
   #s1 .cover-left { position: absolute; left: 5vw; top: 0; bottom: 0; width: 42%; display: flex; flex-direction: column; justify-content: center; gap: 1.6vw; }
   #s1 .cover-logo { height: 5.6vw; align-self: flex-start; }
@@ -212,11 +227,11 @@
   #s4 .stat-row { grid-template-columns: repeat(2, 1fr); margin-top: 1.4vw; }
 
   /* ================= 6. АРХИТЕКТУРА ================= */
-  #s6 { background: var(--color-secondary); }
-  #s6 .page-head h2 { color: #fff; }
+  #s6 { background: var(--paper); }
 
   /* ================= 7/8. ШЛЮЗЫ (обзор) ================= */
   .gw-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; height: 100%; }
+  #s20 .gw-layout { height: 34vw; }
   .gw-photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.8vw; }
 
   /* ================= 9. КЕЙС ================= */
@@ -273,12 +288,27 @@
   .case-card li b { color: var(--color-secondary); }
 
   #s29 .ph.big { height: 22vw; }
-  #s30 { background: var(--color-secondary); }
-  #s30 .achieve-stat { border-top: 0.22vw solid var(--color-primary); padding-top: 0.8vw; }
-  #s30 .achieve-stat .num { font-size: 2.6vw; font-weight: 900; color: #fff; }
-  #s30 .achieve-stat p { font-size: 0.88vw; color: rgba(255,255,255,0.6); margin-top: 0.3vw; }
-  #s30 .headline { font-size: 1.6vw; font-weight: 800; color: #fff; margin: 1.2vw 0; }
-  #s30 .headline em { color: #E8938C; font-style: normal; }
+  #s30 { display: none !important; }
+
+  /* ================= ДОСТИЖЕНИЯ (слайд 2) ================= */
+  #sAch .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4vw; margin-top: 1vw; }
+  #sAch .hero-stat { border-top: 0.28vw solid var(--color-primary); padding-top: 1.1vw; }
+  #sAch .hero-stat .hn { font-size: 4.6vw; font-weight: 900; color: var(--color-primary); letter-spacing: -0.03em; line-height: 0.95; }
+  #sAch .hero-stat .hc { font-size: 1.15vw; font-weight: 700; color: var(--color-secondary); margin-top: 0.5vw; line-height: 1.32; }
+  #sAch .hero-stat .proof { font-size: 0.76vw; color: rgba(20,18,18,0.48); margin-top: 1.1vw; line-height: 1.4; }
+
+  /* ================= МАСШТАБ И ТЕХНОЛОГИЧЕСКАЯ БАЗА (объединённый слайд) ================= */
+  #sScale .split { display: grid; grid-template-columns: 1fr 1fr; gap: 3.2vw; height: 100%; position: relative; }
+  #sScale .split::before {
+    content: ""; position: absolute; left: 50%; top: 0; bottom: 8vw; width: 0.06vw; background: var(--rule);
+  }
+  #sScale .side h3 {
+    font-size: 1vw; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.14em;
+    margin-bottom: 1.3vw; font-weight: 700;
+  }
+  #sScale .bignum { border-top: 0.2vw solid rgba(20,18,18,0.14); padding-top: 0.7vw; margin-bottom: 1.5vw; }
+  #sScale .bignum .num { font-size: 3vw; font-weight: 900; color: var(--color-secondary); letter-spacing: -0.03em; }
+  #sScale .bignum p { font-size: 0.95vw; color: rgba(20,18,18,0.62); margin-top: 0.3vw; }
 
   #s32 .case-2col, #s34 .case-2col { grid-template-columns: 0.9fr 1.4fr; }
   .fault-item { border-left: 0.18vw solid var(--color-primary); padding-left: 0.8vw; margin-bottom: 0.9vw; }
@@ -306,8 +336,6 @@
 </style>
 
 <div class="deck">
-
-  <!-- 1 — ОБЛОЖКА -->
   <section class="slide active" id="s1">
     <div class="band"></div>
     <div class="cover-left">
@@ -323,7 +351,36 @@
     <div class="slide-no">01</div>
   </section>
 
-  <!-- 2 — О КОМПАНИИ -->
+  <!-- ДОСТИЖЕНИЯ -->
+  <section class="slide" id="sAch">
+    <div class="page-head">
+      <div class="kicker">Результаты внедрения</div>
+      <h2>Измеримые результаты предиктивного обслуживания</h2>
+      <div class="sub">Совокупный эффект от внедрения технологии на промышленных объектах — снижение затрат на техническое обслуживание оценивается в 4 000 000 $.</div>
+    </div>
+    <div class="content-area">
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hn">−57%</div>
+          <p class="hc">отказов механического оборудования</p>
+          <p class="proof">Данные подтверждены на основе анализа 34 000+ успешных кейсов в горнодобывающей отрасли.</p>
+        </div>
+        <div class="hero-stat">
+          <div class="hn">−80%</div>
+          <p class="hc">времени простоя из-за механических отказов</p>
+          <p class="proof">Данные подтверждены на основе анализа 34 000+ успешных кейсов в горнодобывающей отрасли.</p>
+        </div>
+        <div class="hero-stat">
+          <div class="hn">−37%</div>
+          <p class="hc">затрат на аутсорсинг технического обслуживания</p>
+          <p class="proof">Данные подтверждены на основе анализа 34 000+ успешных кейсов в горнодобывающей отрасли.</p>
+        </div>
+      </div>
+    </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">02</div>
+  </section>
+
   <section class="slide" id="s2">
     <div class="head-block">
       <div class="kicker on-dark">О компании</div>
@@ -347,56 +404,35 @@
       </div>
     </div>
     <img class="logo-mark" style="left: 4.2vw; bottom: 2.4vw;" src="assets/logo.png" alt="Алгоритм">
-    <div class="slide-no">02</div>
-  </section>
-
-  <!-- 3 — МАСШТАБ: НАУЧНО-ТЕХНИЧЕСКАЯ БАЗА -->
-  <section class="slide" id="s3">
-    <div class="page-head">
-      <div class="kicker">Технологическая база</div>
-      <h2>Научно-техническая экспертиза платформы</h2>
-      <div class="sub">Показатели характеризуют технологическую базу, на которую опирается ООО «Алгоритм» при реализации проектов в РФ.</div>
-    </div>
-    <div class="content-area">
-      <div class="stat-row">
-        <div class="stat"><div class="num">42%</div><p>доля специалистов НИОКР в общей численности персонала платформы</p></div>
-        <div class="stat"><div class="num">49%</div><p>доля сотрудников с учёными и кандидатскими степенями</p></div>
-        <div class="stat"><div class="num">22%</div><p>доля инвестиций в НИОКР от выручки технологического партнёра</p></div>
-        <div class="stat"><div class="num">250<em>+</em></div><p>патентов и зарегистрированных прав на ПО и технологические решения</p></div>
-        <div class="stat"><div class="num">20<em>+</em></div><p>наград национального уровня за научные достижения</p></div>
-        <div class="stat"><div class="num">2</div><p>национальных стандарта технического обслуживания оборудования</p></div>
-      </div>
-      <div class="tile-grid">
-        <div class="tile"><h4>Сильная команда</h4><p>800+ сотрудников платформы, 300+ в составе НИОКР</p></div>
-        <div class="tile"><h4>Комплексные возможности</h4><p>Аппаратное и программное обеспечение, ИИ и удалённые сервисы</p></div>
-        <div class="tile"><h4>Широкий охват</h4><p>2000+ подключённых предприятий, 20+ отраслей промышленности</p></div>
-        <div class="tile"><h4>Экспертиза диагностики</h4><p>Центр авторизации и сертификации Mobius, сертифицированный GL-центр диагностики</p></div>
-      </div>
-    </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">03</div>
   </section>
 
-  <!-- 4 — МАСШТАБ: ЦЕНТР МОНИТОРИНГА -->
-  <section class="slide" id="s4">
+  <!-- МАСШТАБ И ТЕХНОЛОГИЧЕСКАЯ БАЗА -->
+  <section class="slide" id="sScale">
     <div class="page-head">
       <div class="kicker">Технологическая база</div>
-      <h2>Масштаб платформы удалённого мониторинга вращающегося оборудования</h2>
+      <h2>Масштаб и технологическая база платформы</h2>
     </div>
     <div class="content-area">
-      <div class="photo-row">
-        <div class="ph"><img src="assets/diag_dashboard.jpg" alt="Платформа мониторинга"><div class="cap">Платформа удалённого мониторинга — карта подключённых объектов</div></div>
-        <div class="ph"><img src="assets/diag_office.jpg" alt="Диагностический центр"><div class="cap">Центр удалённой диагностики</div></div>
-      </div>
-      <div class="stat-row">
-        <div class="stat"><div class="num">188 000<em>+</em></div><p>единиц оборудования на платформе онлайн-мониторинга</p></div>
-        <div class="stat"><div class="num">882 000<em>+</em></div><p>установленных датчиков на промышленных объектах по всему миру</p></div>
+      <div class="split">
+        <div class="side">
+          <h3>Масштаб внедрения</h3>
+          <div class="bignum"><div class="num">882 000+</div><p>установленных датчиков на промышленных объектах по всему миру</p></div>
+          <div class="bignum"><div class="num">188 000+</div><p>единиц оборудования на платформе онлайн-мониторинга</p></div>
+          <div class="bignum"><div class="num">3.0 ТБ+</div><p>данных телеметрии обрабатывается ежедневно</p></div>
+        </div>
+        <div class="side" style="padding-left: 0.4vw;">
+          <h3>Научный потенциал платформы</h3>
+          <div class="bignum"><div class="num">42%</div><p>специалистов НИОКР в общей численности персонала платформы</p></div>
+          <div class="bignum"><div class="num">250+</div><p>патентов и зарегистрированных технологических решений</p></div>
+          <div class="bignum"><div class="num">35+</div><p>стран внедрения технологии, 800+ сотрудников платформы</p></div>
+        </div>
       </div>
     </div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
     <div class="slide-no">04</div>
   </section>
 
-  <!-- 5 — ОБЛАСТИ ПРИМЕНЕНИЯ -->
   <section class="slide" id="s5">
     <div class="page-head">
       <div class="kicker">Область применения</div>
@@ -421,60 +457,74 @@
     <div class="slide-no">05</div>
   </section>
 
-  <!-- 6 — АРХИТЕКТУРА РЕШЕНИЯ -->
   <section class="slide" id="s6">
-    <div class="page-head on-dark">
-      <div class="kicker on-dark">Архитектура</div>
-      <h2>Интеллектуальный сценарий предиктивного технического обслуживания</h2>
+    <div class="page-head">
+      <div class="kicker">Архитектура</div>
+      <h2>Архитектура сбора данных: гибкая интеграция в локальную сеть предприятия (LAN)</h2>
     </div>
     <div class="content-area">
       <svg viewBox="0 0 1000 430" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible;font-family:var(--font);">
-        <rect x="60" y="10" width="200" height="70" rx="8" fill="#fff" fill-opacity="0.06" stroke="#fff" stroke-opacity="0.25"/>
-        <text x="160" y="50" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">Облачный сервер</text>
-        <rect x="400" y="10" width="200" height="70" rx="8" fill="#B72E26"/>
+        <rect x="60" y="10" width="200" height="70" rx="8" fill="#fff" stroke="#93402B" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="160" y="50" text-anchor="middle" fill="#141212" font-size="16" font-weight="700">Облачный сервер</text>
+        <rect x="400" y="10" width="200" height="70" rx="8" fill="#93402B"/>
         <text x="500" y="45" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Локальный сервер</text>
         <text x="500" y="63" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">данных</text>
-        <rect x="740" y="10" width="200" height="70" rx="8" fill="#fff" fill-opacity="0.06" stroke="#fff" stroke-opacity="0.25"/>
-        <text x="840" y="50" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">Supercare</text>
-        <line x1="260" y1="45" x2="400" y2="45" stroke="#fff" stroke-opacity="0.4" stroke-width="2"/>
-        <line x1="600" y1="45" x2="740" y2="45" stroke="#fff" stroke-opacity="0.4" stroke-width="2"/>
-        <rect x="60" y="120" width="880" height="34" rx="4" fill="#fff" fill-opacity="0.08"/>
-        <text x="500" y="142" text-anchor="middle" fill="#fff" font-size="14" font-weight="700">Локальная сеть предприятия (LAN)</text>
-        <line x1="500" y1="80" x2="500" y2="120" stroke="#fff" stroke-opacity="0.4" stroke-width="2"/>
-        <line x1="167" y1="154" x2="167" y2="210" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
-        <line x1="500" y1="154" x2="500" y2="210" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
-        <line x1="833" y1="154" x2="833" y2="210" stroke="#fff" stroke-opacity="0.3" stroke-width="2"/>
-        <g font-size="12" fill="#fff" fill-opacity="0.7" font-weight="600" text-anchor="middle">
-          <text x="167" y="235">Уровень A — сетевой кабель / оптика / Wi-Fi</text>
-          <text x="500" y="235">Уровень Б — ZigBee / беспроводной шлюз</text>
-          <text x="833" y="235">Уровень В — LoRa / 4G / 5G</text>
+        <rect x="740" y="10" width="200" height="70" rx="8" fill="#fff" stroke="#93402B" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="840" y="50" text-anchor="middle" fill="#141212" font-size="16" font-weight="700">Supercare</text>
+        <line x1="260" y1="45" x2="400" y2="45" stroke="#141212" stroke-opacity="0.3" stroke-width="2"/>
+        <line x1="600" y1="45" x2="740" y2="45" stroke="#141212" stroke-opacity="0.3" stroke-width="2"/>
+        <rect x="60" y="120" width="880" height="34" rx="4" fill="#F1EFEE"/>
+        <text x="500" y="142" text-anchor="middle" fill="#141212" font-size="14" font-weight="700">Локальная сеть предприятия (LAN)</text>
+        <line x1="500" y1="80" x2="500" y2="120" stroke="#141212" stroke-opacity="0.3" stroke-width="2"/>
+        <line x1="167" y1="154" x2="167" y2="205" stroke="#141212" stroke-opacity="0.25" stroke-width="2"/>
+        <line x1="500" y1="154" x2="500" y2="205" stroke="#141212" stroke-opacity="0.25" stroke-width="2"/>
+        <line x1="833" y1="154" x2="833" y2="205" stroke="#141212" stroke-opacity="0.25" stroke-width="2"/>
+
+        <!-- Уровень A: проводное подключение -->
+        <g>
+          <rect x="127" y="205" width="80" height="60" rx="10" fill="#fff" stroke="#141212" stroke-opacity="0.55" stroke-width="1.5"/>
+          <line x1="147" y1="225" x2="187" y2="225" stroke="#141212" stroke-width="2.5"/>
+          <line x1="147" y1="235" x2="187" y2="235" stroke="#141212" stroke-width="2.5"/>
+          <line x1="147" y1="245" x2="175" y2="245" stroke="#141212" stroke-width="2.5"/>
+          <rect x="177" y="192" width="42" height="20" rx="10" fill="#141212"/>
+          <text x="198" y="206" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">×N</text>
         </g>
-        <g fill="#B72E26">
-          <circle cx="90" cy="290" r="14"/><circle cx="167" cy="290" r="14"/><circle cx="244" cy="290" r="14"/>
-          <circle cx="440" cy="290" r="14"/><circle cx="500" cy="290" r="14"/><circle cx="560" cy="290" r="14"/>
-          <circle cx="770" cy="290" r="14"/><circle cx="833" cy="290" r="14"/><circle cx="896" cy="290" r="14"/>
+        <text x="167" y="290" text-anchor="middle" fill="#141212" font-size="13" font-weight="700">Уровень A</text>
+        <text x="167" y="307" text-anchor="middle" fill="#93402B" font-size="10.5" font-weight="700">Кабель / оптика / Wi-Fi</text>
+        <text x="167" y="326" text-anchor="middle" fill="#141212" fill-opacity="0.55" font-size="10.5">Дробилка, масляный пресс…</text>
+
+        <!-- Уровень Б: ZigBee -->
+        <g>
+          <rect x="460" y="205" width="80" height="60" rx="10" fill="#fff" stroke="#93402B" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="500" cy="235" r="5" fill="#93402B"/>
+          <path d="M508,235 A8,8 0 0 1 508,225" fill="none" stroke="#93402B" stroke-width="1.6"/>
+          <path d="M513,240 A15,15 0 0 1 513,220" fill="none" stroke="#93402B" stroke-width="1.6" stroke-opacity="0.6"/>
+          <rect x="510" y="192" width="42" height="20" rx="10" fill="#93402B"/>
+          <text x="531" y="206" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">×N</text>
         </g>
-        <g stroke="#fff" stroke-opacity="0.3" stroke-width="1.5">
-          <line x1="90" y1="260" x2="167" y2="260"/><line x1="167" y1="260" x2="244" y2="260"/>
-          <line x1="90" y1="260" x2="90" y2="276"/><line x1="167" y1="260" x2="167" y2="276"/><line x1="244" y1="260" x2="244" y2="276"/>
-          <line x1="167" y1="240" x2="167" y2="260"/>
-          <line x1="440" y1="260" x2="560" y2="260"/>
-          <line x1="440" y1="260" x2="440" y2="276"/><line x1="500" y1="260" x2="500" y2="276"/><line x1="560" y1="260" x2="560" y2="276"/>
-          <line x1="500" y1="240" x2="500" y2="260"/>
-          <line x1="770" y1="260" x2="896" y2="260"/>
-          <line x1="770" y1="260" x2="770" y2="276"/><line x1="833" y1="260" x2="833" y2="276"/><line x1="896" y1="260" x2="896" y2="276"/>
-          <line x1="833" y1="240" x2="833" y2="260"/>
+        <text x="500" y="290" text-anchor="middle" fill="#141212" font-size="13" font-weight="700">Уровень Б</text>
+        <text x="500" y="307" text-anchor="middle" fill="#93402B" font-size="10.5" font-weight="700">ZigBee / беспроводной шлюз</text>
+        <text x="500" y="326" text-anchor="middle" fill="#141212" fill-opacity="0.55" font-size="10.5">Подъёмник, скребок, сушилка…</text>
+
+        <!-- Уровень В: LoRa/4G/5G -->
+        <g>
+          <rect x="793" y="205" width="80" height="60" rx="10" fill="#fff" stroke="#93402B" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <circle cx="833" cy="235" r="5" fill="#93402B"/>
+          <path d="M841,235 A8,8 0 0 1 841,225" fill="none" stroke="#93402B" stroke-width="1.6"/>
+          <path d="M846,240 A15,15 0 0 1 846,220" fill="none" stroke="#93402B" stroke-width="1.6" stroke-opacity="0.6"/>
+          <path d="M851,245 A22,22 0 0 1 851,215" fill="none" stroke="#93402B" stroke-width="1.6" stroke-opacity="0.35"/>
+          <rect x="843" y="192" width="42" height="20" rx="10" fill="#93402B"/>
+          <text x="864" y="206" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">×N</text>
         </g>
-        <text x="167" y="325" text-anchor="middle" fill="#fff" fill-opacity="0.55" font-size="11">Дробилка, масляный пресс…</text>
-        <text x="500" y="325" text-anchor="middle" fill="#fff" fill-opacity="0.55" font-size="11">Подъёмник, скребок, сушилка…</text>
-        <text x="833" y="325" text-anchor="middle" fill="#fff" fill-opacity="0.55" font-size="11">Воздуходувка, насос, компрессор…</text>
+        <text x="833" y="290" text-anchor="middle" fill="#141212" font-size="13" font-weight="700">Уровень В</text>
+        <text x="833" y="307" text-anchor="middle" fill="#93402B" font-size="10.5" font-weight="700">LoRa / 4G / 5G</text>
+        <text x="833" y="326" text-anchor="middle" fill="#141212" fill-opacity="0.55" font-size="10.5">Воздуходувка, насос, компрессор…</text>
       </svg>
     </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
-    <div class="slide-no on-dark">06</div>
+    <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
+    <div class="slide-no">06</div>
   </section>
 
-  <!-- 7 — БЕСПРОВОДНОЙ ВАРИАНТ -->
   <section class="slide" id="s7">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
@@ -502,7 +552,6 @@
     <div class="slide-no">07</div>
   </section>
 
-  <!-- 8 — ПРОВОДНОЙ ВАРИАНТ -->
   <section class="slide" id="s8">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
@@ -530,7 +579,6 @@
     <div class="slide-no">08</div>
   </section>
 
-  <!-- 9 — ТИПИЧНЫЙ СЛУЧАЙ ПРЕДИКТИВНОГО ОБСЛУЖИВАНИЯ -->
   <section class="slide" id="s9">
     <div class="page-head">
       <div class="kicker">Кейс из практики</div>
@@ -567,7 +615,6 @@
     <div class="slide-no">09</div>
   </section>
 
-  <!-- 10 — РАЗДЕЛИТЕЛЬ: ПРОЕКТЫ (ОТКРЫТЫЙ КАРЬЕР) -->
   <section class="slide divider" id="s10">
     <div class="num">02</div>
     <div class="d-body">
@@ -577,7 +624,6 @@
     <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
-  <!-- 11 — СЦЕНАРИИ ПРИМЕНЕНИЯ: ОТРАСЛИ -->
   <section class="slide" id="s11">
     <div class="page-head">
       <div class="kicker">Область применения</div>
@@ -595,10 +641,9 @@
         <span>Конвейер</span><span>Подъёмная машина</span><span>Компрессор</span><span>Мостовой кран</span>
       </div>
     </div>
-    <div class="slide-no">11</div>
+    <div class="slide-no">10</div>
   </section>
 
-  <!-- 12 — КЛАСС C/D -->
   <section class="slide" id="s12">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
@@ -609,13 +654,13 @@
         <div>
           <div class="class-diagram-box diagram">
             <svg viewBox="0 0 460 150" xmlns="http://www.w3.org/2000/svg">
-              <line x1="40" y1="30" x2="172" y2="72" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
-              <line x1="40" y1="75" x2="172" y2="75" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
-              <line x1="40" y1="120" x2="172" y2="78" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="30" x2="172" y2="72" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="75" x2="172" y2="75" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="120" x2="172" y2="78" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
               <circle cx="30" cy="30" r="10" fill="#141212"/><circle cx="30" cy="75" r="10" fill="#141212"/><circle cx="30" cy="120" r="10" fill="#141212"/>
               <text x="30" y="144" text-anchor="middle" class="cap">Датчики RW161</text>
               <text x="220" y="42" text-anchor="middle" class="cap">LoRa, до 1 км</text>
-              <rect x="172" y="50" width="96" height="50" rx="6" fill="#B72E26"/>
+              <rect x="172" y="50" width="96" height="50" rx="6" fill="#93402B"/>
               <text x="220" y="80" text-anchor="middle" class="lbl" fill="#fff">Шлюз LoRa</text>
               <line x1="268" y1="75" x2="352" y2="75" stroke="#141212" stroke-opacity="0.45" stroke-width="2"/>
               <rect x="352" y="50" width="96" height="50" rx="6" fill="#141212"/>
@@ -638,10 +683,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">12</div>
+    <div class="slide-no">11</div>
   </section>
 
-  <!-- 13 — КЛАСС B -->
   <section class="slide" id="s13">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
@@ -652,15 +696,15 @@
         <div>
           <div class="class-diagram-box diagram">
             <svg viewBox="0 0 460 150" xmlns="http://www.w3.org/2000/svg">
-              <line x1="40" y1="20" x2="172" y2="70" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
-              <line x1="40" y1="55" x2="172" y2="72" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
-              <line x1="40" y1="90" x2="172" y2="78" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
-              <line x1="40" y1="125" x2="172" y2="80" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="20" x2="172" y2="70" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="55" x2="172" y2="72" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="90" x2="172" y2="78" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="40" y1="125" x2="172" y2="80" stroke="#93402B" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 4"/>
               <circle cx="30" cy="20" r="9" fill="#141212"/><circle cx="30" cy="55" r="9" fill="#141212"/>
               <circle cx="30" cy="90" r="9" fill="#141212"/><circle cx="30" cy="125" r="9" fill="#141212"/>
               <text x="30" y="144" text-anchor="middle" class="cap">RH505/605, RW625</text>
               <text x="220" y="42" text-anchor="middle" class="cap">ZigBee</text>
-              <rect x="172" y="50" width="96" height="50" rx="6" fill="#B72E26"/>
+              <rect x="172" y="50" width="96" height="50" rx="6" fill="#93402B"/>
               <text x="220" y="80" text-anchor="middle" class="lbl" fill="#fff">RH570</text>
               <line x1="268" y1="75" x2="352" y2="75" stroke="#141212" stroke-opacity="0.45" stroke-width="2"/>
               <rect x="352" y="50" width="96" height="50" rx="6" fill="#141212"/>
@@ -682,10 +726,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">13</div>
+    <div class="slide-no">12</div>
   </section>
 
-  <!-- 14 — КЛАСС A -->
   <section class="slide" id="s14">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
@@ -706,8 +749,8 @@
               <text x="220" y="42" text-anchor="middle" class="cap">RS485 / WiFi / 4-20mA</text>
               <rect x="172" y="50" width="96" height="50" rx="6" fill="#141212"/>
               <text x="220" y="80" text-anchor="middle" class="lbl" fill="#fff">RH2000 / Exd</text>
-              <line x1="268" y1="75" x2="352" y2="75" stroke="#B72E26" stroke-opacity="0.55" stroke-width="2"/>
-              <rect x="352" y="50" width="96" height="50" rx="6" fill="#B72E26"/>
+              <line x1="268" y1="75" x2="352" y2="75" stroke="#93402B" stroke-opacity="0.55" stroke-width="2"/>
+              <rect x="352" y="50" width="96" height="50" rx="6" fill="#93402B"/>
               <text x="400" y="80" text-anchor="middle" class="lbl" fill="#fff">SuperCare</text>
               <text x="400" y="112" text-anchor="middle" class="cap">Система мониторинга</text>
             </svg>
@@ -725,10 +768,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">14</div>
+    <div class="slide-no">13</div>
   </section>
 
-  <!-- 15 — КОНТРОЛЬ НЕИСПРАВНОСТЕЙ -->
   <section class="slide" id="s15">
     <div class="page-head">
       <div class="kicker">Диагностика</div>
@@ -744,10 +786,9 @@
       </table>
       <div class="ph"><img src="assets/defect_photo_grid.jpg" alt="Примеры дефектов"></div>
     </div>
-    <div class="slide-no">15</div>
+    <div class="slide-no">14</div>
   </section>
 
-  <!-- 16 — РАЗДЕЛИТЕЛЬ: РЕШЕНИЯ -->
   <section class="slide divider" id="s16">
     <div class="num">03</div>
     <div class="d-body">
@@ -757,7 +798,6 @@
     <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
-  <!-- 17 — ПО SUPERCARE -->
   <section class="slide" id="s17">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
@@ -778,10 +818,9 @@
       </div>
     </div>
     <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo.png" alt="Алгоритм">
-    <div class="slide-no">17</div>
+    <div class="slide-no">15</div>
   </section>
 
-  <!-- 18 — AI ДИАГНОСТИКА -->
   <section class="slide" id="s18">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
@@ -797,10 +836,9 @@
         <div class="tile"><h4>AI-диагностика</h4><p>Алгоритм автоматически даёт выводы по диагностике неисправностей и рекомендации по обслуживанию.</p></div>
       </div>
     </div>
-    <div class="slide-no">18</div>
+    <div class="slide-no">16</div>
   </section>
 
-  <!-- 19 — МОБИЛЬНОЕ ПРИЛОЖЕНИЕ -->
   <section class="slide" id="s19">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
@@ -814,10 +852,9 @@
         <div class="phone"><img src="assets/phone_right.jpg" alt="Мобильное приложение — тревоги"></div>
       </div>
     </div>
-    <div class="slide-no">19</div>
+    <div class="slide-no">17</div>
   </section>
 
-  <!-- 20 — ПО EPM -->
   <section class="slide" id="s20">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
@@ -837,10 +874,9 @@
         <div class="ph"><img src="assets/epm_waveform.jpg" alt="Профессиональные инструменты"><div class="cap">Профессиональные инструменты диагностики</div></div>
       </div>
     </div>
-    <div class="slide-no">20</div>
+    <div class="slide-no">18</div>
   </section>
 
-  <!-- 21 — РАЗДЕЛИТЕЛЬ: СЕРВИСЫ -->
   <section class="slide divider" id="s21">
     <div class="num">04</div>
     <div class="d-body">
@@ -850,7 +886,6 @@
     <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
-  <!-- 22 — ШЕСТЬ УСЛУГ -->
   <section class="slide" id="s22">
     <div class="page-head">
       <div class="kicker">Сервисы поддержки</div>
@@ -870,10 +905,9 @@
         <div class="tile"><h4>Консалтинг диагностического центра</h4></div>
       </div>
     </div>
-    <div class="slide-no">22</div>
+    <div class="slide-no">19</div>
   </section>
 
-  <!-- 23 — ОБУЧЕНИЕ И АВТОРИЗАЦИЯ -->
   <section class="slide" id="s23">
     <div class="page-head">
       <div class="kicker">Сервисы поддержки</div>
@@ -897,10 +931,9 @@
         <div></div>
       </div>
     </div>
-    <div class="slide-no">23</div>
+    <div class="slide-no">20</div>
   </section>
 
-  <!-- 24 — РАЗДЕЛИТЕЛЬ: МЕЖДУНАРОДНЫЙ ОПЫТ -->
   <section class="slide divider" id="s24">
     <div class="num">05</div>
     <div class="d-body">
@@ -910,7 +943,6 @@
     <img class="logo-mark" style="right: 4.2vw; top: 3vw;" src="assets/logo-white.png" alt="Алгоритм">
   </section>
 
-  <!-- 25 — ГЕОГРАФИЯ ВНЕДРЕНИЯ -->
   <section class="slide" id="s25">
     <div class="page-head on-dark">
       <div class="kicker on-dark">Масштаб</div>
@@ -929,29 +961,9 @@
         <span>Чили</span><span>Аргентина</span>
       </div>
     </div>
-    <div class="slide-no on-dark">25</div>
+    <div class="slide-no on-dark">21</div>
   </section>
 
-  <!-- 26 — МАСШТАБ ВНЕДРЕНИЯ -->
-  <section class="slide" id="s26">
-    <div class="page-head on-dark">
-      <div class="kicker on-dark">Масштаб</div>
-      <h2>Эксплуатационный успех ключевого оборудования в различных отраслях</h2>
-    </div>
-    <div class="content-area">
-      <div class="hex-grid">
-        <div class="hx"><div class="num">188 000<em>+</em></div><p>единиц оборудования, подключённых к платформе</p></div>
-        <div class="hx"><div class="num">880 000<em>+</em></div><p>установленных датчиков</p></div>
-        <div class="hx"><div class="num">3.0 ТБ<em>+</em></div><p>ежедневных данных телеметрии</p></div>
-        <div class="hx"><div class="num">35<em>+</em></div><p>стран внедрения технологии</p></div>
-        <div class="hx"><div class="num">34 000<em>+</em></div><p>успешных случаев с замкнутым циклом обслуживания</p></div>
-        <div class="hx"><div class="num">3 000<em>+</em></div><p>реализованных проектов</p></div>
-      </div>
-    </div>
-    <div class="slide-no on-dark">26</div>
-  </section>
-
-  <!-- 27 — КЕЙСЫ: МЕДЬ И УГОЛЬ -->
   <section class="slide" id="s27">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -973,10 +985,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">27</div>
+    <div class="slide-no">22</div>
   </section>
 
-  <!-- 28 — КЕЙСЫ: БРАЗИЛИЯ И ЧИЛИ -->
   <section class="slide" id="s28">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -996,10 +1007,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">28</div>
+    <div class="slide-no">23</div>
   </section>
 
-  <!-- 29 — КЕЙС: ИНТЕГРАЦИЯ С КОРПОРАТИВНОЙ ПЛАТФОРМОЙ -->
   <section class="slide" id="s29">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -1009,28 +1019,9 @@
     <div class="content-area" style="display:flex; align-items:center; justify-content:center;">
       <div class="ph big" style="width: 60vw;"><img src="assets/cidc_dashboard.jpg" alt="Платформа удалённой диагностики"><div class="cap">Единая платформа удалённой диагностики группы предприятий</div></div>
     </div>
-    <div class="slide-no">29</div>
+    <div class="slide-no">24</div>
   </section>
 
-  <!-- 30 — ДОСТИЖЕНИЯ -->
-  <section class="slide" id="s30">
-    <div class="page-head on-dark">
-      <div class="kicker on-dark">Международный опыт</div>
-      <h2>Достижения</h2>
-    </div>
-    <div class="content-area">
-      <div class="headline">Общее снижение затрат на техническое обслуживание — примерно <em>4 000 000 $</em></div>
-      <div class="stat-row on-dark" style="grid-template-columns: repeat(4,1fr);">
-        <div class="achieve-stat"><div class="num">57.29%</div><p>сокращение количества отказов механического оборудования (2022)</p></div>
-        <div class="achieve-stat"><div class="num">80.64%</div><p>сокращение времени простоя из-за механических отказов</p></div>
-        <div class="achieve-stat"><div class="num">50%</div><p>сокращение инспекционного персонала за счёт онлайн-мониторинга</p></div>
-        <div class="achieve-stat"><div class="num">37.17%</div><p>снижение доли затрат на аутсорсинг технического обслуживания</p></div>
-      </div>
-    </div>
-    <div class="slide-no on-dark">30</div>
-  </section>
-
-  <!-- 31 — ПРОЕКТ ПРИЗНАННОЙ ЭФФЕКТИВНОСТИ -->
   <section class="slide" id="s31">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -1044,10 +1035,9 @@
         <div class="ph"><img src="assets/lighthouse_list.jpg" alt="Список Lighthouse 2023"><div class="cap">03 — Реестр Global Lighthouse Network, 2023</div></div>
       </div>
     </div>
-    <div class="slide-no">31</div>
+    <div class="slide-no">25</div>
   </section>
 
-  <!-- 32 — ТИПИЧНЫЕ СЛУЧАИ НЕИСПРАВНОСТЕЙ (ПРОЕКТ) -->
   <section class="slide" id="s32">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -1071,10 +1061,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">32</div>
+    <div class="slide-no">26</div>
   </section>
 
-  <!-- 33 — КЕЙС: ГОРНОДОБЫВАЮЩАЯ ГРУППА (4 ОБЪЕКТА) -->
   <section class="slide" id="s33">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -1090,10 +1079,9 @@
       </div>
       <p style="margin-top: 1vw; font-size: 0.95vw; color: rgba(20,18,18,0.68);">С 2021 года платформа помогла выявить неисправность основного подъёмника, пройти национальную сертификацию «умного месторождения», внедрить мониторинг подземного ключевого оборудования и расширить мониторинг масла.</p>
     </div>
-    <div class="slide-no">33</div>
+    <div class="slide-no">27</div>
   </section>
 
-  <!-- 34 — СПЕЦИАЛЬНОЕ ГОРНОЕ ОБОРУДОВАНИЕ -->
   <section class="slide" id="s34">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -1112,10 +1100,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">34</div>
+    <div class="slide-no">28</div>
   </section>
 
-  <!-- 35 — НЕСКОЛЬКО ТИПИЧНЫХ СЛУЧАЕВ -->
   <section class="slide" id="s35">
     <div class="page-head">
       <div class="kicker">Международный опыт</div>
@@ -1141,10 +1128,9 @@
         </div>
       </div>
     </div>
-    <div class="slide-no">35</div>
+    <div class="slide-no">29</div>
   </section>
 
-  <!-- 36 — КОНТАКТЫ -->
   <section class="slide" id="s36">
     <div class="block">
       <img class="block-logo" src="assets/logo-white.png" alt="ООО Алгоритм">
@@ -1157,7 +1143,7 @@
       <div class="c-row"><div class="lbl">Сайт</div><div class="val">https://algoritmkrsk.ru/</div></div>
       <div class="c-row"><div class="lbl">Адрес</div><div class="val small">660075, Красноярский край, г. Красноярск,<br>ул. Маерчака, д. 8, офис 318</div></div>
     </div>
-    <div class="slide-no">36</div>
+    <div class="slide-no">30</div>
   </section>
 </div>
 

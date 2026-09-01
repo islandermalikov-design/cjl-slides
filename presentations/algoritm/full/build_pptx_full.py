@@ -8,19 +8,23 @@ from pptx.dml.color import RGBColor
 from pptx.enum.dml import MSO_LINE_DASH_STYLE
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
+from pptx.oxml.ns import qn
+from lxml import etree
 
-PRIMARY = RGBColor(0xB7, 0x2E, 0x26)
-ACCENT = RGBColor(0x8C, 0x1B, 0x13)
+PRIMARY = RGBColor(0x93, 0x40, 0x2B)
+ACCENT = RGBColor(0x5A, 0x24, 0x17)
+DEEPEST = RGBColor(0x3D, 0x16, 0x0E)
 SECONDARY = RGBColor(0x14, 0x12, 0x12)
 GREY_BG = RGBColor(0xF1, 0xEF, 0xEE)
+STEEL = RGBColor(0xE7, 0xE9, 0xEA)
 WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 INK = RGBColor(0x14, 0x12, 0x12)
 INK_MUTED = RGBColor(0x5A, 0x57, 0x57)
 WHITE_MUTED = RGBColor(0xC9, 0xC4, 0xC4)
-PINK = RGBColor(0xE8, 0x93, 0x8C)
+PINK = RGBColor(0xD9, 0xA8, 0x8F)
 RULE = RGBColor(0xD8, 0xD4, 0xD3)
 RULE_DARK = RGBColor(0x3A, 0x37, 0x37)
-ROW_TINT = RGBColor(0xF8, 0xF1, 0xF1)
+ROW_TINT = RGBColor(0xF3, 0xE9, 0xE6)
 
 FONT = "DM Sans"
 A = "assets/"
@@ -60,6 +64,23 @@ def rect(s, l, t, w, h, color=None):
         shp.fill.background()
     shp.line.fill.background()
     return shp
+
+
+def add_shadow(shape, blur=90000, dist=26000, alpha=24000, color="1A1815", direction=5400000):
+    spPr = shape._element.spPr
+    existing = spPr.find(qn("a:effectLst"))
+    if existing is not None:
+        spPr.remove(existing)
+    effect_lst = etree.SubElement(spPr, qn("a:effectLst"))
+    outer = etree.SubElement(effect_lst, qn("a:outerShdw"))
+    outer.set("blurRad", str(blur))
+    outer.set("dist", str(dist))
+    outer.set("dir", str(direction))
+    outer.set("rotWithShape", "0")
+    clr = etree.SubElement(outer, qn("a:srgbClr"))
+    clr.set("val", color)
+    a = etree.SubElement(clr, qn("a:alpha"))
+    a.set("val", str(alpha))
 
 
 def gradient_rect(s, l, t, w, h, c1, c2, angle=45):
@@ -122,19 +143,22 @@ def picture_h(s, path, l, t, height):
     return s.shapes.add_picture(path, l, t, height=height, width=width)
 
 
-def photo_box(s, l, t, w, h, path, caption=None, cap_size=9):
-    rect(s, l, t, w, h, GREY_BG)
+def photo_box(s, l, t, w, h, path, caption=None, cap_size=9, pad=Inches(0.07)):
+    mat = rect(s, l, t, w, h, STEEL)
+    add_shadow(mat)
+    inner_l, inner_t = l + pad, t + pad
+    inner_w, inner_h = w - Emu(int(pad * 2)), h - Emu(int(pad * 2))
     iw, ih = img_size(path)
-    box_ar = w / h
+    box_ar = inner_w / inner_h
     img_ar = iw / ih
     if img_ar > box_ar:
-        dw = w
-        dh = Emu(int(w / img_ar))
+        dw = inner_w
+        dh = Emu(int(inner_w / img_ar))
     else:
-        dh = h
-        dw = Emu(int(h * img_ar))
-    dl = l + Emu(int((w - dw) / 2))
-    dt = t + Emu(int((h - dh) / 2))
+        dh = inner_h
+        dw = Emu(int(inner_h * img_ar))
+    dl = inner_l + Emu(int((inner_w - dw) / 2))
+    dt = inner_t + Emu(int((inner_h - dh) / 2))
     s.shapes.add_picture(path, dl, dt, width=dw, height=dh)
     if caption:
         cap_h = Inches(0.3)
@@ -279,7 +303,12 @@ def page_head(s, kick, title, sub=None, on_dark=False, title_size=21, kick_color
     return y + Inches(0.15)
 
 
-def page_no(s, text, on_dark=False):
+_page_counter = [0]
+
+
+def page_no(s, on_dark=False):
+    _page_counter[0] += 1
+    text = f"{_page_counter[0]:02d}"
     _, tf = textbox(s, Inches(11.9), Inches(6.95), Inches(1.1), Inches(0.35))
     add_para(tf, text, 10, WHITE_MUTED if on_dark else INK_MUTED, bold=True, align=PP_ALIGN.RIGHT, first=True)
 
@@ -424,9 +453,35 @@ add_para(tf, "Прогнозное техническое обслуживани
          14.5, WHITE, bold=True, align=PP_ALIGN.RIGHT, first=True, spacing=1.25)
 _, tf = textbox(s, Inches(7.8), Inches(6.55), Inches(5.1), Inches(0.35))
 add_para(tf, "Коммерческое предложение", 10.5, WHITE_MUTED, align=PP_ALIGN.RIGHT, first=True, letter_caps=True)
-page_no(s, "01", on_dark=True)
+page_no(s, on_dark=True)
 
-# ============================================================ SLIDE 2 — ABOUT
+# ============================================================ SLIDE 2 — ACHIEVEMENTS (moved to front)
+s = slide()
+rect(s, 0, 0, SW, SH, WHITE)
+y = page_head(s, "Результаты внедрения", "Измеримые результаты предиктивного обслуживания",
+              "Совокупный эффект от внедрения технологии на промышленных объектах — снижение затрат "
+              "на техническое обслуживание оценивается в 4 000 000 $.", title_size=21)
+hero_stats = [
+    ("−57%", "отказов механического оборудования"),
+    ("−80%", "времени простоя из-за механических отказов"),
+    ("−37%", "затрат на аутсорсинг технического обслуживания"),
+]
+hw = Inches(3.85)
+gap = Inches(0.3)
+for i, (num, cap) in enumerate(hero_stats):
+    x = ML + Emu(int(i * (hw + gap)))
+    rect(s, x, y + Inches(0.15), hw, Pt(2.8), PRIMARY)
+    _, tf = textbox(s, x, y + Inches(0.3), hw, Inches(1.1))
+    add_para(tf, num, 44, PRIMARY, bold=True, first=True)
+    _, tf = textbox(s, x, y + Inches(1.35), hw, Inches(0.6))
+    add_para(tf, cap, 13.5, INK, bold=True, first=True, spacing=1.25)
+    _, tf = textbox(s, x, y + Inches(2.05), hw, Inches(0.9))
+    add_para(tf, "Данные подтверждены на основе анализа 34 000+ успешных кейсов в горнодобывающей отрасли.",
+             9, RGBColor(0x8A, 0x86, 0x85), first=True, spacing=1.35)
+picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
+page_no(s)
+
+# ============================================================ SLIDE 3 — ABOUT
 s = slide()
 rect(s, 0, 0, SW, SH, WHITE)
 rect(s, 0, 0, SW, Inches(2.4), SECONDARY)
@@ -458,45 +513,36 @@ for l, heading, body, rule_color in cols:
         first = False
     add_para(tf, body, 12, INK_MUTED if heading else INK, first=first, spacing=1.32)
 picture_h(s, LOGO_COLOR, ML, Inches(6.6), Inches(0.5))
-page_no(s, "02")
+page_no(s)
 
-# ============================================================ SLIDE 3 — SCALE R&D
+# ============================================================ SLIDE 4 — SCALE & TECH BASE (merged 3+4+26)
 s = slide()
 rect(s, 0, 0, SW, SH, WHITE)
-y = page_head(s, "Технологическая база", "Научно-техническая экспертиза платформы",
-              "Показатели характеризуют технологическую базу, на которую опирается ООО «Алгоритм» при реализации проектов в РФ.",
-              title_size=21)
-stat_row(s, ML, y + Inches(0.15), Inches(12.1), [
-    ("42%", "доля специалистов НИОКР в общей численности персонала платформы"),
-    ("49%", "доля сотрудников с учёными и кандидатскими степенями"),
-    ("22%", "доля инвестиций в НИОКР от выручки технологического партнёра"),
-    ("250+", "патентов и зарегистрированных прав на ПО и технологические решения"),
-    ("20+", "наград национального уровня за научные достижения"),
-    ("2", "национальных стандарта технического обслуживания оборудования"),
-], cols=6, num_size=22, row_h=1.5)
-tile_grid(s, ML, y + Inches(1.9), Inches(12.1), Inches(1.15), [
-    ("Сильная команда", "800+ сотрудников платформы, 300+ в составе НИОКР"),
-    ("Комплексные возможности", "Аппаратное и программное обеспечение, ИИ и удалённые сервисы"),
-    ("Широкий охват", "2000+ подключённых предприятий, 20+ отраслей промышленности"),
-    ("Экспертиза диагностики", "Центр авторизации Mobius, сертифицированный GL-центр диагностики"),
-], cols=4)
+y = page_head(s, "Технологическая база", "Масштаб и технологическая база платформы", title_size=21)
+connector(s, Inches(6.67), y, Inches(6.67), Inches(7.0), RULE, width=0.75)
+
+col_x = [ML, Inches(6.95)]
+col_headings = ["Масштаб внедрения", "Научный потенциал платформы"]
+col_stats = [
+    [("882 000+", "установленных датчиков на промышленных объектах по всему миру"),
+     ("188 000+", "единиц оборудования на платформе онлайн-мониторинга"),
+     ("3.0 ТБ+", "данных телеметрии обрабатывается ежедневно")],
+    [("42%", "специалистов НИОКР в общей численности персонала платформы"),
+     ("250+", "патентов и зарегистрированных технологических решений"),
+     ("35+", "стран внедрения технологии, 800+ сотрудников платформы")],
+]
+for cx, heading, stats in zip(col_x, col_headings, col_stats):
+    kicker(s, cx, y, Inches(5.5), heading, PRIMARY)
+    yy = y + Inches(0.4)
+    for num, cap in stats:
+        rect(s, cx, yy, Inches(5.6), Pt(2), RULE)
+        _, tf = textbox(s, cx, yy + Inches(0.1), Inches(5.6), Inches(0.75))
+        add_para(tf, num, 26, INK, bold=True, first=True)
+        _, tf = textbox(s, cx, yy + Inches(0.78), Inches(5.6), Inches(0.55))
+        add_para(tf, cap, 11, INK_MUTED, first=True, spacing=1.25)
+        yy = yy + Inches(1.25)
 picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
-page_no(s, "03")
-
-# ============================================================ SLIDE 4 — MONITORING SCALE
-s = slide()
-rect(s, 0, 0, SW, SH, WHITE)
-y = page_head(s, "Технологическая база",
-              "Масштаб платформы удалённого мониторинга вращающегося оборудования", title_size=19)
-photo_box(s, ML, y + Inches(0.1), Inches(5.9), Inches(2.7), A + "diag_dashboard.jpg",
-          "Платформа мониторинга — карта подключённых объектов")
-photo_box(s, Inches(6.75), y + Inches(0.1), Inches(5.95), Inches(2.7), A + "diag_office.jpg",
-          "Центр удалённой диагностики")
-stat_row(s, ML, y + Inches(3.1), Inches(12.1), [
-    ("188 000+", "единиц оборудования на платформе онлайн-мониторинга"),
-    ("882 000+", "установленных датчиков на промышленных объектах по всему миру"),
-], cols=2, num_size=34)
-page_no(s, "04")
+page_no(s)
 
 # ============================================================ SLIDE 5 — APPLICATIONS
 s = slide()
@@ -517,7 +563,7 @@ tile_grid(s, ML, y + Inches(0.1), Inches(12.1), Inches(3.2), [
     ("Прочее", "Ж/д транспорт, ЦБП, винодельческое и медицинское оборудование"),
 ], cols=5)
 picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
-page_no(s, "05")
+page_no(s)
 
 prs.save("algoritm-full-partial.pptx")
 print("saved batch 1 (slides 1-5)")
@@ -525,9 +571,9 @@ print("saved batch 1 (slides 1-5)")
 
 # ============================================================ SLIDE 6 — ARCHITECTURE
 s = slide()
-rect(s, 0, 0, SW, SH, SECONDARY)
-page_head(s, "Архитектура", "Интеллектуальный сценарий предиктивного технического обслуживания",
-          on_dark=True, title_size=19)
+rect(s, 0, 0, SW, SH, WHITE)
+page_head(s, "Архитектура", "Архитектура сбора данных: гибкая интеграция в локальную сеть предприятия (LAN)",
+          title_size=19)
 
 box_y = Inches(1.7)
 box_h = Inches(0.62)
@@ -538,44 +584,72 @@ for label, x, filled in boxes:
     b = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, box_y, box_w, box_h)
     b.shadow.inherit = False
     b.fill.solid()
-    b.fill.fore_color.rgb = PRIMARY if filled else RGBColor(0x24, 0x22, 0x22)
-    b.line.color.rgb = RGBColor(0x55, 0x50, 0x50)
-    b.line.width = Pt(0.75) if not filled else Pt(0)
+    b.fill.fore_color.rgb = PRIMARY if filled else WHITE
+    b.line.color.rgb = PRIMARY
+    b.line.width = Pt(0) if filled else Pt(1.1)
     tf = b.text_frame
     tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    add_para(tf, label, 13, WHITE, bold=True, align=PP_ALIGN.CENTER, first=True)
+    add_para(tf, label, 13, WHITE if filled else INK, bold=True, align=PP_ALIGN.CENTER, first=True)
 connector(s, Inches(3.6), box_y + Inches(0.31), Inches(5.75), box_y + Inches(0.31), RGBColor(0x8A, 0x86, 0x85), width=1.2)
 connector(s, Inches(8.05), box_y + Inches(0.31), Inches(10.2), box_y + Inches(0.31), RGBColor(0x8A, 0x86, 0x85), width=1.2)
 
 lan_y = Inches(2.85)
-lan = rect(s, Inches(0.6), lan_y, Inches(12.1), Inches(0.42), RGBColor(0x24, 0x22, 0x22))
+lan = rect(s, Inches(0.6), lan_y, Inches(12.1), Inches(0.42), GREY_BG)
 tf = lan.text_frame
 tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-add_para(tf, "Локальная сеть предприятия (LAN)", 12.5, WHITE, bold=True, align=PP_ALIGN.CENTER, first=True)
+add_para(tf, "Локальная сеть предприятия (LAN)", 12.5, INK, bold=True, align=PP_ALIGN.CENTER, first=True)
 connector(s, Inches(6.9), box_y + box_h, Inches(6.9), lan_y, RGBColor(0x8A, 0x86, 0x85), width=1.2)
 
 levels = [
-    (Inches(1.65), "Уровень A — кабель / оптика / Wi-Fi", "Дробилка, масляный пресс…"),
-    (Inches(6.05), "Уровень Б — ZigBee / беспроводной шлюз", "Подъёмник, скребок, сушилка…"),
-    (Inches(10.45), "Уровень В — LoRa / 4G / 5G", "Воздуходувка, насос, компрессор…"),
+    (Inches(1.65), "Уровень A", "Кабель / оптика / Wi-Fi", "Дробилка, масляный пресс…", False),
+    (Inches(6.05), "Уровень Б", "ZigBee / беспроводной шлюз", "Подъёмник, скребок, сушилка…", True),
+    (Inches(10.45), "Уровень В", "LoRa / 4G / 5G", "Воздуходувка, насос, компрессор…", True),
 ]
-for cx, label, cap in levels:
-    connector(s, cx, lan_y + Inches(0.42), cx, Inches(3.75), RGBColor(0x8A, 0x86, 0x85), width=1.2)
-    _, tf = textbox(s, cx - Inches(1.6), Inches(3.8), Inches(3.2), Inches(0.3))
-    add_para(tf, label, 10.5, WHITE, bold=True, align=PP_ALIGN.CENTER, first=True)
-    dot_y = Inches(4.35)
-    for dx in (-Inches(0.65), Emu(0), Inches(0.65)):
-        dot = s.shapes.add_shape(MSO_SHAPE.OVAL, cx + dx - Inches(0.14), dot_y, Inches(0.28), Inches(0.28))
+icon_y = Inches(3.55)
+icon_w, icon_h = Inches(0.85), Inches(0.62)
+for cx, label, protocol, cap, wireless in levels:
+    connector(s, cx, lan_y + Inches(0.42), cx, icon_y, RGBColor(0x8A, 0x86, 0x85), width=1.2)
+    icon_l = cx - Emu(int(icon_w / 2))
+    icon = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, icon_l, icon_y, icon_w, icon_h)
+    icon.shadow.inherit = False
+    icon.fill.solid(); icon.fill.fore_color.rgb = WHITE
+    icon.line.color.rgb = PRIMARY if wireless else INK
+    icon.line.width = Pt(1.3)
+    if wireless:
+        icon.line.dash_style = MSO_LINE_DASH_STYLE.DASH
+        dot = s.shapes.add_shape(MSO_SHAPE.OVAL, cx - Inches(0.22), icon_y + Inches(0.2), Inches(0.13), Inches(0.13))
         dot.shadow.inherit = False
         dot.fill.solid(); dot.fill.fore_color.rgb = PRIMARY
         dot.line.fill.background()
-        connector(s, cx + dx, Inches(4.15), cx + dx, dot_y, RGBColor(0x8A, 0x86, 0x85), width=1)
-    connector(s, cx - Inches(0.65), Inches(4.15), cx + Inches(0.65), Inches(4.15), RGBColor(0x8A, 0x86, 0x85), width=1)
-    _, tf = textbox(s, cx - Inches(1.6), Inches(4.75), Inches(3.2), Inches(0.3))
-    add_para(tf, cap, 9.5, WHITE_MUTED, align=PP_ALIGN.CENTER, first=True)
+        bar_x = cx - Inches(0.02)
+        for bi, bh in enumerate([0.12, 0.2, 0.28]):
+            bw = Inches(0.08)
+            bx = bar_x + Emu(int(bi * (bw + Inches(0.03))))
+            bar = rect(s, bx, icon_y + icon_h - Inches(0.12) - Inches(bh), bw, Inches(bh), PRIMARY)
+    else:
+        for li in range(3):
+            ly = icon_y + Inches(0.16) + Emu(int(li * Inches(0.14)))
+            lw = icon_w - Inches(0.42) if li < 2 else icon_w - Inches(0.55)
+            connector(s, icon_l + Inches(0.14), ly, icon_l + Inches(0.14) + lw, ly, INK, width=1.8)
+    badge_w = Inches(0.42)
+    badge = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, cx + icon_w / 2 - Inches(0.1),
+                                icon_y - Inches(0.16), badge_w, Inches(0.28))
+    badge.shadow.inherit = False
+    badge.fill.solid(); badge.fill.fore_color.rgb = PRIMARY if wireless else INK
+    badge.line.fill.background()
+    tf = badge.text_frame
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    add_para(tf, "×N", 9, WHITE, bold=True, align=PP_ALIGN.CENTER, first=True)
 
-picture_h(s, LOGO_WHITE, Inches(11.75), Inches(0.5), Inches(0.55))
-page_no(s, "06", on_dark=True)
+    _, tf = textbox(s, cx - Inches(1.6), icon_y + icon_h + Inches(0.15), Inches(3.2), Inches(0.3))
+    add_para(tf, label, 12.5, INK, bold=True, align=PP_ALIGN.CENTER, first=True)
+    _, tf = textbox(s, cx - Inches(1.6), icon_y + icon_h + Inches(0.48), Inches(3.2), Inches(0.3))
+    add_para(tf, protocol, 10.5, PRIMARY, bold=True, align=PP_ALIGN.CENTER, first=True)
+    _, tf = textbox(s, cx - Inches(1.6), icon_y + icon_h + Inches(0.82), Inches(3.2), Inches(0.3))
+    add_para(tf, cap, 9.5, INK_MUTED, align=PP_ALIGN.CENTER, first=True)
+
+picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
+page_no(s)
 
 # ============================================================ SLIDE 7 — WIRELESS
 s = slide()
@@ -596,7 +670,7 @@ photo_box(s, Inches(9.65), y + Inches(0.1), Inches(3.05), Inches(2.0), A + "wire
 photo_box(s, Inches(6.55), y + Inches(2.2), Inches(6.15), Inches(1.85), A + "wireless_install.jpg",
           "Монтаж беспроводных датчиков на промышленном объекте")
 picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
-page_no(s, "07")
+page_no(s)
 
 # ============================================================ SLIDE 8 — WIRED
 s = slide()
@@ -617,7 +691,7 @@ photo_box(s, Inches(9.65), y + Inches(0.1), Inches(3.05), Inches(2.0), A + "wire
 photo_box(s, Inches(6.55), y + Inches(2.2), Inches(6.15), Inches(1.85), A + "wired_software.jpg",
           "Программное обеспечение анализа вибрации в реальном времени")
 picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
-page_no(s, "08")
+page_no(s)
 
 # ============================================================ SLIDE 9 — CASE STORY
 s = slide()
@@ -642,7 +716,7 @@ for i, (img, txt) in enumerate(cells):
     photo_box(s, x, yy, cw, ch, img)
     _, tf = textbox(s, x, yy + ch + Inches(0.05), cw, Inches(0.65))
     add_para(tf, txt, 9.5, INK_MUTED, first=True, spacing=1.25)
-page_no(s, "09")
+page_no(s)
 
 prs.save("algoritm-full-partial.pptx")
 print("saved batch 2 (slides 6-9)")
@@ -664,10 +738,10 @@ tile_grid(s, ML, y + Inches(0.1), Inches(12.1), Inches(1.5), [
 ], cols=3)
 tag_row(s, ML, y + Inches(1.85), ["Мельница", "Дробилка", "Насос", "Вентилятор", "Конвейер",
         "Подъёмная машина", "Компрессор", "Мостовой кран"], max_w=Inches(12.1))
-page_no(s, "11")
+page_no(s)
 
 
-def class_scenario_slide(num, title, wireless, gw_label, protocol, sensor_label, srv_label, srv_cap,
+def class_scenario_slide(title, wireless, gw_label, protocol, sensor_label, srv_label, srv_cap,
                           photo_key, photo_note, features, gw_fill=None, srv_fill=None, n_sensors=3):
     s = slide()
     rect(s, 0, 0, SW, SH, WHITE)
@@ -684,12 +758,12 @@ def class_scenario_slide(num, title, wireless, gw_label, protocol, sensor_label,
                      anchor=MSO_ANCHOR.MIDDLE)
     add_para(tf, photo_note, 10.5, INK_MUTED, first=True, spacing=1.3)
     feat_list(s, Inches(7.75), y + Inches(0.1), Inches(4.95), features, row_h=0.98)
-    page_no(s, num)
+    page_no(s)
     return s
 
 
 class_scenario_slide(
-    "12", "Для оборудования класса «C/D» — сокращение персонала",
+    "Для оборудования класса «C/D» — сокращение персонала",
     True, "Шлюз LoRa", "LoRa, до 1 км", "Датчики RW161", "LAN", "Локальная сеть",
     "cd_install_photos.jpg", "RW161 — беспроводные датчики вибрации версии LoRa для оборудования уровня C/D",
     [
@@ -702,7 +776,7 @@ class_scenario_slide(
     ], n_sensors=3)
 
 class_scenario_slide(
-    "13", "Для оборудования класса «B» — анализ неисправностей",
+    "Для оборудования класса «B» — анализ неисправностей",
     True, "RH570", "ZigBee", "RH505/605, RW625", "LAN", "Локальная сеть",
     "b_fault_photos.jpg", "RH570 — беспроводная станция сбора данных, датчики по ZigBee",
     [
@@ -714,7 +788,7 @@ class_scenario_slide(
     ], n_sensors=4)
 
 class_scenario_slide(
-    "14", "Для оборудования класса «A» — анализ точности",
+    "Для оборудования класса «A» — анализ точности",
     False, "RH2000 / Exd", "RS485 / WiFi / 4-20mA", "IEPE, обороты, частицы масла", "SuperCare",
     "Система мониторинга",
     "a_fault_photos.jpg", "RH2000 / RH2000 Exd — взрывозащищённая станция сбора данных",
@@ -737,7 +811,7 @@ data_table(s, ML, y + Inches(0.1), Inches(5.6),
             ["Неисправность смазки", "Загрязнение масла, химический износ, посторонние предметы"]],
            col_widths=[1.9, 3.7], row_h=0.68, header_h=0.4, font_size=10.5)
 photo_box(s, Inches(6.55), y + Inches(0.1), Inches(6.15), Inches(4.2), A + "defect_photo_grid.jpg")
-page_no(s, "15")
+page_no(s)
 
 # ============================================================ SLIDE 16 — DIVIDER
 divider_slide(["Программные решения для", "предиктивного технического", "обслуживания"])
@@ -757,7 +831,7 @@ tile_grid(s, ML, y + Inches(2.75), Inches(12.1), Inches(1.55), [
     ("Совместимость", "Интеграция с DCS/PLC/MES/SCADA и другими системами"),
 ], cols=3)
 picture_h(s, LOGO_COLOR, Inches(11.75), Inches(0.5), Inches(0.55))
-page_no(s, "17")
+page_no(s)
 
 # ============================================================ SLIDE 18 — AI DIAGNOSIS
 s = slide()
@@ -771,7 +845,7 @@ tile_grid(s, ML, y + Inches(3.35), Inches(12.1), Inches(1.0), [
     ("AI-диагностика",
      "Алгоритм автоматически даёт выводы по диагностике неисправностей и рекомендации по обслуживанию."),
 ], cols=2)
-page_no(s, "18")
+page_no(s)
 
 # ============================================================ SLIDE 19 — MOBILE APP
 s = slide()
@@ -785,7 +859,7 @@ photo_box(s, Inches(1.8), y + Inches(0.3), ph_w, ph_h, A + "phone_left.jpg")
 rect(s, Inches(5.1), y + Inches(1.0), Inches(3.1), Inches(1.9), GREY_BG)
 photo_box(s, Inches(5.2), y + Inches(1.1), Inches(2.9), Inches(1.7), A + "phone_chart.jpg")
 photo_box(s, Inches(9.6), y + Inches(0.3), ph_w, ph_h, A + "phone_right.jpg")
-page_no(s, "19")
+page_no(s)
 
 # ============================================================ SLIDE 20 — EPM
 s = slide()
@@ -801,7 +875,7 @@ photo_box(s, ML, y + Inches(3.2), Inches(6.15), Inches(1.9), A + "epm_machine3d.
           "Мониторинг состояния оборудования в реальном времени")
 photo_box(s, Inches(6.85), y + Inches(3.2), Inches(5.85), Inches(1.9), A + "epm_waveform.jpg",
           "Профессиональные инструменты диагностики")
-page_no(s, "20")
+page_no(s)
 
 prs.save("algoritm-full-partial.pptx")
 print("saved batch 3 (slides 10-20)")
@@ -822,7 +896,7 @@ tile_grid(s, ML, y + Inches(2.85), Inches(12.1), Inches(0.85), [
     "24×7 экспертный мониторинг", "Оценка после техобслуживания на месте", "Экспертный консалтинг",
     "Ежемесячный отчёт о состоянии", "Постоянное обучение персонала", "Консалтинг диагностического центра",
 ], cols=6)
-page_no(s, "22")
+page_no(s)
 
 # ============================================================ SLIDE 23 — TRAINING
 s = slide()
@@ -842,7 +916,7 @@ photo_box(s, Inches(6.75), y + Inches(1.95), Inches(5.95), Inches(2.15), A + "tr
           "Инфраструктура диагностического центра")
 _, tf = textbox(s, ML, y + Inches(4.25), Inches(6), Inches(0.3))
 add_para(tf, "Сертификаты — справочно, в приложении к предложению", 9.5, INK_MUTED, first=True)
-page_no(s, "23")
+page_no(s)
 
 # ============================================================ SLIDE 24 — DIVIDER
 divider_slide(["Международный опыт", "применения технологии"])
@@ -862,34 +936,7 @@ tag_row(s, Inches(5.6), Inches(3.1),
          "Марокко", "Пакистан", "Индия", "Южная Корея", "Таиланд", "Малайзия", "Сингапур",
          "Индонезия", "Австралия", "США", "Мексика", "Бразилия", "Перу", "Чили", "Аргентина"],
         on_dark=True, max_w=Inches(6.9))
-page_no(s, "25", on_dark=True)
-
-# ============================================================ SLIDE 26 — SCALE HEX
-s = slide()
-rect(s, 0, 0, SW, SH, SECONDARY)
-y = page_head(s, "Масштаб", "Эксплуатационный успех ключевого оборудования в различных отраслях",
-              on_dark=True, title_size=19)
-hex_items = [
-    ("188 000+", "единиц оборудования, подключённых к платформе"),
-    ("880 000+", "установленных датчиков"),
-    ("3.0 ТБ+", "ежедневных данных телеметрии"),
-    ("35+", "стран внедрения технологии"),
-    ("34 000+", "успешных случаев с замкнутым циклом обслуживания"),
-    ("3 000+", "реализованных проектов"),
-]
-cw = Inches(3.85)
-ch = Inches(1.55)
-for i, (num, cap) in enumerate(hex_items):
-    r = i // 3
-    c = i % 3
-    x = ML + Emu(int(c * (cw + Inches(0.3))))
-    yy = y + Emu(int(r * (ch + Inches(0.2))))
-    rect(s, x, yy + ch - Pt(1.5), cw, Pt(1.5), RULE_DARK)
-    _, tf = textbox(s, x, yy, cw, Inches(0.75))
-    add_para(tf, num, 30, WHITE, bold=True, first=True)
-    _, tf = textbox(s, x, yy + Inches(0.8), cw, Inches(0.65))
-    add_para(tf, cap, 10.5, WHITE_MUTED, first=True, spacing=1.25)
-page_no(s, "26", on_dark=True)
+page_no(s, on_dark=True)
 
 prs.save("algoritm-full-partial.pptx")
 print("saved batch 4 (slides 21-26)")
@@ -927,7 +974,7 @@ s = two_case_cards("Типичные проекты за рубежом", [
     ("Клиент: CNH Energy Heidaigou", ["Тип сырья: уголь", "Датчиков установлено: 1184"],
      [A + "case_cnh_site.jpg", A + "case_cnh_equip.jpg"]),
 ])
-page_no(s, "27")
+page_no(s)
 
 s = two_case_cards("Типичные проекты за рубежом — Латинская Америка", [
     ("Расположение: Бразилия", ["Промышленность: горнодобывающая", "Датчиков установлено: 2000+"],
@@ -935,7 +982,7 @@ s = two_case_cards("Типичные проекты за рубежом — Ла
     ("Расположение: Чили", ["Промышленность: горнодобывающая", "Датчиков установлено: 2000+"],
      [A + "case_chile_photos.jpg"]),
 ])
-page_no(s, "28")
+page_no(s)
 
 # ============================================================ SLIDE 29 — ENTERPRISE PLATFORM CASE
 s = slide()
@@ -947,24 +994,7 @@ y = page_head(s, "Международный опыт",
               title_size=18)
 photo_box(s, Inches(2.4), y + Inches(0.15), Inches(8.5), Inches(3.7), A + "cidc_dashboard.jpg",
           "Единая платформа удалённой диагностики группы предприятий")
-page_no(s, "29")
-
-# ============================================================ SLIDE 30 — ACHIEVEMENTS
-s = slide()
-rect(s, 0, 0, SW, SH, SECONDARY)
-y = page_head(s, "Международный опыт", "Достижения", on_dark=True, title_size=21)
-_, tf = textbox(s, ML, y + Inches(0.1), Inches(12), Inches(0.6))
-add_para(tf, "Общее снижение затрат на техническое обслуживание — примерно ", 16, WHITE, bold=True, first=True)
-p = tf.paragraphs[0]
-run = p.add_run(); run.text = "4 000 000 $"
-run.font.size = Pt(16); run.font.bold = True; run.font.name = FONT; run.font.color.rgb = PINK
-stat_row(s, ML, y + Inches(0.95), Inches(12.1), [
-    ("57.29%", "сокращение количества отказов механического оборудования (2022)"),
-    ("80.64%", "сокращение времени простоя из-за механических отказов"),
-    ("50%", "сокращение инспекционного персонала за счёт онлайн-мониторинга"),
-    ("37.17%", "снижение доли затрат на аутсорсинг технического обслуживания"),
-], cols=4, on_dark=True, num_size=26)
-page_no(s, "30", on_dark=True)
+page_no(s)
 
 # ============================================================ SLIDE 31 — LIGHTHOUSE
 s = slide()
@@ -979,7 +1009,7 @@ photo_box(s, ML, y + Inches(0.1), pw, Inches(3.9), A + "lighthouse_group.jpg", "
 photo_box(s, ML + pw + Inches(0.15), y + Inches(0.1), pw, Inches(3.9), A + "lighthouse_equip.jpg", "02 — Пусконаладка на объекте")
 photo_box(s, ML + 2 * (pw + Inches(0.15)), y + Inches(0.1), pw, Inches(3.9), A + "lighthouse_list.jpg",
           "03 — Реестр Global Lighthouse Network, 2023")
-page_no(s, "31")
+page_no(s)
 
 # ============================================================ SLIDE 32 — TIANYANG FAULT CASES
 s = slide()
@@ -995,7 +1025,7 @@ feat_list(s, Inches(3.75), y + Inches(0.1), Inches(8.95), [
      "Диагностирована недостаточная жёсткость основания; выявлено отсутствие 8 болтов. Через неделю "
      "проведено техническое обслуживание."),
 ], row_h=1.85)
-page_no(s, "32")
+page_no(s)
 
 # ============================================================ SLIDE 33 — WESTERN MINING GROUP
 s = slide()
@@ -1012,7 +1042,7 @@ _, tf = textbox(s, ML, y + Inches(3.15), Inches(12.1), Inches(0.7))
 add_para(tf, "С 2021 года платформа помогла выявить неисправность основного подъёмника, пройти "
              "национальную сертификацию «умного месторождения», внедрить мониторинг подземного "
              "ключевого оборудования и расширить мониторинг масла.", 10.5, INK_MUTED, first=True, spacing=1.3)
-page_no(s, "33")
+page_no(s)
 
 # ============================================================ SLIDE 34 — SPECIAL MINING TECH
 s = slide()
@@ -1027,7 +1057,7 @@ feat_list(s, ML, y + Inches(0.1), Inches(5.9), [
 photo_box(s, Inches(6.75), y + Inches(0.1), Inches(5.95), Inches(2.6), A + "mining_sensor_products.jpg")
 photo_box(s, Inches(6.75), y + Inches(2.85), Inches(2.9), Inches(1.4), A + "mining_install1.jpg")
 photo_box(s, Inches(9.8), y + Inches(2.85), Inches(2.9), Inches(1.4), A + "mining_install2.jpg")
-page_no(s, "34")
+page_no(s)
 
 # ============================================================ SLIDE 35 — TYPICAL FAULT CASES
 s = slide()
@@ -1057,7 +1087,7 @@ for i, (img, head, body) in enumerate(quad):
     _, tf = textbox(s, x + Inches(1.85), yy, cw - Inches(1.85), ch)
     add_para(tf, head, 12, PRIMARY, bold=True, first=True, spacing=1.1, space_after=3)
     add_para(tf, body, 10, INK_MUTED, spacing=1.28)
-page_no(s, "35")
+page_no(s)
 
 # ============================================================ SLIDE 36 — CONTACTS
 s = slide()
@@ -1087,7 +1117,7 @@ for label, value in rows:
     if label != "Адрес":
         rect(s, Inches(6.55), ry + Inches(1.15), Inches(6.0), Pt(0.75), RULE)
     ry = ry + Inches(1.3)
-page_no(s, "36")
+page_no(s)
 
 prs.save("algoritm-predictive-maintenance-Swiss-full.pptx")
 print("saved FINAL: 36 slides")
