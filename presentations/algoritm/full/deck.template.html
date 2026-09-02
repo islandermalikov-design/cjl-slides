@@ -122,6 +122,7 @@
   #s6 .tile h4 { font-size: 0.92vw; line-height: 1.25; }
   #s6 .tile p { font-size: 0.8vw; line-height: 1.32; }
   #s6 .tile p strong { color: var(--color-secondary); }
+  #s12 .content-area, #s13 .content-area, #s14 .content-area, #s17 .content-area { top: 13vw; }
 
   /* ---------- фотографии / карточки ---------- */
 
@@ -204,6 +205,15 @@
   }
   .tag-row.on-dark span { color: #fff; border-color: rgba(255,255,255,0.35); }
 
+  .icon-row { display: flex; flex-wrap: wrap; gap: 1.1vw; }
+  .icon-chip { display: flex; flex-direction: column; align-items: center; gap: 0.55vw; width: 9.6vw; }
+  .icon-chip .icon-circle {
+    width: 3.4vw; height: 3.4vw; border-radius: 50%; background: var(--grey);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .icon-chip .icon-circle svg { width: 1.8vw; height: 1.8vw; stroke: var(--color-primary); }
+  .icon-chip .icon-label { font-size: 0.82vw; font-weight: 700; color: var(--color-secondary); text-align: center; line-height: 1.2; }
+
   /* ---------- телефон-мокап ---------- */
 
   .phone { border-radius: 1.4vw; overflow: hidden; border: 0.25vw solid #1c1c1c; box-shadow: 0 1vw 2.5vw rgba(0,0,0,0.35); }
@@ -220,7 +230,7 @@
   .diagram.on-dark .cap { fill: rgba(255,255,255,0.55); }
 
   /* ================= 1. ОБЛОЖКА ================= */
-  #s1 { background: var(--paper); }
+  #s1 { background: var(--grey); }
   #s1 .band { position: absolute; inset: 0 0 0 50%; background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-accent) 55%, #3D160E 100%); }
   #s1 .band::after { content: ""; position: absolute; left: -8vw; bottom: -14vw; width: 34vw; height: 34vw; background: rgba(255,255,255,0.06); transform: rotate(45deg); }
 
@@ -267,7 +277,8 @@
   /* ================= 7/8. ШЛЮЗЫ (обзор) ================= */
   .gw-layout { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 2vw; height: 100%; min-height: 0; }
   .gw-layout > * { min-height: 0; }
-  #s20 .gw-layout { height: 34vw; }
+  #s20 .content-area { top: 11vw; }
+  #s20 .gw-layout { height: 29vw; }
   .gw-photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 0.8vw; height: 100%; min-height: 0; }
   .gw-photos .ph { min-height: 0; }
 
@@ -296,24 +307,44 @@
   .class-photos { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8vw; margin-top: 0.8vw; height: 8vw; }
 
   /* ================= 15. КОНТРОЛЬ НЕИСПРАВНОСТЕЙ ================= */
-  #s15 .content-area { display: grid; grid-template-columns: 0.85fr 1.4fr; gap: 1.4vw; }
+  #s15 .content-area { display: grid; grid-template-columns: 0.85fr 1.4fr; gap: 1.4vw; align-items: stretch; }
   #s15 .ph { height: 100%; }
+  #s15 .feat-list { height: 100%; justify-content: space-between; }
+  #s15 .feat-list .f-item { border-left-width: 0.22vw; padding-left: 1vw; }
+  #s15 .feat-list .f-item h4 { font-size: 1.15vw; }
+  #s15 .feat-list .f-item p { font-size: 0.98vw; }
+
+  #s18 .content-area { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6vw; }
+  #s18 .ai-col { display: flex; flex-direction: column; gap: 0.7vw; }
+  #s18 .ai-col .ph { height: 8.4vw; }
+
+  #s19 .content-area { top: 10.4vw; display: flex; flex-direction: column; gap: 1.4vw; }
+  #s19 .mobile-feats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2vw; }
 
   /* ================= 17-20. ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ================= */
   .soft-photos-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1vw; height: 15vw; margin-bottom: 1vw; }
   .soft-feat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1vw; }
   .soft-feat-row .tile { border-left-color: var(--color-secondary); }
 
-  #s19 .phones-row { display: flex; align-items: center; justify-content: center; gap: 2.5vw; height: 100%; }
-  #s19 .phones-row .phone { width: 13vw; }
+  #s19 .phones-row { display: flex; align-items: center; justify-content: center; gap: 2.5vw; height: 19vw; flex-shrink: 0; }
+  #s19 .phones-row .phone { width: auto; height: 19vw; }
+  #s19 .phones-row .phone img { width: auto; height: 100%; }
   #s19 .phones-row .chart-card { width: 18vw; }
 
   /* ================= 22-23. СЕРВИСЫ / ОБУЧЕНИЕ ================= */
   .photo-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2vw; }
-  #s22 .photo-2 { height: 15vw; }
-  #s22 .service-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.8vw; margin-top: 1vw; }
-  #s22 .service-row .tile { padding: 0.7vw 0.8vw; }
-  #s22 .service-row .tile h4 { font-size: 0.92vw; }
+  #s22 .content-area { top: 11vw; }
+  #s22 .photo-2 { height: 10.5vw; }
+  #s22 .service-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9vw; margin-top: 1.1vw; }
+  #s22 .service-row .tile { padding: 0.7vw 0.9vw; }
+  #s22 .service-row .tile h4 { font-size: 1vw; }
+  #s22 .service-row .tile p { font-size: 0.85vw; }
+
+  #s23 .content-area { top: 11vw; }
+  #s23 .train-2col { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; gap: 2vw; height: 100%; min-height: 0; }
+  #s23 .train-2col > * { min-height: 0; }
+  #s23 .train-photos { display: flex; flex-direction: column; gap: 1vw; height: 100%; min-height: 0; }
+  #s23 .train-photos .ph { flex: 1; min-height: 0; }
 
   #s23 .cert-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1vw; height: 11vw; }
   #s23 .cert-row .ph.small { opacity: 0.72; }
@@ -373,16 +404,21 @@
   #s35 .quad .qcell { display: grid; grid-template-columns: 1fr 1.3fr; gap: 0.8vw; }
 
   /* ================= 36. КОНТАКТЫ ================= */
+  #s36 { background: var(--grey); }
   #s36 .block { position: absolute; left: 0; top: 0; bottom: 0; width: 44%; background: var(--steel-dark); padding: 4vw 3.5vw; display: flex; flex-direction: column; justify-content: center; gap: 1.4vw; }
   #s36 .block-logo { height: 4.6vw; align-self: flex-start; }
   #s36 .block h2 { font-size: 2vw; color: #fff; max-width: 28vw; }
   #s36 .block p { font-size: 1.2vw; color: rgba(255,255,255,0.7); max-width: 28vw; }
-  #s36 .contacts { position: absolute; left: 50%; right: 4vw; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.3vw; }
-  #s36 .c-row { border-bottom: 0.06vw solid var(--rule); padding-bottom: 1vw; }
+  #s36 .contacts { position: absolute; left: 50%; right: 4vw; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.05vw; }
+  #s36 .contacts-heading { margin-bottom: 0.3vw; }
+  #s36 .contacts-heading h3 { font-size: 1.55vw; font-weight: 800; color: var(--color-secondary); line-height: 1.15; max-width: 27vw; }
+  #s36 .contacts-heading p { font-size: 0.98vw; color: rgba(20,18,18,0.62); max-width: 27vw; margin-top: 0.5vw; line-height: 1.35; }
+  #s36 .c-row { border-bottom: 0.06vw solid var(--rule); padding-bottom: 0.85vw; }
   #s36 .c-row:last-child { border-bottom: none; }
-  #s36 .c-row .lbl { font-size: 0.85vw; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-primary); }
-  #s36 .c-row .val { font-size: 1.5vw; font-weight: 700; letter-spacing: -0.01em; margin-top: 0.25vw; }
-  #s36 .c-row .val.small { font-size: 1.25vw; font-weight: 500; line-height: 1.4; letter-spacing: 0; }
+  #s36 .c-row .lbl { font-size: 0.85vw; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-primary); }
+  #s36 .c-row .val { font-size: 1.4vw; font-weight: 700; letter-spacing: -0.01em; margin-top: 0.22vw; }
+  #s36 .c-row .val.small { font-size: 1.15vw; font-weight: 500; line-height: 1.4; letter-spacing: 0; }
+  #s36 .c-row .c-note { font-size: 0.85vw; color: rgba(20,18,18,0.55); margin-top: 0.28vw; }
 </style>
 
 <div class="deck">
@@ -664,20 +700,6 @@
     <div class="slide-no">09</div>
   </section>
 
-  <section class="slide divider" id="s10">
-    <div class="num">02</div>
-    <div class="d-body">
-      <h1>Как сократить простои и затраты на контроле оборудования в открытом карьере</h1>
-      <div class="rule"></div>
-      <div class="d-sub">Пилотное внедрение системы мониторинга: эффект от 30% снижения внеплановых остановок</div>
-    </div>
-    <div class="d-stats">
-      <div class="d-stat"><div class="d-stat-num">−30%</div><div class="d-stat-cap">простоев</div></div>
-      <div class="d-stat"><div class="d-stat-num">11 мес.</div><div class="d-stat-cap">окупаемость</div></div>
-    </div>
-    <img class="logo-mark" style="right: 4.2vw; top: 2.6vw; bottom: auto;" src="assets/logo-white.png" alt="Алгоритм">
-  </section>
-
   <section class="slide" id="s11">
     <div class="page-head">
       <div class="kicker">Область применения</div>
@@ -695,9 +717,67 @@
         <div class="tile"><h4>Переработка полезных ископаемых</h4><p>Щёковые и конусные дробилки, шаровые мельницы, флотационное и обогатительное оборудование</p></div>
         <div class="tile"><h4>Плавка и металлургия</h4><p>Прокатные станы, винтовые компрессоры, насосные станции, мостовые краны</p></div>
       </div>
-      <div class="tag-row">
-        <span>Мельница</span><span>Дробилка</span><span>Насос</span><span>Вентилятор</span>
-        <span>Конвейер</span><span>Подъёмная машина</span><span>Компрессор</span><span>Мостовой кран</span>
+      <div class="icon-row">
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+            <path d="M12 2.3v3M12 18.7v3M2.3 12h3M18.7 12h3M5.1 5.1l2.1 2.1M16.8 16.8l2.1 2.1M5.1 18.9l2.1-2.1M16.8 7.2l2.1-2.1"/>
+          </svg></div>
+          <div class="icon-label">Мельница</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4.5h16l-6 8.2v6.8h-4v-6.8z"/><path d="M7.4 8.5h9.2"/>
+          </svg></div>
+          <div class="icon-label">Дробилка</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="10" cy="10" r="6.2"/><circle cx="10" cy="10" r="1.4" fill="currentColor" stroke="none"/>
+            <path d="M4.5 20h11M15.5 20l4.5-4.5"/>
+          </svg></div>
+          <div class="icon-label">Насос</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/>
+            <path d="M12 12C12 8 10 5.3 7.3 5.3c-2.3 0-2.3 3.4 0 4.8 1.4 0.8 3.2 1.4 4.7 1.9z"/>
+            <path d="M12 12c3.6 0.8 6.3 3 6.3 6.1 0 2.2-3.1 2.2-4.6 0.1C12.7 16.7 12 14.4 12 12z"/>
+            <path d="M12 12c-3 2-6.1 2.3-8.2 0.2-1.6-1.6 0.6-4.3 3.1-3.3C9 9.7 10.8 10.7 12 12z"/>
+          </svg></div>
+          <div class="icon-label">Вентилятор</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2.5" y="9" width="19" height="6" rx="3"/>
+            <circle cx="8" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+            <circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/>
+          </svg></div>
+          <div class="icon-label">Конвейер</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.5 3.5V21M4.5 5.5h15.3M18 5.5v3.2M4.5 21h6.2"/>
+            <circle cx="18" cy="10.3" r="1.1" fill="currentColor" stroke="none"/>
+          </svg></div>
+          <div class="icon-label">Подъёмная машина</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="8" width="12" height="8.5" rx="1"/>
+            <path d="M16 10.5h3.2M16 14h3.2M4 11h-1.6M4 14.5h-1.6"/>
+            <path d="M7 16.5v2M12.5 16.5v2"/>
+          </svg></div>
+          <div class="icon-label">Компрессор</div>
+        </div>
+        <div class="icon-chip">
+          <div class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7.5h18M6 7.5v11M18 7.5v11M3 18.5h18"/>
+            <path d="M12 7.5v4.2M9.8 11.7h4.4"/>
+          </svg></div>
+          <div class="icon-label">Мостовой кран</div>
+        </div>
       </div>
     </div>
     <div class="slide-no">10</div>
@@ -706,7 +786,8 @@
   <section class="slide" id="s12">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
-      <h2>Для оборудования класса «C/D» — сокращение персонала</h2>
+      <h2>Мониторинг вспомогательного оборудования (Класс C/D): автоматизация ручных инспекций</h2>
+      <div class="sub">Беспроводные датчики вибрации RW161 разработаны специально для массового контроля вспомогательных узлов. Они позволяют перевести обслуживание сотен агрегатов в автоматический режим с минимальными затратами.</div>
     </div>
     <div class="content-area">
       <div class="class-layout">
@@ -733,12 +814,11 @@
           </div>
         </div>
         <div class="feat-list">
-          <div class="f-item"><h4>Экономичность</h4><p>Конкурентоспособные цены для всех решений класса.</p></div>
-          <div class="f-item"><h4>Удалённость</h4><p>Радиус действия LoRa-канала — до 1 км без прокладки кабеля.</p></div>
-          <div class="f-item"><h4>Замена инспекций персоналом</h4><p>Сокращение ежедневных плановых и внеплановых проверок по сигналу тревоги.</p></div>
-          <div class="f-item"><h4>Сбор формы волны</h4><p>Дополнительная функция по сравнению с типовыми датчиками LoRa других производителей.</p></div>
-          <div class="f-item"><h4>Интеллектуальный анализ</h4><p>Автоматическая настройка порога и интеллектуальная сигнализация аварий.</p></div>
-          <div class="f-item"><h4>Высокая степень защиты</h4><p>IP68 / ATEX — взрывозащищённое исполнение.</p></div>
+          <div class="f-item"><h4>🛰️ Дальнобойность до 1 км без кабеля</h4><p>Радиус действия канала достигает 1 км в условиях промышленной застройки. Один шлюз собирает данные со всей фабрики без прокладки кабельных трасс.</p></div>
+          <div class="f-item"><h4>👥 Сокращение ручного труда на 50%</h4><p>Полная замена ежедневных плановых обходов персонала. Система сама непрерывно мониторит узлы и вызывает инженера только по сигналу тревоги.</p></div>
+          <div class="f-item"><h4>🤖 Умная сигнализация аварий</h4><p>Интеллектуальный анализ автоматически настраивает базовый порог вибрации для каждого узла и мгновенно оповещает о зарождении дефекта.</p></div>
+          <div class="f-item"><h4>📊 Сбор формы волны (уникальная функция)</h4><p>В отличие от стандартных датчиков других брендов, RW161 умеет собирать и передавать полную форму волны для детального экспертного анализа.</p></div>
+          <div class="f-item"><h4>🌋 Взрывозащита промышленного уровня</h4><p>Корпус имеет максимальную степень защиты IP68 / ATEX. Датчики сертифицированы для работы в самых тяжёлых, влажных и взрывоопасных условиях.</p></div>
         </div>
       </div>
     </div>
@@ -748,7 +828,8 @@
   <section class="slide" id="s13">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
-      <h2>Для оборудования класса «B» — анализ неисправностей</h2>
+      <h2>Мониторинг основного оборудования (Класс «B»): глубокий анализ неисправностей</h2>
+      <div class="sub">Высокопроизводительные беспроводные станции и датчики обеспечивают детальный спектральный анализ. Это идеальное решение для средних и крупных агрегатов, требующих точной локализации дефектов без прокладки кабеля.</div>
     </div>
     <div class="content-area">
       <div class="class-layout">
@@ -777,11 +858,11 @@
           </div>
         </div>
         <div class="feat-list">
-          <div class="f-item"><h4>Высокая производительность</h4><p>Вибрация, температура, скорость (опционально) 3 в 1; частотный диапазон 2–20 кГц (±3 дБ).</p></div>
-          <div class="f-item"><h4>Расширенный интеллектуальный анализ</h4><p>Фильтр ложных сигналов, определение запуска, более 20 специальных индексов.</p></div>
-          <div class="f-item"><h4>Длина сбора</h4><p>До 2048 Кб (819 200 линий) на измерение.</p></div>
-          <div class="f-item"><h4>Долгий срок службы батареи</h4><p>До 3 лет автономной работы.</p></div>
-          <div class="f-item"><h4>Высокая степень защиты</h4><p>IP68 / ATEX — взрывозащищённый сертификат.</p></div>
+          <div class="f-item"><h4>🎯 Диагностика «3 в 1» (вибрация, температура, скорость)</h4><p>Датчик одновременно измеряет три критических параметра в широком диапазоне частот (до 20 кГц). Это позволяет обнаружить малейшие зарождающиеся дефекты подшипников и шестерён.</p></div>
+          <div class="f-item"><h4>🔍 Сверхглубокий сбор данных (до 819 200 линий)</h4><p>Длина записи сигнала до 2048 Кб даёт возможность инженерам-диагностам проводить расширенный спектральный анализ и безошибочно определять тип поломки.</p></div>
+          <div class="f-item"><h4>🛡️ Фильтрация ложных сигналов</h4><p>Интеллектуальные алгоритмы умеют автоматически определять моменты пуска/останова и отсекать фоновые шумы соседних машин, исключая ложные срабатывания тревоги.</p></div>
+          <div class="f-item"><h4>🔋 До 3 лет автономной работы</h4><p>Несмотря на высокую плотность сбора данных, датчики оптимизированы по энергопотреблению и работают до 3 лет на одной батарее в режиме циклического мониторинга.</p></div>
+          <div class="f-item"><h4>🌋 Максимальная взрывозащита IP68</h4><p>Оборудование сертифицировано для жёстких условий эксплуатации. Корпус полностью герметичен, защищён от агрессивной химии, пыли и влаги.</p></div>
         </div>
       </div>
     </div>
@@ -791,7 +872,8 @@
   <section class="slide" id="s14">
     <div class="page-head">
       <div class="kicker">Сценарии применения</div>
-      <h2>Для оборудования класса «A» — анализ точности</h2>
+      <h2>Мониторинг критического оборудования (Класс «А»): непрерывный контроль высокой точности</h2>
+      <div class="sub">Стационарные взрывозащищённые комплексы RH2000 обеспечивают непрерывный посекундный сбор данных. Это бескомпромиссное решение для ключевых агрегатов предприятия, где риски внезапного останова недопустимы.</div>
     </div>
     <div class="content-area">
       <div class="class-layout">
@@ -820,10 +902,10 @@
           </div>
         </div>
         <div class="feat-list">
-          <div class="f-item"><h4>Высокая совместимость</h4><p>IEPE-датчики вибрации, датчики оборотов, частиц металла в масле, унифицированный сигнал процесса.</p></div>
-          <div class="f-item"><h4>Характеристики</h4><p>Постоянный сбор (индикация 30 с, форма волны 30 мин); частотная характеристика 0,1–15 кГц (±3 дБ).</p></div>
-          <div class="f-item"><h4>Интеллектуальный анализ</h4><p>Более 50 специальных индексов, автоматическая настройка порога, диагностика с помощью ИИ.</p></div>
-          <div class="f-item"><h4>Высокая степень защиты</h4><p>IP68 / ATEX.</p></div>
+          <div class="f-item"><h4>⛓️ Комплексный многофакторный мониторинг</h4><p>Полная совместимость с датчиками любого типа: IEPE-датчики вибрации, лазерные датчики оборотов, а также системы контроля металлических частиц в масле.</p></div>
+          <div class="f-item"><h4>⏱️ Непрерывный сбор данных без пауз</h4><p>Запись параметров каждую секунду (индикация тренда — 30 с, детальная форма волны — каждые 30 мин). Система не пропустит дефект даже при мгновенных скачках нагрузки.</p></div>
+          <div class="f-item"><h4>🧠 Диагностика экспертного уровня с помощью ИИ</h4><p>Анализ данных по более чем 50 специальным индексам. Искусственный интеллект автоматически сопоставляет вибрацию, обороты и качество масла для выявления скрытых угроз.</p></div>
+          <div class="f-item"><h4>💥 Взрывозащищённое исполнение корпуса (Exd)</h4><p>Станция поставляется в специальном бронированном корпусе RH2000. Система полностью сертифицирована для работы во взрывоопасных зонах шахт и обогатительных фабрик.</p></div>
         </div>
       </div>
     </div>
@@ -833,34 +915,25 @@
   <section class="slide" id="s15">
     <div class="page-head">
       <div class="kicker">Диагностика</div>
-      <h2>Контроль неисправностей оборудования</h2>
+      <h2>Матрица диагностики: автоматический контроль и классификация неисправностей</h2>
     </div>
     <div class="content-area">
-      <table class="data-table" style="align-self: start;">
-        <tr><th>Тип неисправности</th><th>Специфические неисправности</th></tr>
-        <tr><td>Дефект привода</td><td>Дисбаланс, несоосность, ослабление, структурный резонанс, эксцентриситет ротора, изгиб вала</td></tr>
-        <tr><td>Дефект подшипника</td><td>Сколы, износ, раковины, ржавчина, трещины, деформация и поломка сепаратора, недостаток смазки</td></tr>
-        <tr><td>Неисправность редуктора</td><td>Недостаток смазки, плохое зацепление, износ и поломка зубьев, усталостное разрушение</td></tr>
-        <tr><td>Неисправность смазки</td><td>Загрязнение масла, химический износ, попадание посторонних предметов</td></tr>
-      </table>
+      <div class="feat-list">
+        <div class="f-item"><h4>🔩 Дефекты привода</h4><p>Дисбаланс, несоосность, ослабление, структурный резонанс, эксцентриситет ротора, изгиб вала</p></div>
+        <div class="f-item"><h4>⚙️ Дефекты подшипников</h4><p>Сколы, износ, раковины, ржавчина, трещины, деформация и поломка сепаратора, недостаток смазки</p></div>
+        <div class="f-item"><h4>🔄 Неисправности редуктора</h4><p>Недостаток смазки, плохое зацепление, износ и поломка зубьев, усталостное разрушение</p></div>
+        <div class="f-item"><h4>🛢️ Проблемы со смазкой</h4><p>Загрязнение масла, химический износ, попадание посторонних предметов</p></div>
+      </div>
       <div class="ph"><img src="assets/defect_photo_grid.jpg" alt="Примеры дефектов"></div>
     </div>
     <div class="slide-no">14</div>
   </section>
 
-  <section class="slide divider" id="s16">
-    <div class="num">03</div>
-    <div class="d-body">
-      <h1>Программные решения для предиктивного технического обслуживания</h1>
-      <div class="rule"></div>
-    </div>
-    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo-white.png" alt="Алгоритм">
-  </section>
-
   <section class="slide" id="s17">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
-      <h2>SuperCare — платформа предиктивного обслуживания</h2>
+      <h2>Программный комплекс SuperCare: экосистема предиктивного анализа верхнего уровня</h2>
+      <div class="sub">Единая цифровая платформа для централизованного мониторинга, глубокой ИИ-диагностики неисправностей и оперативного управления надёжностью всего парка оборудования холдинга.</div>
     </div>
     <div class="content-area">
       <div class="soft-photos-2">
@@ -868,12 +941,12 @@
         <div class="ph"><img src="assets/supercare_right.jpg" alt="SuperCare — мониторинг оборудования"></div>
       </div>
       <div class="soft-feat-row">
-        <div class="tile"><h4>Архитектура больших данных</h4><p>Удовлетворяет потребности для долгосрочного использования в будущем</p></div>
-        <div class="tile"><h4>B/S структура</h4><p>Совместима с различными браузерами, не требует установки</p></div>
-        <div class="tile"><h4>Самоопределяемое размещение</h4><p>Быстрая настройка макета страницы под стилевые требования</p></div>
-        <div class="tile"><h4>Профессиональная версия Pro</h4><p>Унифицированный и централизованный контроль верхней группы предприятий</p></div>
-        <div class="tile"><h4>Статистические таблицы</h4><p>Глубокая аналитика по всем предприятиям для руководителя</p></div>
-        <div class="tile"><h4>Совместимость</h4><p>Интеграция с DCS/PLC/MES/SCADA и другими системами</p></div>
+        <div class="tile"><h4>💻 Доступ из любого браузера (B/S архитектура)</h4><p>Система не требует установки программ на рабочие места. Доступ к панели мониторинга защищён и возможен с любого компьютера в локальной сети завода.</p></div>
+        <div class="tile"><h4>🔌 Бесшовная совместимость с АСУ ТП</h4><p>Лёгкая интеграция с существующими на предприятии системами автоматизации (DCS, PLC, MES, SCADA). Данные аналитики встраиваются в цифровой контур фабрики.</p></div>
+        <div class="tile"><h4>🤖 Обработка больших данных (Big Data)</h4><p>Высокопроизводительное ядро системы спроектировано под долгосрочное хранение и непрерывный анализ терабайтов исторической телеметрии.</p></div>
+        <div class="tile"><h4>📊 Аналитика для руководства (версия Pro)</h4><p>Автоматическая генерация глубоких статистических отчётов по состоянию оборудования для оценки эффективности работы ремонтных служб всего холдинга.</p></div>
+        <div class="tile"><h4>⚙️ Индивидуальный интерфейс (кастомизация)</h4><p>Быстрая и гибкая настройка макета страниц под регламенты вашего предприятия и требования корпоративного стиля.</p></div>
+        <div class="tile"><h4>🏢 Унифицированный контроль</h4><p>Объединение разрозненных фабрик и удалённых карьеров в единую сквозную сеть мониторинга для головной компании.</p></div>
       </div>
     </div>
     <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo.png" alt="Алгоритм">
@@ -883,16 +956,21 @@
   <section class="slide" id="s18">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
-      <h2>Профессиональная диагностика на основе ИИ</h2>
+      <h2>Профессиональный анализ и автоматическая ИИ-диагностика</h2>
     </div>
     <div class="content-area">
-      <div class="soft-photos-2" style="height: 18vw;">
+      <div class="ai-col">
         <div class="ph"><img src="assets/ai_panel_left.jpg" alt="Инструменты диагностики"></div>
-        <div class="ph"><img src="assets/ai_panel_right.jpg" alt="AI-диагностика"></div>
-      </div>
-      <div class="soft-feat-row" style="grid-template-columns: repeat(2, 1fr);">
         <div class="tile"><h4>30+ инструментов профессиональной диагностики</h4><p>Удовлетворяют потребности инженеров в поиске всех видов неисправностей вращающегося оборудования.</p></div>
+        <div class="tile"><h4>🛠️ Полный набор аналитических методов</h4><p>Система включает спектральный анализ, анализ временных сигналов (форма волны), каскад спектров, орбиты валов и оценку трендов. Это на 100% закрывает потребности инженеров в поиске любых видов скрытых дефектов.</p></div>
+        <div class="tile"><h4>🎯 Быстрый поиск первопричин</h4><p>Возможность одновременного сравнения данных с нескольких измерительных точек для точного выявления несоосности, дисбаланса или ослабления опор.</p></div>
+      </div>
+      <div class="ai-col">
+        <div class="ph"><img src="assets/ai_panel_right.jpg" alt="AI-диагностика"></div>
         <div class="tile"><h4>AI-диагностика</h4><p>Алгоритм автоматически даёт выводы по диагностике неисправностей и рекомендации по обслуживанию.</p></div>
+        <div class="tile"><h4>🤖 Умный ИИ-диагност</h4><p>Алгоритм автоматически сопоставляет признаки, определяет конкретный тип неисправности (например, «ослабление подшипника») и выдаёт готовое ремонтное предписание.</p></div>
+        <div class="tile"><h4>🚨 Разделение уровней тревоги</h4><p>Цветовая индикация опасности (жёлтый / оранжевый / красный) по направлениям дефектов позволяет мгновенно локализовать узел, требующий внимания.</p></div>
+        <div class="tile"><h4>📉 Автоматический перехват аномалий</h4><p>Система мгновенно вырезает и сохраняет фрагмент формы волны в момент скачка вибрации для последующего детального разбора.</p></div>
       </div>
     </div>
     <div class="slide-no">16</div>
@@ -901,14 +979,19 @@
   <section class="slide" id="s19">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
-      <h2>Удобный доступ к оборудованию с мобильного устройства</h2>
-      <div class="sub">Контроль статуса в режиме реального времени, просмотр статистики и управление тревогами через приложение</div>
+      <h2>Мобильное приложение SuperCare: оперативный контроль предприятия 24/7</h2>
+      <div class="sub">Полный доступ к предиктивной аналитике, статусу оборудования холдинга и системе аварийных оповещений прямо со смартфона руководства и сервисных служб.</div>
     </div>
     <div class="content-area">
       <div class="phones-row">
         <div class="phone"><img src="assets/phone_left.jpg" alt="Мобильное приложение — информация"></div>
         <div class="card chart-card" style="padding: 0.8vw;"><img src="assets/phone_chart.jpg" alt="Тренд по датчику" style="width:100%; display:block;"></div>
         <div class="phone"><img src="assets/phone_right.jpg" alt="Мобильное приложение — тревоги"></div>
+      </div>
+      <div class="mobile-feats">
+        <div class="tile"><h4>🟢 Контроль статуса в режиме реального времени</h4><p>Мгновенная проверка состояния любого агрегата (работает / остановлен / авария). Базовая техническая информация по узлам, типу оборудования и уровню важности всегда под рукой.</p></div>
+        <div class="tile"><h4>📈 Просмотр детальной статистики и трендов</h4><p>Быстрый вывод исторических графиков вибрации и трендов волновых спектров на экране телефона. Возможность оперативно оценить динамику развития дефекта без доступа к ПК.</p></div>
+        <div class="tile"><h4>🚨 Управление тревогами и сквозной аудит</h4><p>Удобный журнал обработки инцидентов. Диспетчер или главный инженер видит список необработанных аварийных сигналов с точным указанием цеха, типа неисправности и времени её фиксации.</p></div>
       </div>
     </div>
     <div class="slide-no">17</div>
@@ -917,15 +1000,16 @@
   <section class="slide" id="s20">
     <div class="page-head">
       <div class="kicker">Программное обеспечение</div>
-      <h2>EPM — простой мониторинг и диагностика</h2>
+      <h2>Система EPM: наглядный мониторинг и экспресс-диагностика</h2>
+      <div class="sub">Упрощённый интерфейс платформы, созданный специально для диспетчеров и руководителей цехов. Позволяет мгновенно оценить общую ситуацию с надёжностью оборудования без необходимости работы со сложными спектральными графиками.</div>
     </div>
     <div class="content-area">
       <div class="gw-layout">
         <div class="ph" style="height: 100%;"><img src="assets/epm_dashboard.jpg" alt="EPM — панель"></div>
         <div class="feat-list">
-          <div class="f-item"><h4>B/S структура</h4><p>Совместима с различным браузером, не требует установки на рабочем месте.</p></div>
-          <div class="f-item"><h4>Статистика состояния оборудования</h4><p>Помогает управляющим быстро понять долгосрочный статус оборудования.</p></div>
-          <div class="f-item"><h4>2.5D моделирование</h4><p>Реализует наглядное моделирование оборудования и точек измерения в реальном времени.</p></div>
+          <div class="f-item"><h4>📐 Наглядное 2.5D-моделирование агрегатов</h4><p>Реализация интуитивно понятных трёхмерных моделей оборудования и точек измерения прямо на экране. Диспетчер видит реальный макет станка с точной подсветкой узла, который начинает перегреваться или вибрировать.</p></div>
+          <div class="f-item"><h4>📊 Сквозная статистика состояния парка</h4><p>Цветовая кодировка рисков (опасно / тревога / внимание / норма). Помогает управляющему персоналу за 3 секунды понять долгосрочный статус надёжности всего цеха или фабрики.</p></div>
+          <div class="f-item"><h4>💻 Доступ без установки</h4><p>Программа полностью совместима с любыми современными браузерами. Система не требует развёртывания дополнительного софта на рабочих местах диспетчеров.</p></div>
         </div>
       </div>
       <div class="class-photos" style="margin-top: 1vw;">
@@ -936,19 +1020,11 @@
     <div class="slide-no">18</div>
   </section>
 
-  <section class="slide divider" id="s21">
-    <div class="num">04</div>
-    <div class="d-body">
-      <h1>Сервисы для обеспечения предиктивного технического обслуживания</h1>
-      <div class="rule"></div>
-    </div>
-    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo-white.png" alt="Алгоритм">
-  </section>
-
   <section class="slide" id="s22">
     <div class="page-head">
       <div class="kicker">Сервисы поддержки</div>
-      <h2>Шесть услуг обеспечивают эффективность диагностики</h2>
+      <h2>Сервисная поддержка холдинга: экспертное сопровождение системы 24/7</h2>
+      <div class="sub">Мы не просто поставляем оборудование и софт — наша инженерная служба обеспечивает полный цикл экспертной поддержки для достижения максимальной эффективности и окупаемости проекта.</div>
     </div>
     <div class="content-area">
       <div class="photo-2">
@@ -956,12 +1032,12 @@
         <div class="ph"><img src="assets/services_campus.jpg" alt="Диагностический центр"><div class="cap">Синхронизация данных в облачном диагностическом центре</div></div>
       </div>
       <div class="service-row">
-        <div class="tile"><h4>24×7 экспертный мониторинг</h4></div>
-        <div class="tile"><h4>Оценка после техобслуживания на месте</h4></div>
-        <div class="tile"><h4>Экспертный консалтинг</h4></div>
-        <div class="tile"><h4>Ежемесячный отчёт о состоянии</h4></div>
-        <div class="tile"><h4>Постоянное обучение персонала</h4></div>
-        <div class="tile"><h4>Консалтинг диагностического центра</h4></div>
+        <div class="tile"><h4>📡 Круглосуточный мониторинг</h4><p>Экспертный контроль состояния ваших агрегатов в режиме 24/7/365. Мгновенная реакция удалённого диагностического центра на любые аварийные сигналы системы.</p></div>
+        <div class="tile"><h4>☁️ Синхронизация данных</h4><p>Непрерывное резервное копирование и синхронизация телеметрии в защищённом облачном диагностическом центре для исключения потери истории дефектов.</p></div>
+        <div class="tile"><h4>🧠 Экспертный консалтинг</h4><p>Постоянный доступ вашей технической службы к ведущим инженерам-диагностам для решения сложных и нестандартных инцидентов на фабрике.</p></div>
+        <div class="tile"><h4>📝 Ежемесячный аудит</h4><p>Предоставление детального отчёта о состоянии всего парка оборудования с анализом трендов развития дефектов и рекомендациями для планирования бюджетов ТОиР.</p></div>
+        <div class="tile"><h4>🛠️ Оценка после техобслуживания</h4><p>Экспертный контроль качества выполненных ремонтов на месте. Проверка геометрии узлов, качества балансировки и центровки агрегатов после запуска.</p></div>
+        <div class="tile"><h4>👥 Постоянное обучение</h4><p>Регулярное повышение квалификации сотрудников вашей ИТ- и ремонтной службы для эффективной самостоятельной работы с платформой.</p></div>
       </div>
     </div>
     <div class="slide-no">19</div>
@@ -970,224 +1046,23 @@
   <section class="slide" id="s23">
     <div class="page-head">
       <div class="kicker">Сервисы поддержки</div>
-      <h2>Обучение персонала и авторизация системы</h2>
+      <h2>Центр обучения персонала и авторизация экосистемы</h2>
+      <div class="sub">Мы помогаем заказчикам выстроить собственную независимую экосистему ТОиР на базе искусственного интеллекта и сертифицируем специалистов по высшим отраслевым стандартам.</div>
     </div>
     <div class="content-area">
-      <div class="feat-list" style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.2vw;">
-        <div class="f-item"><h4>Международный центр обучения</h4><p>Обучение вибродиагностике международного уровня и сертификация инженеров по диагностике уровней II, III и IV.</p></div>
-        <div class="f-item"><h4>Сертифицированная платформа</h4><p>Международная GL-сертифицированная интеллектуальная платформа технического обслуживания.</p></div>
-        <div class="f-item"><h4>Передача компетенций</h4><p>Помощь клиентам в создании собственной системы O&M с интеллектуальными данными и ИИ-алгоритмом.</p></div>
-        <div class="f-item"><h4>Сопровождение внедрения</h4><p>Достижение интеллектуальной революции в перцепции и управлении оборудованием.</p></div>
-      </div>
-      <div class="photo-2" style="margin-top: 1.2vw; height: 11vw;">
-        <div class="ph"><img src="assets/training_classroom.jpg" alt="Обучение персонала"><div class="cap">Обучение инженеров вибродиагностике</div></div>
-        <div class="ph"><img src="assets/training_serverroom.jpg" alt="Серверная"><div class="cap">Инфраструктура диагностического центра</div></div>
-      </div>
-      <div class="cert-row" style="height: 6vw; margin-top: 1vw; opacity: 0.6;">
-        <div></div>
-        <div class="ph small" style="position: relative;"><img src="assets/cert_mobius.jpg" alt="Сертификат"><div class="cert-label">Сертификаты — справочно, в приложении</div></div>
-        <div class="ph small"><img src="assets/cert_dnvgl.jpg" alt="Сертификат"></div>
-        <div></div>
+      <div class="train-2col">
+        <div class="feat-list">
+          <div class="f-item"><h4>🤖 Передача ИИ-компетенций</h4><p>Мы помогаем клиентам развернуть и настроить собственную внутреннюю систему O&amp;M (эксплуатации и обслуживания), обучая встроенные ИИ-алгоритмы под задачи предприятия.</p></div>
+          <div class="f-item"><h4>🛡️ Сертифицированная платформа</h4><p>Внедрение решений на базе международной GL-сертифицированной платформы технического обслуживания, что гарантирует соответствие самым строгим промышленным аудитам.</p></div>
+          <div class="f-item"><h4>📈 Сопровождение цифровой трансформации</h4><p>Полное управление рисками при переходе от устаревшего планового ремонта к интеллектуальному обслуживанию оборудования по его фактическому состоянию.</p></div>
+        </div>
+        <div class="train-photos">
+          <div class="ph"><img src="assets/training_classroom.jpg" alt="Обучение персонала"><div class="cap">Обучение инженеров вибродиагностике</div></div>
+          <div class="ph"><img src="assets/training_serverroom.jpg" alt="Серверная"><div class="cap">Инфраструктура диагностического центра</div></div>
+        </div>
       </div>
     </div>
     <div class="slide-no">20</div>
-  </section>
-
-  <section class="slide divider" id="s24">
-    <div class="num">05</div>
-    <div class="d-body">
-      <h1>Международный опыт применения технологии</h1>
-      <div class="rule"></div>
-    </div>
-    <img class="logo-mark" style="right: 4.2vw; bottom: 2vw;" src="assets/logo-white.png" alt="Алгоритм">
-  </section>
-
-  <section class="slide" id="s25">
-    <div class="page-head on-dark">
-      <div class="kicker on-dark">Масштаб</div>
-      <h2>Продукты и услуги на базе технологии внедрены более чем в 35 странах</h2>
-    </div>
-    <div class="content-area" style="display:flex; align-items:center; justify-content: space-between;">
-      <div>
-        <div class="big-num">35<em>+</em></div>
-        <div class="big-cap">стран, где решения на базе этой технологической платформы работают на промышленных объектах</div>
-      </div>
-      <div class="tag-row on-dark" style="max-width: 46vw; justify-content: flex-end;">
-        <span>Россия</span><span>Германия</span><span>Великобритания</span><span>Швеция</span><span>Нидерланды</span>
-        <span>Испания</span><span>Италия</span><span>Марокко</span><span>Пакистан</span><span>Индия</span>
-        <span>Южная Корея</span><span>Таиланд</span><span>Малайзия</span><span>Сингапур</span><span>Индонезия</span>
-        <span>Австралия</span><span>США</span><span>Мексика</span><span>Бразилия</span><span>Перу</span>
-        <span>Чили</span><span>Аргентина</span>
-      </div>
-    </div>
-    <div class="slide-no on-dark">21</div>
-  </section>
-
-  <section class="slide" id="s27">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Типичные проекты за рубежом</h2>
-    </div>
-    <div class="content-area">
-      <div class="case-2col">
-        <div class="case-card">
-          <div class="ph" style="height: 8vw;"><img src="assets/case_zijin_site.jpg" alt="Zijin Julong"></div>
-          <h4>Клиент: Zijin Julong</h4>
-          <ul><li><b>Тип сырья:</b> медная руда</li><li><b>Датчиков установлено:</b> 387</li></ul>
-          <div class="ph" style="height: 6.5vw;"><img src="assets/case_zijin_equip.jpg" alt="Оборудование"></div>
-        </div>
-        <div class="case-card">
-          <div class="ph" style="height: 8vw;"><img src="assets/case_cnh_site.jpg" alt="CNH Energy Heidaigou"></div>
-          <h4>Клиент: CNH Energy Heidaigou</h4>
-          <ul><li><b>Тип сырья:</b> уголь</li><li><b>Датчиков установлено:</b> 1184</li></ul>
-          <div class="ph" style="height: 6.5vw;"><img src="assets/case_cnh_equip.jpg" alt="Оборудование"></div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-no">22</div>
-  </section>
-
-  <section class="slide" id="s28">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Типичные проекты за рубежом — Латинская Америка</h2>
-    </div>
-    <div class="content-area">
-      <div class="case-2col">
-        <div class="case-card">
-          <h4>Расположение: Бразилия</h4>
-          <ul><li><b>Промышленность:</b> горнодобывающая</li><li><b>Датчиков установлено:</b> 2000+</li></ul>
-          <div class="ph" style="height: 10vw;"><img src="assets/case_brazil_photos.jpg" alt="Проект в Бразилии"></div>
-        </div>
-        <div class="case-card">
-          <h4>Расположение: Чили</h4>
-          <ul><li><b>Промышленность:</b> горнодобывающая</li><li><b>Датчиков установлено:</b> 2000+</li></ul>
-          <div class="ph" style="height: 10vw;"><img src="assets/case_chile_photos.jpg" alt="Проект в Чили"></div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-no">23</div>
-  </section>
-
-  <section class="slide" id="s29">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Кейс: интеграция с корпоративной платформой промышленной группы</h2>
-      <div class="sub">Разработка интеллектуальной системы и операционной модели для собственного центра удалённой диагностики заказчика; платформа объединяет 18 предприятий и 31 производственную линию.</div>
-    </div>
-    <div class="content-area" style="display:flex; align-items:center; justify-content:center;">
-      <div class="ph big" style="width: 60vw;"><img src="assets/cidc_dashboard.jpg" alt="Платформа удалённой диагностики"><div class="cap">Единая платформа удалённой диагностики группы предприятий</div></div>
-    </div>
-    <div class="slide-no">24</div>
-  </section>
-
-  <section class="slide" id="s31">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Проект, отмеченный международным признанием эффективности</h2>
-      <div class="sub">Крупный проект по добыче гранита (500 млн тонн) включил интеллектуальную систему эксплуатации и технического обслуживания на базе этой платформы и вошёл в число предприятий мирового уровня по цифровизации производства (Global Lighthouse Network, 2023).</div>
-    </div>
-    <div class="content-area">
-      <div class="case-2col" style="grid-template-columns: 1fr 1fr 0.8fr;">
-        <div class="ph"><img src="assets/lighthouse_group.jpg" alt="Обучение персонала"><div class="cap">01 — Обучение персонала диагностике</div></div>
-        <div class="ph"><img src="assets/lighthouse_equip.jpg" alt="Испытание на объекте"><div class="cap">02 — Пусконаладка на объекте</div></div>
-        <div class="ph"><img src="assets/lighthouse_list.jpg" alt="Список Lighthouse 2023"><div class="cap">03 — Реестр Global Lighthouse Network, 2023</div></div>
-      </div>
-    </div>
-    <div class="slide-no">25</div>
-  </section>
-
-  <section class="slide" id="s32">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Типичные случаи неисправностей на объекте по добыче гранита</h2>
-    </div>
-    <div class="content-area">
-      <div class="case-2col">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8vw; height:100%;">
-          <div class="ph"><img src="assets/tianyang_site1.jpg" alt="Объект"></div>
-          <div class="ph"><img src="assets/tianyang_site2.jpg" alt="Объект"></div>
-        </div>
-        <div>
-          <div class="fault-item">
-            <h4>Случай 1 — износ муфты ударной дробилки</h4>
-            <p>Диагностирована неисправность муфты высокоскоростного вала; через 3 дня муфта заменена в соответствии с планом. На фото — явный износ нейлонового стержня.</p>
-          </div>
-          <div class="fault-item">
-            <h4>Случай 2 — ослабление болтов на вибрационном сите</h4>
-            <p>Диагностирована недостаточная жёсткость основания; выявлено отсутствие 8 болтов. Через неделю проведено техническое обслуживание.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-no">26</div>
-  </section>
-
-  <section class="slide" id="s33">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Кейс: горнодобывающая группа — четыре объекта</h2>
-    </div>
-    <div class="content-area">
-      <div class="ph" style="height: 9vw;"><img src="assets/western_mining_sites.jpg" alt="Объекты группы"></div>
-      <div class="site-stats">
-        <div class="tile"><h4>Объект 1</h4><p>121 ед. оборудования, 781 датчик, старт — авг. 2021, 53 успешных кейса</p></div>
-        <div class="tile"><h4>Объект 2</h4><p>24 ед. оборудования, 130 датчиков, старт — авг. 2021, 11 успешных кейсов</p></div>
-        <div class="tile"><h4>Объект 3</h4><p>62 ед. оборудования, 417 датчиков, старт — авг. 2021, 27 успешных кейсов</p></div>
-        <div class="tile"><h4>Объект 4</h4><p>91 ед. оборудования, 917 датчиков, старт — ноя. 2022, 11 успешных кейсов</p></div>
-      </div>
-      <p style="margin-top: 1vw; font-size: 0.95vw; color: rgba(20,18,18,0.68);">С 2021 года платформа помогла выявить неисправность основного подъёмника, пройти национальную сертификацию «умного месторождения», внедрить мониторинг подземного ключевого оборудования и расширить мониторинг масла.</p>
-    </div>
-    <div class="slide-no">27</div>
-  </section>
-
-  <section class="slide" id="s34">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Технические решения для специального горного оборудования</h2>
-    </div>
-    <div class="content-area">
-      <div class="case-2col">
-        <div class="feat-list">
-          <div class="f-item"><h4>Проблема</h4><p>При серьёзных перегрузках персонал не всегда в состоянии выявить скрытые неисправности и тенденции к ухудшению — тяжёлые условия труда, сейсмическая опасность, сложность коммуникаций.</p></div>
-          <div class="f-item"><h4>Решение</h4><p>Взрывозащищённые беспроводные датчики решают проблему монтажа кабелей в шахте; дополнительный мониторинг масла, тока и напряжения; поддержка Ethernet/ВОЛС/WiFi/4G/5G.</p></div>
-        </div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.8vw; height: 100%;">
-          <div class="ph" style="grid-column: 1 / 3;"><img src="assets/mining_sensor_products.jpg" alt="Взрывозащищённые датчики"></div>
-          <div class="ph"><img src="assets/mining_install1.jpg" alt="Монтаж"></div>
-          <div class="ph"><img src="assets/mining_install2.jpg" alt="Монтаж"></div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-no">28</div>
-  </section>
-
-  <section class="slide" id="s35">
-    <div class="page-head">
-      <div class="kicker">Международный опыт</div>
-      <h2>Несколько типичных случаев неисправности</h2>
-    </div>
-    <div class="content-area">
-      <div class="quad">
-        <div class="qcell">
-          <div class="ph"><img src="assets/fault_springs.jpg" alt="Сломанная пружина"></div>
-          <div class="fault-item"><h4>Исключение незапланированных простоев 24/7</h4><p>В 3 часа ночи диагностирована неисправность — сломанная пружина в соединении ремня. Пружина заменена своевременно, незапланированное отключение исключено.</p></div>
-        </div>
-        <div class="qcell">
-          <div class="ph"><img src="assets/fault_ring.jpg" alt="Износ дорожки качения"></div>
-          <div class="fault-item"><h4>Техобслуживание по производственным планам</h4><p>Диагностирован износ дорожки качения внутреннего кольца подшипника. С учётом планового отключения инженер провёл обслуживание раньше срока.</p></div>
-        </div>
-        <div class="qcell">
-          <div class="ph"><img src="assets/fault_bearing.jpg" alt="Разрушенный подшипник"></div>
-          <div class="fault-item"><h4>Долгосрочное отслеживание</h4><p>Обнаружено отслоение внутреннего кольца подшипника ролика; дефект развивался несколько месяцев — своевременное напоминание позволило спланировать ремонт.</p></div>
-        </div>
-        <div class="qcell">
-          <div class="ph"><img src="assets/fault_roller.jpg" alt="Износ ролика"></div>
-          <div class="fault-item"><h4>Руководство по выбору запасных частей</h4><p>Выявлен значительный износ внутреннего кольца ролика ремня. После анализа установлено: причина — неправильный выбор модели подшипника.</p></div>
-        </div>
-      </div>
-    </div>
-    <div class="slide-no">29</div>
   </section>
 
   <section class="slide" id="s36">
@@ -1197,12 +1072,16 @@
       <p>Комплексные решения для предиктивного обслуживания оборудования.</p>
     </div>
     <div class="contacts">
-      <div class="c-row"><div class="lbl">Телефон</div><div class="val">+7 (988) 492-81-03</div></div>
-      <div class="c-row"><div class="lbl">E-mail</div><div class="val">info@algoritmkrsk.ru</div></div>
-      <div class="c-row"><div class="lbl">Сайт</div><div class="val">https://algoritmkrsk.ru/</div></div>
-      <div class="c-row"><div class="lbl">Адрес</div><div class="val small">660075, Красноярский край, г. Красноярск,<br>ул. Маерчака, д. 8, офис 318</div></div>
+      <div class="contacts-heading">
+        <h3>Сделайте первый шаг к оптимизации ТОиР вашего предприятия</h3>
+        <p>Свяжитесь с нами, чтобы согласовать проведение бесплатного экспресс-аудита критического оборудования холдинга.</p>
+      </div>
+      <div class="c-row"><div class="lbl">📞 Телефон</div><div class="val">+7 (988) 492-81-03</div><div class="c-note">Прямая линия с инженерно-сервисным центром.</div></div>
+      <div class="c-row"><div class="lbl">✉️ E-mail</div><div class="val">info@algoritmkrsk.ru</div><div class="c-note">Для направления технических заданий и опросных листов.</div></div>
+      <div class="c-row"><div class="lbl">🌐 Сайт</div><div class="val">algoritmkrsk.ru</div></div>
+      <div class="c-row"><div class="lbl">📍 Адрес</div><div class="val small">660075, Красноярский край, г. Красноярск, ул. Маерчака, д. 8, офис 318</div><div class="c-note">Собственная база поддержки и склад оборудования в СФО.</div></div>
     </div>
-    <div class="slide-no">30</div>
+    <div class="slide-no">21</div>
   </section>
 </div>
 
