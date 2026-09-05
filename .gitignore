@@ -1,0 +1,9 @@
+build/shots/
+build/pptx_shots/
+build/o_*/
+build/pptx_png/
+build/ttf/
+build/contact_*.png
+build/pair_*.png
+build/t_*.pptx
+build/__pycache__/
