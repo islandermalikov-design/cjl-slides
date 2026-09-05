@@ -51,7 +51,7 @@ JS = r"""() => {
       rec.rules.push({...rel(R(t)), color:c.borderTopColor, kind:'tile-border'});
     });
 
-    const SEL = 'h1,h2,p,.state,.idx,.sp-l,.ph-cap,.f-kick,.t-cap';
+    const SEL = 'h1,h2,p,.state,.idx,.sp-l,.ph-cap,.f-kick,.t-cap,.f-title';
     s.querySelectorAll(SEL).forEach(t => {
       if (!t.textContent.trim()) return;
       const c = getComputedStyle(t), r = R(t);

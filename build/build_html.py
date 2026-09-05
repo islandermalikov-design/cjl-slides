@@ -77,9 +77,9 @@ def final():
     tiles = "".join(f'<div class="tile">{frame("final-"+o["slug"], "tile-f")}'
                     f'<span class="t-cap">{o["idx"]}</span></div>' for o in S.OBJECTS)
     return f'''<div class="slide final">
-      <div class="f-head"><span class="rule-s"></span><span class="f-kick">ПОРТФОЛИО</span></div>
+      <div class="f-head"><span class="rule-s"></span><span class="f-kick">ПОРТФОЛИО</span>
+        <span class="f-title">{S.TITLE}</span></div>
       <div class="grid6">{tiles}</div>
-      <h2 class="f-title">{S.TITLE}</h2>
     </div>'''
 
 
@@ -177,21 +177,22 @@ body{font-family:var(--sans);display:flex;align-items:center;justify-content:cen
 
 /* ---------- финал ---------- */
 .slide.final{display:flex;flex-direction:column;
-  padding:calc(4.2*var(--u)) calc(5*var(--u)) calc(4.2*var(--u));background:var(--color-primary)}
+  padding:calc(3.6*var(--u)) calc(4.2*var(--u)) calc(3.6*var(--u));background:var(--color-primary)}
 .f-head{display:flex;align-items:center;gap:calc(1*var(--u))}
 .f-kick{font-size:calc(.6*var(--u));letter-spacing:.36em;color:var(--stone);text-transform:uppercase}
-.grid6{flex:1;display:grid;grid-template-columns:repeat(6,1fr);gap:calc(1.5*var(--u));
-  margin:calc(3*var(--u)) 0 calc(2.8*var(--u))}
+.grid6{flex:1;display:grid;grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(2,1fr);gap:calc(1.5*var(--u)) calc(1.6*var(--u));
+  margin:calc(2.4*var(--u)) 0 calc(2.4*var(--u))}
 .tile{position:relative;display:flex;flex-direction:column}
 .tile-f{flex:1;border:1px solid rgba(242,236,227,.12)}
 .tile .frame.ph::after{content:none}
 .tile .ph-cap{display:none}
 .tile .ph-in{gap:0}
-.tile .ph-mark{width:calc(1.3*var(--u));height:calc(1.3*var(--u))}
+.tile .ph-mark{width:calc(1.7*var(--u));height:calc(1.7*var(--u))}
 .t-cap{display:block;margin-top:calc(.8*var(--u));
   font-size:calc(.56*var(--u));letter-spacing:.26em;color:rgba(242,236,227,.42)}
-.f-title{font-family:var(--serif);font-weight:300;font-size:calc(2.5*var(--u));
-  letter-spacing:.3em;color:var(--color-secondary);text-transform:uppercase}
+.f-title{font-family:var(--serif);font-weight:300;font-size:calc(1.75*var(--u));
+  letter-spacing:.28em;color:var(--color-secondary);text-transform:uppercase;margin-left:auto}
 """ % S.PALETTE
 
 JS = """

@@ -37,8 +37,19 @@ OBJECTS = [
 # Реальные фотографии с Google Drive: slot -> файл.
 # Пустой слот рисуется как оформленный placeholder.
 PHOTOS = {
-    "cover":            "assets/photos/pochtovaya_before_frame.jpg",
-    "pochtovaya-before": "assets/photos/pochtovaya_before_frame.jpg",
+    "cover":                "assets/photos/cover.jpg",
+    "giliarovskogo-before": "assets/photos/giliarovskogo-before.jpg",
+    "giliarovskogo-after":  "assets/photos/giliarovskogo-after.jpg",
+    "borby-before":         "assets/photos/borby-before.jpg",
+    "myasnickaya-after":    "assets/photos/myasnickaya-after.jpg",
+    "nikoloyamskaya-after": "assets/photos/nikoloyamskaya-after.jpg",
+    "okruzhnoy-before":     "assets/photos/okruzhnoy-before.jpg",
+    "okruzhnoy-after":      "assets/photos/okruzhnoy-after.jpg",
+    "pochtovaya-before":    "assets/photos/pochtovaya-before.jpg",
+    "final-giliarovskogo":  "assets/photos/final-giliarovskogo.jpg",
+    "final-myasnickaya":    "assets/photos/final-myasnickaya.jpg",
+    "final-nikoloyamskaya": "assets/photos/final-nikoloyamskaya.jpg",
+    "final-okruzhnoy":      "assets/photos/final-okruzhnoy.jpg",
 }
 
 PLACEHOLDER_CAPTION = "ФОТОСЪЁМКА В ПРОЦЕССЕ"
