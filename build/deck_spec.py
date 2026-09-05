@@ -42,6 +42,7 @@ PHOTOS = {
     "giliarovskogo-after":  "assets/photos/giliarovskogo-after.jpg",
     "borby-before":         "assets/photos/borby-before.jpg",
     "myasnickaya-after":    "assets/photos/myasnickaya-after.jpg",
+    "myasnickaya-before":   "assets/photos/myasnickaya-before.jpg",
     "nikoloyamskaya-after": "assets/photos/nikoloyamskaya-after.jpg",
     "okruzhnoy-before":     "assets/photos/okruzhnoy-before.jpg",
     "okruzhnoy-after":      "assets/photos/okruzhnoy-after.jpg",

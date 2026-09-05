@@ -17,6 +17,7 @@ JOBS = {
     "giliarovskogo-after":   ("assets/drive/gil_new_00.jpg",            FRAME, 0.50),
     "borby-before":          ("assets/drive/borby_00.jpg",              FRAME, 0.45),
     "myasnickaya-after":     ("assets/drive/myasnickaya_p05_03.jpg",    FRAME, 0.48),
+
     "nikoloyamskaya-after":  ("assets/drive/nikoloyamskaya_p01_00.jpg", FRAME, 0.50),
     "okruzhnoy-before":      ("assets/drive/okr_04.jpg",                FRAME, 0.50),
     "okruzhnoy-after":       ("assets/drive/okr_03.jpg",                FRAME, 0.48),
@@ -26,6 +27,24 @@ JOBS = {
     "final-nikoloyamskaya":  ("assets/drive/nikoloyamskaya_p12_09.jpg", TILE,  0.50),
     "final-okruzhnoy":       ("assets/drive/okr_03.jpg",                TILE,  0.42),
 }
+
+
+GRAPHITE = (38, 35, 31)          # --graphite-2
+
+
+def pad_to(src, ratio, inset=0.075):
+    """Вписать снимок целиком в рамку на графитовом поле (для архивных кадров)."""
+    im = ImageOps.exif_transpose(Image.open(src)).convert("RGB")
+    W = 1459
+    H = int(round(W / ratio))
+    box_w, box_h = int(W * (1 - 2 * inset)), int(H * (1 - 2 * inset))
+    k = min(box_w / im.width, box_h / im.height)
+    if k > 1:                                    # не растягиваем выше 2x
+        k = min(k, 2.0)
+    im = im.resize((int(round(im.width * k)), int(round(im.height * k))), Image.LANCZOS)
+    canvas = Image.new("RGB", (W, H), GRAPHITE)
+    canvas.paste(im, ((W - im.width) // 2, (H - im.height) // 2))
+    return canvas
 
 
 def crop_to(src, ratio, anchor):
@@ -42,8 +61,18 @@ def crop_to(src, ratio, anchor):
         im = im.crop((0, top, w, top + nh))
     if im.width > 2400:
         im = im.resize((2400, int(round(2400 / ratio))), Image.LANCZOS)
+    elif im.width < 1459:
+        im = im.resize((1459, int(round(1459 / ratio))), Image.LANCZOS)
     return im
 
+
+PAD = {"myasnickaya-before": ("build/pdfall/mya_p03_003.jpg", FRAME)}
+
+for slot, (src, ratio) in PAD.items():
+    im = pad_to(ROOT / src, ratio)
+    out = OUT / f"{slot}.jpg"
+    im.save(out, quality=92, optimize=True)
+    print(f"{slot:24} {im.size}  вписан целиком  {out.stat().st_size//1024} KB")
 
 for slot, (src, ratio, anchor) in JOBS.items():
     p = ROOT / src
