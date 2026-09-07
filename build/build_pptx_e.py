@@ -288,6 +288,9 @@ def final_slide(prs):
 
 prs = Presentation()
 prs.slide_width, prs.slide_height = SLIDE_W, SLIDE_H
+sldSz = prs._element.find(qn("p:sldSz"))
+if sldSz is not None and "type" in sldSz.attrib:
+    del sldSz.attrib["type"]   # шаблон по умолчанию помечен как 4:3 — сбивает мобильный PowerPoint при 16:9-размере
 cover_slide(prs)
 for o in S.OBJECTS:
     object_before_slide(prs, o)
