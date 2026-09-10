@@ -1,0 +1,318 @@
+<meta charset="utf-8">
+<title>Доработка каталога Irbis</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=PT+Sans:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--paper:#F1F3EF;--surface:#FFF;--sunk:#E7EAE3;--ink:#12181D;--ink2:#5B666E;
+ --line:#D3D8D0;--line2:#BEC5BA;--accent:#A6461A;--accent2:#8E3C15;--steel:#2B4757;--ok:#2F6B3D;--r:3px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E1317;--surface:#161D23;
+ --sunk:#1C252C;--ink:#E3E9EC;--ink2:#8E9BA4;--line:#28323A;--line2:#3A4852;--accent:#E07B44;
+ --accent2:#EE9257;--steel:#8AAFC5;--ok:#63B076}}
+:root[data-theme="dark"]{--paper:#0E1317;--surface:#161D23;--sunk:#1C252C;--ink:#E3E9EC;--ink2:#8E9BA4;
+ --line:#28323A;--line2:#3A4852;--accent:#E07B44;--accent2:#EE9257;--steel:#8AAFC5;--ok:#63B076}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "PT Sans","Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:"Oswald","Arial Narrow",sans-serif;font-weight:500;margin:0;text-wrap:balance}
+a{color:var(--accent2)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.page{max-width:1240px;margin:0 auto;padding-inline:20px;padding-block:0 60px}
+.top{padding-block:40px 22px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:"Oswald",sans-serif;font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+ color:var(--accent);margin:0 0 10px}
+.top h1{font-size:clamp(30px,5vw,50px);text-transform:uppercase;line-height:1.04}
+.top p{max-width:62ch;color:var(--ink2);margin:12px 0 0}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px;margin-top:32px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:1fr;gap:44px}}
+.panel h2{font-size:23px;text-transform:uppercase;margin-bottom:4px}
+.panel>p.sub{color:var(--ink2);margin:0 0 16px}
+.bar{position:sticky;top:0;z-index:5;background:var(--paper);padding-block:10px;display:flex;gap:10px;
+ align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:12px}
+button.copy{font:500 13px/1 "Oswald",sans-serif;letter-spacing:.1em;text-transform:uppercase;
+ background:var(--accent);color:#fff;border:0;border-radius:var(--r);padding:13px 20px;cursor:pointer}
+button.copy:hover{background:var(--accent2)}
+button.copy.done{background:var(--ok)}
+.meta{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink2)}
+pre.prompt{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+ padding:16px;max-height:60vh;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;
+ font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;line-height:1.6;color:var(--ink)}
+.steps{margin:0 0 18px;padding:0;list-style:none;counter-reset:s;display:grid;gap:9px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:auto minmax(0,1fr);gap:11px;
+ font-size:13.5px;color:var(--ink2)}
+.steps li::before{content:counter(s);font-family:"IBM Plex Mono",monospace;font-size:11px;
+ color:var(--accent);border:1px solid var(--line2);border-radius:2px;width:20px;height:20px;
+ display:grid;place-items:center;margin-top:1px}
+.links{border-top:1px solid var(--line)}
+.links h2.grp{font-size:20px;text-transform:uppercase;margin:26px 0 4px;padding-top:18px;
+ border-top:2px solid var(--ink)}
+.links h3{font-size:15px;text-transform:uppercase;margin:22px 0 8px;color:var(--steel);
+ letter-spacing:.04em}
+.links p{font-size:13.5px;color:var(--ink2);margin:8px 0}
+.links hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th{text-align:left;font:500 10px/1.3 "Oswald",sans-serif;letter-spacing:.12em;text-transform:uppercase;
+ color:var(--ink2);padding:9px 11px;border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700;white-space:nowrap}
+code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;background:var(--sunk);padding:2px 5px;border-radius:2px}
+.dot{color:var(--line2);padding:0 2px}
+.foot{margin-top:40px;padding-top:16px;border-top:2px solid var(--ink);font-size:12.5px;color:var(--ink2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div class="page">
+<header class="top"><p class="eyebrow">Irbis · рабочие материалы</p><h1>Доработка<br>каталога</h1><p>Слева — готовый промт для ChatGPT: в нём все данные каталога, список дефектов, пропуски и техзадание на восьмую группу — навесное оборудование. Справа — страницы, с которых снимаются фотографии.</p></header>
+<div class="cols">
+<section class="panel"><h2>Промт для ChatGPT</h2><p class="sub">Полностью самодостаточный: данные внутри, ничего дополнительно прикреплять не нужно.</p><ol class="steps"><li>Нажмите «Скопировать промт».</li><li>Откройте новый чат в ChatGPT и вставьте текст одним сообщением.</li><li>Модель вернёт отчёт по дефектам, заполненные пропуски и готовый HTML-каталог.</li><li>Значения, помеченные как ненайденные, подтвердите у поставщика — не публикуйте вслепую.</li></ol><div class="bar"><button class="copy" id="copy" type="button">Скопировать промт</button><span class="meta">204 строк · 19 547 знаков</span></div><pre class="prompt" id="prompt">Ты — технический редактор каталогов спецтехники. Твоя задача — довести до чистового
+вида каталог бренда **Irbis**: устранить дефекты данных, заполнить пропуски, привести
+обозначения к единому виду и добавить одну новую товарную группу.
+
+## 1. Контекст
+
+Irbis — торговая марка спецтехники. Машины строятся на платформах XCMG, SEM и
+NHL/Terex. В клиентской версии каталога указывается **только обозначение Irbis**;
+колонка «Платформа» — служебная, нужна для сверки характеристик и в готовый каталог
+не выносится.
+
+Каталог уже собран: 7 товарных групп, 45 моделей. Часть значений
+подтверждена по дилерским каталогам, часть — нет.
+
+## 2. Обозначения в данных
+
+- `УТОЧНИТЬ` — значение отсутствует, его нужно найти.
+- `(?)` после значения — значение есть, но не подтверждено; нужно перепроверить.
+- Метка `ДЕФЕКТ` в последней колонке — у позиции есть конкретная проблема, описанная в §6.
+
+## 3. Ключевые параметры групп
+
+В карточке каждой машины на первом месте стоят три параметра своей группы —
+именно эти, в этом порядке, менять состав нельзя:
+
+- **Автогрейдеры** — Эксплуатационная масса · Мощность двигателя · Макс. глубина срезания
+- **Карьерные самосвалы** — Эксплуатационная масса · Грузоподъёмность · Объём кузова
+- **Экскаваторы и перегружатели** — Эксплуатационная масса · Мощность двигателя · Ёмкость ковша
+- **Бульдозеры** — Эксплуатационная масса · Мощность двигателя · Ёмкость отвала
+- **Автокраны** — Эксплуатационная масса · Длина стрелы с гуськом · Макс. грузоподъёмность
+- **Телескопические погрузчики** — Мощность двигателя · Высота подъёма · Макс. грузоподъёмность
+- **Фронтальные погрузчики** — Ёмкость ковша · Эксплуатационная масса · Макс. грузоподъёмность
+
+## 4. Полные данные каталога
+
+| Группа | Модель Irbis | Платформа | Параметр 1 | Параметр 2 | Параметр 3 | Прочее | Метка |
+|---|---|---|---|---|---|---|---|
+| Автогрейдеры | Irbis IR30 | XCMG GR3505T Pro | Эксплуатационная масса: 32 т | Мощность двигателя: 261 кВт (350 л.с.) | Макс. глубина срезания: 660 мм | Двигатель: Cummins QSM11, 2100 об/мин; Отвал: 4270 × 635 мм; Шины: 23.5R25; Скорость вперёд / назад: до 45 / 30 км/ч; Поворот передних колёс: ±45° |  |
+| Автогрейдеры | Irbis IR35 | XCMG GR3505 | Эксплуатационная масса: 34 т | Мощность двигателя: 258 кВт (350 л.с.) | Макс. глубина срезания: 660 мм (?) | Двигатель: Weichai WP12G350E201, турбодизель; Отвал: 4270 мм; Расход топлива: 18–22 л/ч; Мин. радиус поворота: 8,9 м; Скорость вперёд / назад: до 45 / 30 км/ч |  |
+| Автогрейдеры | Irbis IR5505 | XCMG GR5505 | Эксплуатационная масса: 70,4 т | Мощность двигателя: 447 кВт (600 л.с.) | Макс. глубина срезания: УТОЧНИТЬ | Двигатель: Perkins 2806D-E18TA; Габариты: 15 245 × 4265 × 4570 мм; Макс. тяговое усилие: 342 кН; Шины: 29.5-29; Макс. преодолеваемый подъём: 25 %; Класс: Тяжёлый карьерный автогрейдер | ДЕФЕКТ |
+| Автогрейдеры | Irbis IR922 AWD | SEM 922 AWD | Эксплуатационная масса: 14,7 т | Мощность двигателя: 125 кВт (170 л.с.) | Макс. глубина срезания: УТОЧНИТЬ | Двигатель: SDEC SC9D220G2, 2200 об/мин; Отвал: 3669 мм; Привод: Полный (AWD) — ведущие передние колёса и тандем; Применение: Снег, песок, слабонесущие и сыпучие грунты |  |
+| Автогрейдеры | Irbis IR922F AWD | SEM 922F AWD | Эксплуатационная масса: 14,7 т (?) | Мощность двигателя: 125 кВт (170 л.с.) | Макс. глубина срезания: УТОЧНИТЬ | Колёсная формула: 6×6; Отвал: 3669 мм; Рыхлитель: 5-стоечный, задний; Привод: Полный (AWD) |  |
+| Карьерные самосвалы | Irbis IR-TR60 | NHL / Terex TR60 | Эксплуатационная масса: УТОЧНИТЬ | Грузоподъёмность: 55 т | Объём кузова: 35 м³ | Тип рамы: Жёсткая; Трансмиссия: Гидромеханическая; Кабина: ROPS / FOPS | ДЕФЕКТ |
+| Карьерные самосвалы | Irbis IR-TR100A | NHL / Terex TR100A | Эксплуатационная масса: УТОЧНИТЬ | Грузоподъёмность: 91 т | Объём кузова: УТОЧНИТЬ | Тип рамы: Жёсткая; Трансмиссия: Гидромеханическая; Кабина: ROPS / FOPS |  |
+| Карьерные самосвалы | Irbis IR-NTE120 | NHL / Terex NTE120 | Эксплуатационная масса: УТОЧНИТЬ | Грузоподъёмность: 110 т | Объём кузова: 70 м³ (SAE 2:1) | Мощность двигателя: 883 кВт (1200 л.с.); Трансмиссия: Электромеханическая; Тип рамы: Жёсткая, коробчатый профиль; Кабина: ROPS / FOPS |  |
+| Карьерные самосвалы | Irbis IR-NTE150 | NHL / Terex NTE150 | Эксплуатационная масса: УТОЧНИТЬ | Грузоподъёмность: 150 т | Объём кузова: 80 м³ | Трансмиссия: Электромеханическая; Тип рамы: Жёсткая; Кабина: ROPS / FOPS |  |
+| Карьерные самосвалы | Irbis IR3090F | SEM 3090F | Эксплуатационная масса: УТОЧНИТЬ | Грузоподъёмность: УТОЧНИТЬ | Объём кузова: УТОЧНИТЬ | Тип рамы: Жёсткая | ДЕФЕКТ |
+| Экскаваторы и перегружатели | Irbis XE60WD | XCMG XE60WD | Эксплуатационная масса: 5,9 т | Мощность двигателя: 41,5 кВт (56 л.с.) | Ёмкость ковша: 0,23 м³ | Двигатель: Yanmar 4TNV98, 2400 об/мин; Рабочий объём: 3,32 л; Макс. глубина копания: 3520 мм; Макс. радиус копания: 6120 мм; Усилие на ковше: 42,8 кН; Габариты: 6230 × 1925 × 2850 мм; Скорость хода: 10 / 30 км/ч |  |
+| Экскаваторы и перегружатели | Irbis XE150WD | XCMG XE150WD | Эксплуатационная масса: 14 т | Мощность двигателя: 104 кВт (141 л.с.) | Ёмкость ковша: 0,7 м³ | Двигатель: Cummins QSB4.5; Экологический класс: Евро-3; Применение: Городское строительство, коммунальные и дорожные работы |  |
+| Экскаваторы и перегружатели | Irbis XE180WD | XCMG XE180WD | Эксплуатационная масса: 17,6 т | Мощность двигателя: 104 кВт (141 л.с.) | Ёмкость ковша: 0,9 м³ | Двигатель: Cummins QSB4.5; Экологический класс: Евро-3 |  |
+| Экскаваторы и перегружатели | Irbis XE210WD | XCMG XE210WD | Эксплуатационная масса: 21 т | Мощность двигателя: 135 кВт (184 л.с.) | Ёмкость ковша: 1,0 м³ | Двигатель: Cummins QSB7; Экологический класс: Евро-3 |  |
+| Экскаваторы и перегружатели | Irbis XE210WLL | XCMG XE210WLL | Эксплуатационная масса: 21 т | Мощность двигателя: 135 кВт (184 л.с.) | Ёмкость ковша: 0,5 м³ | Двигатель: Cummins QSB7; Рабочее оборудование: Удлинённая стрела и рукоять; Применение: Погрузка, зачистка откосов, работа с увеличенным вылетом |  |
+| Экскаваторы и перегружатели | Irbis XE230M | XCMG XE230M | Эксплуатационная масса: 23 т | Мощность двигателя: 135 кВт (183 л.с.) | Ёмкость грейфера: 0,6 м³ | Двигатель: Cummins QSB7; Габариты: 9178 × 2999 × 3174 мм; Рабочее оборудование: Многочелюстной грейфер (базово); двухчелюстной грейфер, бревнозахват, крюк, электромагнит; Материалы: Стальной лом, сыпучие, древесина |  |
+| Бульдозеры | Irbis D170 | XCMG D170 / D170LGP | Эксплуатационная масса: 17,4 т | Мощность двигателя: 131 кВт (178 л.с.) | Ёмкость отвала: 4,5 м³ | Модификации: D170 — стандарт; D170LGP — болотоход; Трансмиссия: Гидромеханическая; Применение: Планировка, разработка грунтов I–IV категории |  |
+| Бульдозеры | Irbis D260 | XCMG D260 / D260LGP | Эксплуатационная масса: 25,6–28,1 т | Мощность двигателя: УТОЧНИТЬ | Ёмкость отвала: до 8,5 м³ | Модификации: D260 — стандарт; D260LGP — болотоход; Трансмиссия: Гидромеханическая |  |
+| Бульдозеры | Irbis D360 | XCMG D360 | Эксплуатационная масса: 39,3 т | Мощность двигателя: 257 кВт (350 л.с.) | Ёмкость отвала: 9,0 м³ | Двигатель: Cummins NTA855-C360, 14,0 л, 6 цилиндров; Отвал прямой: до 9,96 м³; Применение: Вскрышные работы, карьеры |  |
+| Бульдозеры | Irbis DL350 | XCMG DL350 | Эксплуатационная масса: 29 т | Мощность двигателя: 261 кВт (350 л.с.) | Ёмкость отвала: 6,88 м³ | Двигатель: Cummins, электронное управление, турбонаддув; Макс. тяговое усилие: 270 кН; Габариты: 7950 × 4434 × 3805 мм; Применение: Порты, крупные карьеры |  |
+| Бульдозеры | Irbis DL560 | XCMG DL560 | Эксплуатационная масса: 48 т | Мощность двигателя: 419 кВт (570 л.с.) | Ёмкость отвала: 7,9 м³ | Обороты номинальные: 2000 об/мин; Макс. тяговое усилие: 400 кН; Шины: 35/65R33; Скорость перемещения: до 33 км/ч; Давление на грунт: ≤ 0,14 МПа; Дорожный просвет: 505 мм; Макс. уклон: 24° |  |
+| Автокраны | Irbis XCT25L5 | XCMG XCT25L5 | Эксплуатационная масса: УТОЧНИТЬ | Длина стрелы с гуськом: 49,3 м | Макс. грузоподъёмность: 25 т | Основная стрела: 41 м, 5 секций; Профиль стрелы: Восьмиугольный; Исполнения: XCT25L5_S, XCT25L5_SR (полный привод) |  |
+| Автокраны | Irbis XCT30 | XCMG XCT30_S1 | Эксплуатационная масса: УТОЧНИТЬ | Длина стрелы с гуськом: УТОЧНИТЬ | Макс. грузоподъёмность: 30 т | Тип стрелы: Телескопическая |  |
+| Автокраны | Irbis XCT55 | XCMG XCT55_S1 | Эксплуатационная масса: УТОЧНИТЬ | Длина стрелы с гуськом: 62,3 м | Макс. грузоподъёмность: 55 т | Тип стрелы: Телескопическая |  |
+| Автокраны | Irbis XCT70 | XCMG XCT70_S1 | Эксплуатационная масса: УТОЧНИТЬ | Длина стрелы с гуськом: 62,5 м | Макс. грузоподъёмность: 70 т | Тип стрелы: Телескопическая |  |
+| Автокраны | Irbis XCT80 | XCMG XCT80_S | Эксплуатационная масса: УТОЧНИТЬ | Длина стрелы с гуськом: УТОЧНИТЬ | Макс. грузоподъёмность: 80 т | Тип стрелы: Телескопическая |  |
+| Автокраны | Irbis XCT100 | XCMG XCT100_S | Эксплуатационная масса: УТОЧНИТЬ | Длина стрелы с гуськом: УТОЧНИТЬ | Макс. грузоподъёмность: 100 т | Тип стрелы: Телескопическая |  |
+| Телескопические погрузчики | Irbis IR6-3007V | XCMG XC6-3007V | Мощность двигателя: 66 кВт (90 л.с.) | Высота подъёма: 6,95 м | Макс. грузоподъёмность: 3 т | Эксплуатационная масса: 7,45 т; Двигатель: Weichai WP3.7Q90E436; Стрела: 3-секционная; Макс. вылет: 3690 мм |  |
+| Телескопические погрузчики | Irbis IR3207K | XCMG XT3207K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 7 м (?) | Макс. грузоподъёмность: 3,2 т | Эксплуатационная масса: 8,4 т |  |
+| Телескопические погрузчики | Irbis IR6-3507K | XCMG XC6-3507K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 7 м (?) | Макс. грузоподъёмность: 3,5 т | Эксплуатационная масса: 7,85 т; Двигатель: DEUTZ; Макс. скорость: до 30 км/ч |  |
+| Телескопические погрузчики | Irbis IR6-3514K | XCMG XC6-3514K | Мощность двигателя: 95 кВт (129 л.с.) | Высота подъёма: 13,7 м | Макс. грузоподъёмность: 3,5 т | Эксплуатационная масса: 10,5 т; Двигатель: DEUTZ BF4M2012 |  |
+| Телескопические погрузчики | Irbis IR4014K | XCMG XT4014K | Мощность двигателя: 74 кВт (101 л.с.) | Высота подъёма: 13,4 м | Макс. грузоподъёмность: 4 т | Эксплуатационная масса: УТОЧНИТЬ |  |
+| Телескопические погрузчики | Irbis IR6-4517K | XCMG XC6-4517K | Мощность двигателя: 82 кВт (111 л.с.) | Высота подъёма: 17 м | Макс. грузоподъёмность: 4,5 т | Эксплуатационная масса: 13,5 т; Объём ковша: 2,5 м³; Габариты: 6960 × 2500 × 2850 мм; Гарантия: 24 мес. / 3000 м/ч |  |
+| Телескопические погрузчики | Irbis IR5017K | XCMG XT5017K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 17 м | Макс. грузоподъёмность: 5 т | Эксплуатационная масса: 15,8 т |  |
+| Телескопические погрузчики | Irbis IR5517K | XCMG XT5517K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 17 м | Макс. грузоподъёмность: 5,4 т | Эксплуатационная масса: УТОЧНИТЬ |  |
+| Телескопические погрузчики | Irbis IR8010K | XCMG XT8010K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 10 м | Макс. грузоподъёмность: 8 т | Эксплуатационная масса: 14,1 т; Грузоподъёмность по каталогу XCMG: до 9 т | ДЕФЕКТ |
+| Телескопические погрузчики | Irbis IR12010K | XCMG XT12010K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 10 м | Макс. грузоподъёмность: 12 т | Эксплуатационная масса: 18–19,5 т |  |
+| Телескопические погрузчики | Irbis IR18010K | XCMG XT18010K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 10 м | Макс. грузоподъёмность: 18 т | Эксплуатационная масса: 24,5 т |  |
+| Телескопические погрузчики | Irbis IR23010K | XCMG XT23010K | Мощность двигателя: УТОЧНИТЬ | Высота подъёма: 10 м | Макс. грузоподъёмность: 23 т (?) | Эксплуатационная масса: 32,8 т (?) | ДЕФЕКТ |
+| Фронтальные погрузчики | Irbis IR676D | SEM 676D | Ёмкость ковша: 4,2–7,0 м³ | Эксплуатационная масса: 23 т | Макс. грузоподъёмность: УТОЧНИТЬ | Сменные ковши: Скальный, стандартный, увеличенный |  |
+| Фронтальные погрузчики | Irbis IR958 | XCMG XC958 | Ёмкость ковша: 3,2 м³ | Эксплуатационная масса: 17,3 т | Макс. грузоподъёмность: 5,5 т | Мощность двигателя: 162 кВт (220 л.с.) |  |
+| Фронтальные погрузчики | Irbis IR968 | XCMG XC968 | Ёмкость ковша: 3,5 м³ | Эксплуатационная масса: 20 т | Макс. грузоподъёмность: 6,3 т | Мощность двигателя: 178 кВт (242 л.с.); Двигатель: Weichai, 6 цилиндров, дизель |  |
+| Фронтальные погрузчики | Irbis IR975 | XCMG XC975 | Ёмкость ковша: 4,0 м³ | Эксплуатационная масса: 24 т | Макс. грузоподъёмность: 7 т (?) | Мощность двигателя: УТОЧНИТЬ |  |
+| Фронтальные погрузчики | Irbis IR998 | XCMG XC998 | Ёмкость ковша: 5,4 м³ | Эксплуатационная масса: 32 т | Макс. грузоподъёмность: 10 т | Мощность двигателя: 277 кВт (377 л.с.); Класс: Карьерный погрузчик |  |
+| Фронтальные погрузчики | Irbis IR9150 | XCMG XC9150 | Ёмкость ковша: 7,7 м³ | Эксплуатационная масса: 55 т | Макс. грузоподъёмность: 15 т (?) | Мощность двигателя: УТОЧНИТЬ; Класс: Тяжёлый карьерный погрузчик |  |
+
+## 5. Что нужно сделать
+
+1. **Устранить дефекты** из §6 — по каждому дай решение и обоснование.
+2. **Заполнить пропуски** из §7 — по каждому значению укажи источник (сайт + модель,
+   по которой сверял). Если подтверждения нет — так и напиши, значение не выдумывай.
+3. **Выровнять обозначения** по правилам §8.
+4. **Добавить восьмую группу — навесное оборудование** по §9.
+5. **Выдать результат** в формате §10.
+
+## 6. Дефекты, которые надо устранить
+
+1. **Irbis IR5505** — Один из самых тяжёлых серийных автогрейдеров в классе.
+2. **Irbis IR-TR60** — В исходном файле обозначен как IR3207K — этот индекс уже занят телескопическим погрузчиком. Требуется развести обозначения.
+3. **Irbis IR3090F** — Открытые источники не дают подтверждённых характеристик. Данные запросить у поставщика.
+4. **Irbis IR8010K** — В исходном файле масса указана 15,5 т, у производителя — 14,1 т. Уточнить исполнение.
+5. **Irbis IR23010K** — В исходном файле: масса 23 т, грузоподъёмность 32,8 т. По логике индекса значения переставлены местами — грузоподъёмность 23 т при массе 32,8 т. Требует подтверждения.
+
+## 7. Пропуски, которые надо заполнить
+
+- **Irbis IR35** (XCMG GR3505): Макс. глубина срезания
+- **Irbis IR5505** (XCMG GR5505): Макс. глубина срезания
+- **Irbis IR922 AWD** (SEM 922 AWD): Макс. глубина срезания
+- **Irbis IR922F AWD** (SEM 922F AWD): Эксплуатационная масса, Макс. глубина срезания
+- **Irbis IR-TR60** (NHL / Terex TR60): Эксплуатационная масса
+- **Irbis IR-TR100A** (NHL / Terex TR100A): Эксплуатационная масса, Объём кузова
+- **Irbis IR-NTE120** (NHL / Terex NTE120): Эксплуатационная масса
+- **Irbis IR-NTE150** (NHL / Terex NTE150): Эксплуатационная масса
+- **Irbis IR3090F** (SEM 3090F): Эксплуатационная масса, Грузоподъёмность, Объём кузова
+- **Irbis D260** (XCMG D260 / D260LGP): Мощность двигателя
+- **Irbis XCT25L5** (XCMG XCT25L5): Эксплуатационная масса
+- **Irbis XCT30** (XCMG XCT30_S1): Эксплуатационная масса, Длина стрелы с гуськом
+- **Irbis XCT55** (XCMG XCT55_S1): Эксплуатационная масса
+- **Irbis XCT70** (XCMG XCT70_S1): Эксплуатационная масса
+- **Irbis XCT80** (XCMG XCT80_S): Эксплуатационная масса, Длина стрелы с гуськом
+- **Irbis XCT100** (XCMG XCT100_S): Эксплуатационная масса, Длина стрелы с гуськом
+- **Irbis IR3207K** (XCMG XT3207K): Мощность двигателя, Высота подъёма
+- **Irbis IR6-3507K** (XCMG XC6-3507K): Мощность двигателя, Высота подъёма
+- **Irbis IR4014K** (XCMG XT4014K): Эксплуатационная масса
+- **Irbis IR5017K** (XCMG XT5017K): Мощность двигателя
+- **Irbis IR5517K** (XCMG XT5517K): Мощность двигателя, Эксплуатационная масса
+- **Irbis IR8010K** (XCMG XT8010K): Мощность двигателя
+- **Irbis IR12010K** (XCMG XT12010K): Мощность двигателя
+- **Irbis IR18010K** (XCMG XT18010K): Мощность двигателя
+- **Irbis IR23010K** (XCMG XT23010K): Мощность двигателя, Макс. грузоподъёмность, Эксплуатационная масса
+- **Irbis IR676D** (SEM 676D): Макс. грузоподъёмность
+- **Irbis IR975** (XCMG XC975): Макс. грузоподъёмность, Мощность двигателя
+- **Irbis IR9150** (XCMG XC9150): Макс. грузоподъёмность, Мощность двигателя
+
+## 8. Выравнивание обозначений
+
+Сейчас система индексов разнородна: где-то за основу взят индекс платформы
+(XE60WD, XCT55, D360), где-то собственный числовой индекс (IR30, IR958),
+где-то смешанный (IR6-3507K и IR3207K в одной группе).
+
+Сделай так:
+
+1. **Сохрани текущие обозначения как основные** — они уже в обороте, менять их
+   без моего решения нельзя.
+2. Найди и перечисли **все места, где система ломается**: дубли индексов, разный
+   формат внутри одной группы, индекс, не отражающий параметр машины.
+3. Отдельной колонкой **предложи единую схему** обозначений на весь каталог —
+   такую, чтобы по индексу читались группа и главный параметр машины, и чтобы
+   в ней не возникало дублей. Дай её как предложение с обоснованием, не переписывая
+   каталог автоматически.
+4. Проверь единообразие записи величин: единицы (т, кВт, л.с., м³, мм, м),
+   десятичный разделитель — запятая, диапазоны через тире (4,2–7,0 м³),
+   мощность в формате «261 кВт (350 л.с.)».
+
+## 9. Новая группа: навесное оборудование
+
+Добавь восьмую группу — **навесное оборудование** — и наполни её по тем же
+правилам, что и остальные: три ключевых параметра в карточке, полная спецификация,
+пометка неподтверждённых значений.
+
+Состав группы и ключевые параметры для каждого типа:
+
+| Тип | Ключевые параметры |
+|---|---|
+| Ковши экскаваторные (стандартный, скальный, планировочный, траншейный) | ёмкость, ширина, класс машины-носителя |
+| Ковши погрузочные (стандартный, скальный, увеличенный, зерновой) | ёмкость, ширина, масса |
+| Гидромолоты (закрытого типа, с боковым захватом) | энергия удара, частота, класс носителя |
+| Грейферы (двухчелюстные, многочелюстные) | ёмкость, число челюстей, масса |
+| Бревнозахваты | площадь захвата, масса, класс носителя |
+| Гидроножницы и измельчители | усилие резания, раскрытие челюстей, масса |
+| Рыхлители (одно- и трёхстоечные) | число стоек, глубина рыхления, масса |
+| Быстросъёмные соединители | тип (механический/гидравлический), класс машины, масса |
+| Вилы паллетные | грузоподъёмность, длина вил, класс носителя |
+| Отвалы (прямой, поворотный, снежный) | ширина, объём, масса |
+| Щётки дорожные | ширина захвата, тип привода, масса |
+| Буры шнековые | диаметр, глубина бурения, крутящий момент |
+| Крюк-стрелы и люльки для телескопов | грузоподъёмность, вылет, масса |
+
+Для каждого типа укажи, **с какими машинами каталога он совместим** — по классу
+и массе носителя. Это главная ценность раздела: клиент должен видеть, что подходит
+к его машине.
+
+## 10. Формат результата
+
+Выдай по порядку:
+
+1. **Отчёт по дефектам** — таблица: позиция → что не так → решение → источник.
+2. **Отчёт по пропускам** — таблица: позиция → параметр → найденное значение →
+   источник → уверенность (подтверждено / требует проверки / не найдено).
+3. **Замечания по обозначениям** — список поломок системы + предложенная единая схема.
+4. **Сводная таблица каталога** — все 45 моделей плюс навесное оборудование,
+   колонки: группа, модель, три ключевых параметра, прочие характеристики, статус данных.
+5. **Готовый каталог одним HTML-файлом** — офлайн, без внешних зависимостей кроме
+   шрифтов, с поиском по моделям, фильтром по группам, блоками под фотографии
+   (`&lt;img src=&quot;photos/&lt;код&gt;.jpg&quot;&gt;` с запасной схемой при отсутствии файла)
+   и разделом «Открытые вопросы» внизу.
+
+## 11. Запреты
+
+- **Не выдумывай характеристики.** Если значение не найдено в открытых источниках —
+  пиши «не найдено» и оставляй пометку. Правдоподобное, но непроверенное число
+  в коммерческом каталоге хуже пустой ячейки.
+- Не меняй состав трёх ключевых параметров у групп.
+- Не переименовывай модели самостоятельно — только предлагай.
+- Не подставляй характеристики одной модели другой «по аналогии с классом».
+- Не выноси в клиентскую часть названия платформ (XCMG, SEM, NHL/Terex) —
+  они только в служебной колонке.</pre></section>
+<section class="panel links"><h2>Фотографии: откуда брать</h2><p>Страницы, с которых берутся снимки. Скачанный файл кладите в <code>photos/&lt;код&gt;.jpg</code> — код указан в скобках, карточка подхватит фото сама.</p>
+<p><strong>Где искать лучшее качество:</strong> сначала PDF-брошюры (в них фото в печатном разрешении), затем страницы товара на дилерских сайтах, затем каталожные разделы. Снимки с водяными знаками и чужими логотипами не берите.</p>
+<hr>
+<h3>Автогрейдеры</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis IR30 (<code>ir30</code>)</td><td><a href="https://xcmg.com.ru/catalog/greydery-xcmg/gr3505tpro/" target="_blank" rel="noopener">xcmg.com.ru/gr3505tpro</a> <span class="dot">·</span> <strong><a href="https://xcmg.com.ru/pdf/gr3505tpro.pdf" target="_blank" rel="noopener">PDF-брошюра</a></strong> <span class="dot">·</span> <a href="https://xcmg-rf.ru/product/avtogrejder-xcmg-gr3505tpro/" target="_blank" rel="noopener">xcmg-rf.ru</a> <span class="dot">·</span> <a href="https://xcmg-tt.ru/catalog/avtogreyder-gr3505tpro" target="_blank" rel="noopener">xcmg-tt.ru</a></td></tr><tr><td>Irbis IR35 (<code>ir35</code>)</td><td><a href="https://techno-xcmg.ru/product/dorozhnaya-tekhnika/greydera/greyder-gr3505/" target="_blank" rel="noopener">techno-xcmg.ru</a> <span class="dot">·</span> <a href="https://xcmg.ru/product/greydery/avtogreyder-xcmg-gr3505/" target="_blank" rel="noopener">xcmg.ru</a> <span class="dot">·</span> <a href="https://xcmgvostok.ru/grejdery/gr3505/" target="_blank" rel="noopener">xcmgvostok.ru</a> <span class="dot">·</span> <a href="https://www.ms-parts.ru/specztehnika/avtogrejderyi/xcmg-gr3505" target="_blank" rel="noopener">ms-parts.ru</a></td></tr><tr><td>Irbis IR5505 (<code>ir5505</code>)</td><td><a href="https://exkavator.ru/excapedia/technic/xcmggr5505" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://xcmg.com.ru/catalog/greydery-xcmg/gr5505tpro/" target="_blank" rel="noopener">xcmg.com.ru/gr5505tpro</a> <span class="dot">·</span> <a href="https://specavto.ru/marks/xcmg/avtogreydery/srednie-avtogreidery/gr5505/" target="_blank" rel="noopener">specavto.ru</a> <span class="dot">·</span> <a href="https://skladmashin.ru/dorojnaya-i-stroitelnaya-tehnika/avtogreydery/xcmg/avtogreyder-xcmg-gr5505" target="_blank" rel="noopener">skladmashin.ru</a></td></tr><tr><td>Irbis IR922 AWD (<code>ir922awd</code>)</td><td><a href="https://www.vost-tech.ru/produkciya/sem/grejdery/sem_922awd/" target="_blank" rel="noopener">vost-tech.ru</a> <span class="dot">·</span> <a href="https://exxon-group.com/product/avtogrejder-sem-922-awd-polnoprivodnyj/" target="_blank" rel="noopener">exxon-group.com</a> <span class="dot">·</span> <a href="https://orland.pro/10-katalog/69-avtogrejder-sem-922-awd" target="_blank" rel="noopener">orland.pro</a> <span class="dot">·</span> <a href="https://centr-teh.ru/product-avtogreyder-sem-922-awd-8186" target="_blank" rel="noopener">centr-teh.ru</a></td></tr><tr><td>Irbis IR922F AWD (<code>ir922fawd</code>)</td><td><a href="https://altehstroy.com/technics/sem/graders/922-awd/" target="_blank" rel="noopener">altehstroy.com</a> <span class="dot">·</span> <a href="https://motoriumrus.ru/catalog/dorozhno-stroitelnaya-tekhnika/stroitelstvo-i-remont-dorog/avtogreydery/" target="_blank" rel="noopener">motoriumrus.ru</a></td></tr></tbody></table></div>
+<h3>Карьерные самосвалы</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis IR-TR60 (<code>irtr60</code>)</td><td><a href="https://specteh.specmir.com/catalog/samosvaly1/karernye/terex/karernyy-samosval-nhl-tr-60/" target="_blank" rel="noopener">specmir.com</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/type/karernie_samosvali_vnedorojnie/nhl" target="_blank" rel="noopener">exkavator.ru — весь ряд NHL</a></td></tr><tr><td>Irbis IR-TR100A (<code>irtr100a</code>)</td><td><a href="https://specteh.specmir.com/catalog/samosvaly1/karernye/terex/karernyy-samosval-nhl-tr100-tr100a/" target="_blank" rel="noopener">specmir.com</a> <span class="dot">·</span> <a href="https://g-eurasia.ru/samosval-s-zhestkoy-ramoy-spannhl-98604" target="_blank" rel="noopener">g-eurasia.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/nhltr100a" target="_blank" rel="noopener">exkavator.ru</a></td></tr><tr><td>Irbis IR-NTE120 (<code>irnte120</code>)</td><td><a href="https://specteh.specmir.com/catalog/samosvaly1/karernye/terex/karernyy-samosval-nhl-nte120/" target="_blank" rel="noopener">specmir.com</a> <span class="dot">·</span> <a href="https://g-eurasia.ru/samosval-nhl-nte120" target="_blank" rel="noopener">g-eurasia.ru</a></td></tr><tr><td>Irbis IR-NTE150 (<code>irnte150</code>)</td><td><a href="https://specteh.specmir.com/catalog/samosvaly1/karernye/terex/karernyy-samosval-nhl-nte150/" target="_blank" rel="noopener">specmir.com</a> <span class="dot">·</span> <a href="https://eurasiamachinery.kz/ru/katalog-tovarov/karernye-samosvaly-nhl" target="_blank" rel="noopener">eurasiamachinery.kz</a></td></tr><tr><td>Irbis IR3090F (<code>ir3090f</code>)</td><td><a href="https://vsiaspectehnika.ru/katalog/gornodobyvayushaya-tehnika/samosvaly-karernye/samosval-karernyj-sem-sem3090f" target="_blank" rel="noopener">vsiaspectehnika.ru</a></td></tr><tr><td><strong>Весь ряд NHL</strong></td><td><a href="https://g-eurasia.ru/samosvaly-s-zhestkoy-ramoy-spannhl" target="_blank" rel="noopener">g-eurasia.ru — самосвалы с жёсткой рамой</a> <span class="dot">·</span> <a href="https://autosila24.ru/gortekh/84916-karernye-samosvaly-nhl-s-zhestkoj-ramoj/" target="_blank" rel="noopener">autosila24.ru — обзор</a></td></tr></tbody></table></div>
+<h3>Экскаваторы и перегружатели</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis XE60WD (<code>xe60wd</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/kolesnye-ekskavatory/xe60wd/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://techno-xcmg.ru/product/zemleroynaya-tekhnika/ekskavatory-kolyesnye/kolyesnyy-ekskavator-xe60wd/" target="_blank" rel="noopener">techno-xcmg.ru</a></td></tr><tr><td>Irbis XE150WD (<code>xe150wd</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/kolesnye-ekskavatory/kolesnyy-ekskavator-xe150wd/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://xcmg-pfo.ru/catalog/ekskavatory/kolesnye_ekskavatory/xe150wd.html" target="_blank" rel="noopener">xcmg-pfo.ru</a> <span class="dot">·</span> <a href="https://www.tradicia-k.ru/desc-technic_xcmg/xe150w/" target="_blank" rel="noopener">tradicia-k.ru</a></td></tr><tr><td>Irbis XE180WD (<code>xe180wd</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/kolesnye-ekskavatory/xe180wd/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://xcmg-tt.ru/catalog/ekskavator-kolesnyy-xcmg-xe180wd" target="_blank" rel="noopener">xcmg-tt.ru</a></td></tr><tr><td>Irbis XE210WD (<code>xe210wd</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/kolesnye-ekskavatory/xe210wd/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://www.tradicia-k.ru/desc-technic_xcmg/xe210-wd/" target="_blank" rel="noopener">tradicia-k.ru</a> <span class="dot">·</span> <a href="https://xcmgvostok.ru/moskva/ekskavatory/koljosnye-ekskavatory/xe210wd/" target="_blank" rel="noopener">xcmgvostok.ru</a></td></tr><tr><td>Irbis XE210WLL (<code>xe210wll</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/kolesnye-ekskavatory/" target="_blank" rel="noopener">xcmg-ru.ru — раздел</a> <span class="dot">·</span> <a href="https://xcmg.market/catalog/ekskavatory/kolesnye-ekskavatory/" target="_blank" rel="noopener">xcmg.market</a></td></tr><tr><td>Irbis XE230M (<code>xe230m</code>)</td><td><a href="https://xcmg.com.ru/catalog/peregruzhateli-i-razrushiteli/xe230m-xcmg/" target="_blank" rel="noopener">xcmg.com.ru</a> <span class="dot">·</span> <a href="https://www.xcmgrus.com/peregruzhatel-xe230m.html" target="_blank" rel="noopener">xcmgrus.com</a> <span class="dot">·</span> <a href="https://xcmg.market/catalog/ekskavatory/ekskavatory_peregruzhateli/gusenichnyy-peregruzhatel-xcmg-xe230m/" target="_blank" rel="noopener">xcmg.market</a></td></tr><tr><td><strong>Весь ряд перегружателей</strong></td><td><a href="https://xcmg-ru.ru/tehnika/gusenichnye-peregruzhateli/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://techno-xcmg.ru/product/peregruzhateli/peregruzhateli-gusenichnye/" target="_blank" rel="noopener">techno-xcmg.ru</a></td></tr></tbody></table></div>
+<h3>Бульдозеры</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis D170 (<code>d170</code>)</td><td><a href="https://exkavator.ru/excapedia/technic/xcmgd170" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://techno-xcmg.ru/product/dorozhnaya-tekhnika/buldozery/buldozer-xcmg-d170-d170lgp-bolotokhod-/" target="_blank" rel="noopener">techno-xcmg.ru</a> <span class="dot">·</span> <a href="https://www.silnmash.ru/product/buldozery/buldozer-xcmg-d170/" target="_blank" rel="noopener">silnmash.ru</a></td></tr><tr><td>Irbis D260 (<code>d260</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/gusenichnye-buldozery/xcmg-d260/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/xcmgd260" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://xcmgvostok.ru/buldozery/gusenichnye-buldozery/d260/" target="_blank" rel="noopener">xcmgvostok.ru</a></td></tr><tr><td>Irbis D360 (<code>d360</code>)</td><td><a href="https://exkavator.ru/excapedia/technic/xcmgd360" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://techno-xcmg.ru/product/dorozhnaya-tekhnika/buldozery/buldozer-xcmg-d360/" target="_blank" rel="noopener">techno-xcmg.ru</a> <span class="dot">·</span> <a href="https://chinax.ru/avtopark/stroitelnaya-tekhnika/zemleroynaya-tekhnika/buldozery/buldozer-xcmg-d360/" target="_blank" rel="noopener">chinax.ru</a></td></tr><tr><td>Irbis DL350 (<code>dl350</code>)</td><td><strong><a href="https://pdf.directindustry.com/pdf/xcmg/xcmg-wheel-bulldozer-dl350/50713-792939.html" target="_blank" rel="noopener">PDF-брошюра DirectIndustry</a></strong> <span class="dot">·</span> <a href="https://xcmg.com.ru/catalog/buldozery-xcmg/xcmg-dl350/" target="_blank" rel="noopener">xcmg.com.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/xcmgdl350" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://www.machmall.com/item-detail/XCMG-DL350-6898.html" target="_blank" rel="noopener">machmall.com</a></td></tr><tr><td>Irbis DL560 (<code>dl560</code>)</td><td><strong><a href="https://pdf.directindustry.com/pdf/xcmg/xcmg-wheel-bulldozer-dl560/50713-793605.html" target="_blank" rel="noopener">PDF-брошюра DirectIndustry</a></strong> <span class="dot">·</span> <a href="https://xcmg.com.ru/catalog/buldozery-xcmg/xcmg-dl560/" target="_blank" rel="noopener">xcmg.com.ru</a> <span class="dot">·</span> <a href="https://technoera.ru/kolesnyj-buldozer-xcmg-dl560-ii/" target="_blank" rel="noopener">technoera.ru</a> <span class="dot">·</span> <a href="https://specialnayatechnica.ru/equipment/wheel-dozer/1357-xcmg-dl560" target="_blank" rel="noopener">specialnayatechnica.ru</a></td></tr><tr><td><strong>Весь ряд</strong></td><td><a href="https://xcmg-ru.ru/tehnika/buldozery/" target="_blank" rel="noopener">xcmg-ru.ru гусеничные</a> <span class="dot">·</span> <a href="https://xcmg-ru.ru/tehnika/buldozery-kolesnye/" target="_blank" rel="noopener">xcmg-ru.ru колёсные</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/type/byldozeri/xcmg" target="_blank" rel="noopener">exkavator.ru</a></td></tr></tbody></table></div>
+<h3>Автокраны</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis XCT25L5 (<code>xct25</code>)</td><td><a href="https://xcmg-rf.ru/product/avtokran-xcmg-xct25/" target="_blank" rel="noopener">xcmg-rf.ru</a> <span class="dot">·</span> <a href="https://xcmg.tevex.ru/production/samohodnye-krany/avtomobilnye/xct-series/xct25l5-sr-all-wheel-drive/" target="_blank" rel="noopener">tevex.ru</a> <span class="dot">·</span> <a href="http://www.sibpromtrans.ru/kr_xcmg/xct-25-l5-s.php" target="_blank" rel="noopener">sibpromtrans.ru</a> <span class="dot">·</span> <a href="http://www.kran.ru/catalog/truck-crane/xcmg/qy25k5/" target="_blank" rel="noopener">kran.ru</a></td></tr><tr><td>Irbis XCT30 (<code>xct30</code>)</td><td><a href="http://www.sibpromtrans.ru/kr_xcmg/xct-30-s.php" target="_blank" rel="noopener">sibpromtrans.ru</a></td></tr><tr><td>Irbis XCT55 / XCT70 / XCT80 / XCT100</td><td><a href="https://xcmg-rf.ru/product-category/avtokrany/" target="_blank" rel="noopener">xcmg-rf.ru — раздел</a> <span class="dot">·</span> <a href="https://xcmgru.com/catalog/avtokranyi/" target="_blank" rel="noopener">xcmgru.com</a> <span class="dot">·</span> <a href="https://www.ms-parts.ru/specztehnika/kranyi/shossejnyie-avtokranyi/" target="_blank" rel="noopener">ms-parts.ru</a></td></tr><tr><td><strong>Весь ряд</strong></td><td><a href="https://xcmg-ru.ru/tehnika/avtokrany/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/type/avtokrani_avtomobilnie_krani/xcmg" target="_blank" rel="noopener">exkavator.ru</a></td></tr></tbody></table></div>
+<h3>Телескопические погрузчики</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis IR6-3007V (<code>ir6-3007v</code>)</td><td><a href="https://techno-xcmg.ru/product/pogruzchiki/teleskopicheskie-pogruzchiki/teleskopicheskiy-pogruzchik-xcmg-xc6-3007V/" target="_blank" rel="noopener">techno-xcmg.ru</a></td></tr><tr><td>Irbis IR3207K (<code>ir3207k</code>)</td><td><a href="https://xcmg-rf.ru/product-category/teleskopicheskie-pogruzchiki/" target="_blank" rel="noopener">xcmg-rf.ru — раздел</a></td></tr><tr><td>Irbis IR6-3507K (<code>ir6-3507k</code>)</td><td><a href="https://xcmg.com.ru/catalog/teleskopicheskie-pogruzchiki/xc6-3507k/" target="_blank" rel="noopener">xcmg.com.ru</a> <span class="dot">·</span> <a href="https://xcmg.tevex.ru/production/pogruzchiki/teleskopicheskie/xc6-3507k/" target="_blank" rel="noopener">tevex.ru</a></td></tr><tr><td>Irbis IR6-3514K (<code>ir6-3514k</code>)</td><td><a href="https://xcmg-rf.ru/product/teleskopicheskij-pogruzchik-xcmg-xc6-3514k/" target="_blank" rel="noopener">xcmg-rf.ru</a> <span class="dot">·</span> <a href="https://xcmg-tt.ru/catalog/teleskopicheskiy-pogruzchik-xcmg-xc6-3514k" target="_blank" rel="noopener">xcmg-tt.ru</a> <span class="dot">·</span> <a href="https://www.armtehno.ru/catalog/pogruzchiki/teleskopicheskie_pogruzchiki/869/" target="_blank" rel="noopener">armtehno.ru</a></td></tr><tr><td>Irbis IR4014K (<code>ir4014k</code>)</td><td><a href="https://techno-xcmg.ru/product/pogruzchiki/teleskopicheskie-pogruzchiki/teleskopicheskiy-pogruzchik-xcmg-xt4014k/" target="_blank" rel="noopener">techno-xcmg.ru</a></td></tr><tr><td>Irbis IR6-4517K (<code>ir6-4517k</code>)</td><td><a href="https://xcmg-rf.ru/product/teleskopicheskij-pogruzchik-xcmg-xc6-4517k/" target="_blank" rel="noopener">xcmg-rf.ru</a> <span class="dot">·</span> <a href="https://xcmg.ru/product/pogruzchiki/teleskopicheskie-pogruzchiki/teleskopicheskiy-pogruzchik-xcmg-xc6-4517k/" target="_blank" rel="noopener">xcmg.ru</a> <span class="dot">·</span> <a href="https://www.ms-parts.ru/specztehnika/teleskopicheskie-pogruzchiki/xcmg/xcmg-xc6-4517k/" target="_blank" rel="noopener">ms-parts.ru</a></td></tr><tr><td>Irbis IR5017K (<code>ir5017k</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/teleskopicheskij-pogruzchik/xt5017k/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://xcmgvostok.ru/pogruzchiki-2/teleskopicheskie-pogruzchiki/xt5017k/" target="_blank" rel="noopener">xcmgvostok.ru</a></td></tr><tr><td>Irbis IR5517K (<code>ir5517k</code>)</td><td><a href="https://xcmg-nw.ru/catalog/teleskopicheskie-pogruzchiki/" target="_blank" rel="noopener">xcmg-nw.ru — раздел</a></td></tr><tr><td>Irbis IR8010K (<code>ir8010k</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/teleskopicheskij-pogruzchik/xt8010k/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://xcmgvostok.ru/pogruzchiki-2/teleskopicheskie-pogruzchiki/xt8010k/" target="_blank" rel="noopener">xcmgvostok.ru</a></td></tr><tr><td>Irbis IR12010K (<code>ir12010k</code>)</td><td><a href="https://xcmgrussia.com/teleskopicheskie-pogruzchiki-xcmg/" target="_blank" rel="noopener">xcmgrussia.com — раздел</a></td></tr><tr><td>Irbis IR18010K (<code>ir18010k</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/teleskopicheskij-pogruzchik/xt18010k/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/xcmgxt18010k" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://www.wme.cn/xcmg-xt18010k/" target="_blank" rel="noopener">wme.cn</a></td></tr><tr><td>Irbis IR23010K (<code>ir23010k</code>)</td><td><a href="https://xcmg-tm.ru/pogruzchiki/teleskopicheskie-pogruzchiki/" target="_blank" rel="noopener">xcmg-tm.ru — раздел</a></td></tr><tr><td><strong>Весь ряд</strong></td><td><a href="https://exkavator.ru/excapedia/technic/type/teleskopicheskie_pogryzchiki/xcmg" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://www.ms-parts.ru/specztehnika/teleskopicheskie-pogruzchiki/xcmg/" target="_blank" rel="noopener">ms-parts.ru</a></td></tr></tbody></table></div>
+<h3>Фронтальные погрузчики</h3>
+<div class="tw"><table><thead><tr><th>Модель</th><th>Страницы с фото</th></tr></thead><tbody><tr><td>Irbis IR676D (<code>ir676d</code>)</td><td>Поиск по «SEM 676D фронтальный погрузчик» — прямой карточки в подборке нет</td></tr><tr><td>Irbis IR958 (<code>ir958</code>)</td><td><a href="https://xcmg-ru.ru/tehnika/frontalnyie-pogruzchiki/frontalnyy-pogruzchik-xc958/" target="_blank" rel="noopener">xcmg-ru.ru</a> <span class="dot">·</span> <a href="https://xcmg.com.ru/catalog/frontalnye-pogruzchiki-xcmg/xc958/" target="_blank" rel="noopener">xcmg.com.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/xcmgxc958" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://www.snabus.ru/wheel-loaders/xcmg-wheel-loaders/xcmg-xc958-wheel-loader/" target="_blank" rel="noopener">snabus.ru</a></td></tr><tr><td>Irbis IR968 (<code>ir968</code>)</td><td><a href="https://xcmg-rf.ru/product/frontalnyj-pogruzchik-xcmg-xc968/" target="_blank" rel="noopener">xcmg-rf.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/xcmgxc968" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://afari.ru/pogruzchiki/frontalnyij-pogruzchik-xcmg-xc968" target="_blank" rel="noopener">afari.ru</a> <span class="dot">·</span> <a href="https://silnmash.ru/product/pogruzchiki/frontalnye_pogruzchiki/frontalnyy-pogruzchik-xc968/" target="_blank" rel="noopener">silnmash.ru</a></td></tr><tr><td>Irbis IR975 (<code>ir975</code>)</td><td><a href="https://xcmgmarket.ru/catalogue/pogruzchiki/frontalnye-pogruzchiki/xcmg-xc975-ev" target="_blank" rel="noopener">xcmgmarket.ru</a></td></tr><tr><td>Irbis IR998 (<code>ir998</code>)</td><td><a href="https://xcmg-rf.ru/product/karernyy-frontalnyy-pogruzchik-xcmg-xc998/" target="_blank" rel="noopener">xcmg-rf.ru</a> <span class="dot">·</span> <a href="https://exkavator.ru/excapedia/technic/xcmgxc998" target="_blank" rel="noopener">exkavator.ru</a> <span class="dot">·</span> <a href="https://xcmgcentre.uz/xc998" target="_blank" rel="noopener">xcmgcentre.uz</a> <span class="dot">·</span> <a href="https://upwheel.ru/product/frontalnyi-pogruzchik-xcmg-xc998/" target="_blank" rel="noopener">upwheel.ru</a></td></tr><tr><td>Irbis IR9150 (<code>ir9150</code>)</td><td><a href="https://xcmg.market/catalog/pogruzchiki/frontalnye-pogruzchiki/" target="_blank" rel="noopener">xcmg.market — раздел</a></td></tr></tbody></table></div>
+<hr>
+<h2 class="grp">НАВЕСНОЕ ОБОРУДОВАНИЕ</h2>
+<p>Раздела пока нет в каталоге — промт для ChatGPT добавляет его восьмой группой. Фото и номенклатуру берите отсюда.</p>
+<h3>Основные источники</h3>
+<div class="tw"><table><thead><tr><th>Источник</th><th>Что там есть</th></tr></thead><tbody><tr><td><strong><a href="https://techno-xcmg.ru/product/navesnoe-oborudovanie/" target="_blank" rel="noopener">techno-xcmg.ru — навесное оборудование</a></strong></td><td>Официальный дилер XCMG. Головной раздел: гидромолоты, грейферы, ковши, быстросъёмы, рыхлители. Лучшая отправная точка.</td></tr><tr><td><a href="https://techno-xcmg.ru/product/navesnoe-oborudovanie/navesnoe-oborudovanie-xcmg/gidromoloty-xcmg-s-bokovym-zakhvatom/" target="_blank" rel="noopener">techno-xcmg.ru — гидромолоты с боковым захватом</a></td><td>Гидромолоты, карточки с фото и характеристиками</td></tr><tr><td><a href="https://techno-xcmg.ru/product/navesnoe-oborudovanie/navesnoe-oborudovanie-xcmg/greyfery-xcmg/" target="_blank" rel="noopener">techno-xcmg.ru — грейферы</a></td><td>Двух- и многочелюстные грейферы</td></tr><tr><td><a href="https://extenpower.ru/fits/xcmg/" target="_blank" rel="noopener">extenpower.ru — навесное для XCMG</a></td><td>Подбор навески по модели машины — удобно для колонки «совместимость»</td></tr><tr><td><a href="https://extenpower.ru/navesnoe-oborudovanie-dlya-exkavatora/" target="_blank" rel="noopener">extenpower.ru — навесное для экскаваторов</a></td><td>Ковши, рыхлители, быстросъёмы</td></tr><tr><td><a href="https://spezzap.ru/xcmg/navesnoe-oborudovanie-1" target="_blank" rel="noopener">spezzap.ru — навесное для XCMG</a></td><td>Гидромолоты, грейферные ковши, быстросъёмы</td></tr><tr><td><a href="https://www.tradicia-k.ru/catalog/navesnoe-oborudovanie/" target="_blank" rel="noopener">tradicia-k.ru — навесное для экскаваторов</a></td><td>Производитель: ковши всех типов, рыхлители, отвалы</td></tr><tr><td><a href="https://nationalrent.ru/katalog-spectehniki/navesnoe-oborudovanie/backhoe-loader/" target="_blank" rel="noopener">nationalrent.ru — навесное</a></td><td>Гидромолоты, ковши, вилы, отвалы, дорожные щётки, буры, захваты</td></tr><tr><td><a href="https://shop.roads-pro.ru/catalog/oborudovanie-dlya-ekskavatorov" target="_blank" rel="noopener">shop.roads-pro.ru — оборудование для экскаваторов</a></td><td>Гидромолоты, вилы</td></tr><tr><td><a href="https://extehno.ru/catalog/navesnoe-oborudovanie/naznachenie/ekskavatori-pogruzchiki/" target="_blank" rel="noopener">extehno.ru — навесное</a></td><td>Широкая номенклатура со склада</td></tr></tbody></table></div>
+<h3>Что снять по типам</h3>
+<div class="tw"><table><thead><tr><th>Тип</th><th>Код файла</th><th>Где искать</th></tr></thead><tbody><tr><td>Ковш стандартный</td><td><code>att-bucket-std</code></td><td>tradicia-k.ru, extenpower.ru</td></tr><tr><td>Ковш скальный</td><td><code>att-bucket-rock</code></td><td>tradicia-k.ru</td></tr><tr><td>Ковш планировочный</td><td><code>att-bucket-grade</code></td><td>tradicia-k.ru</td></tr><tr><td>Ковш траншейный узкий</td><td><code>att-bucket-trench</code></td><td>extenpower.ru</td></tr><tr><td>Ковш погрузочный увеличенный</td><td><code>att-bucket-loader</code></td><td>extenpower.ru</td></tr><tr><td>Гидромолот закрытого типа</td><td><code>att-hammer</code></td><td>techno-xcmg.ru, spezzap.ru</td></tr><tr><td>Гидромолот с боковым захватом</td><td><code>att-hammer-side</code></td><td>techno-xcmg.ru</td></tr><tr><td>Грейфер двухчелюстной</td><td><code>att-grab-2</code></td><td>techno-xcmg.ru</td></tr><tr><td>Грейфер многочелюстной</td><td><code>att-grab-multi</code></td><td>techno-xcmg.ru</td></tr><tr><td>Бревнозахват</td><td><code>att-loggrab</code></td><td>nationalrent.ru</td></tr><tr><td>Гидроножницы</td><td><code>att-shears</code></td><td>extehno.ru</td></tr><tr><td>Рыхлитель одностоечный</td><td><code>att-ripper-1</code></td><td>tradicia-k.ru</td></tr><tr><td>Рыхлитель трёхстоечный</td><td><code>att-ripper-3</code></td><td>tradicia-k.ru</td></tr><tr><td>Быстросъём механический</td><td><code>att-qc-mech</code></td><td>spezzap.ru, extenpower.ru</td></tr><tr><td>Быстросъём гидравлический</td><td><code>att-qc-hydr</code></td><td>spezzap.ru</td></tr><tr><td>Вилы паллетные</td><td><code>att-forks</code></td><td>shop.roads-pro.ru, nationalrent.ru</td></tr><tr><td>Отвал поворотный</td><td><code>att-blade</code></td><td>nationalrent.ru</td></tr><tr><td>Отвал снежный</td><td><code>att-blade-snow</code></td><td>nationalrent.ru</td></tr><tr><td>Щётка дорожная</td><td><code>att-broom</code></td><td>nationalrent.ru</td></tr><tr><td>Бур шнековый</td><td><code>att-auger</code></td><td>nationalrent.ru</td></tr><tr><td>Крюк-стрела для телескопа</td><td><code>att-hook</code></td><td>ms-parts.ru, xcmg-rf.ru</td></tr><tr><td>Люлька для телескопа</td><td><code>att-basket</code></td><td>ms-parts.ru</td></tr><tr><td>Электромагнит</td><td><code>att-magnet</code></td><td>раздел перегружателей xcmg-ru.ru</td></tr></tbody></table></div>
+<hr>
+<h3>Правовое замечание</h3>
+<p>Снимки на дилерских сайтах принадлежат их владельцам, а на самой технике видны шильдики XCMG, SEM и NHL. Для каталога под своим брендом это годится как временная подложка на время подготовки, но в продающей версии нужны фотографии собственных машин — иначе несоответствие бренда на фото и в названии заметят и клиенты, и правообладатели.</p></section>
+</div>
+<p class="foot">Промт и список ссылок лежат в репозитории: <code>catalog/ПРОМТ_для_ChatGPT.md</code> и <code>catalog/ФОТО_ссылки.md</code>.</p>
+</div>
+<script>
+var btn=document.getElementById('copy'),src=document.getElementById('prompt');
+btn.addEventListener('click',function(){
+  var t=src.textContent;
+  function done(){btn.textContent='Скопировано \u2713';btn.classList.add('done');
+    setTimeout(function(){btn.textContent='Скопировать промт';btn.classList.remove('done');},2200);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done,fallback);
+  } else {fallback();}
+  function fallback(){
+    var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');done();}catch(err){
+      var r=document.createRange();r.selectNodeContents(src);
+      var s=window.getSelection();s.removeAllRanges();s.addRange(r);
+      btn.textContent='Выделено — нажмите Ctrl+C';}
+    ta.remove();}
+});
+</script>
