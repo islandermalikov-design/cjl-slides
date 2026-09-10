@@ -18,42 +18,52 @@ from deck_layouts import head, page, ACCENTS
 
 # ------------------------------------------------------------ 4 layers -----
 def slide_layers(prs, kicker, text, lead, layers, question, source=None,
-                 num=None):
-    s = page(prs, kicker, text, source=source, num=num)
-    _, tf = textbox(s, M, Inches(1.92), Inches(11.4), Inches(0.4))
-    para(tf, True, text=lead, size=14, color=SLATE, font=F_BOLD, line=1.3)
+                 num=None, image=None):
+    iw = Inches(4.55) if image else 0
+    cw = CW - (iw - Inches(0.10) if image else 0)
+    s = page(prs, kicker, text, source=source, num=num,
+             fw=cw if image else None, tw=cw if image else None)
+    if image:
+        from deck_visuals import image_bleed_right
+        image_bleed_right(s, image, w=iw)
 
-    top = Inches(2.44)
-    rh = Inches(0.66)
-    gap = Inches(0.115)
+    _, tf = textbox(s, M, Inches(1.92), cw, Inches(0.4))
+    para(tf, True, text=lead, size=13.5, color=SLATE, font=F_BOLD, line=1.3)
+
+    top = Inches(2.44) if not image else Inches(2.28)
+    rh = Inches(0.66) if not image else Inches(0.74)
+    gap = Inches(0.115) if not image else Inches(0.105)
+    lab_w = Inches(4.5) if not image else Inches(2.85)
     for i, (name, desc) in enumerate(layers):
         y = top + i * (rh + gap)
-        card = rect(s, M, y, CW - Inches(0.0), rh, WHITE,
+        card = rect(s, M, y, cw, rh, WHITE,
                     shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.14)
         soft_shadow(card, blur=12, dist=3, alpha=0.08)
         acc = ACCENTS[i % len(ACCENTS)]
-        chip = rect(s, M + Inches(0.20), y + Inches(0.145), Inches(0.37),
-                    Inches(0.37), acc, shape=MSO_SHAPE.OVAL)
+        rect(s, M + Inches(0.20), y + Inches(0.145), Inches(0.37),
+             Inches(0.37), acc, shape=MSO_SHAPE.OVAL)
         _, tf = textbox(s, M + Inches(0.20), y + Inches(0.145), Inches(0.37),
                         Inches(0.37), anchor=MSO_ANCHOR.MIDDLE)
         para(tf, True, text=str(i + 1), size=12, color=WHITE, font=F_HEAD,
              bold=True, align=PP_ALIGN.CENTER)
-        _, tf = textbox(s, M + Inches(0.78), y, Inches(4.5), rh,
+        _, tf = textbox(s, M + Inches(0.78), y, lab_w, rh,
                         anchor=MSO_ANCHOR.MIDDLE)
-        para(tf, True, text=name, size=15, color=NAVY, font=F_HEAD, bold=True)
-        _, tf = textbox(s, M + Inches(5.35), y, CW - Inches(5.7), rh,
+        para(tf, True, text=name, size=14 if image else 15, color=NAVY,
+             font=F_HEAD, bold=True, line=1.1)
+        dx = M + Inches(0.78) + lab_w + Inches(0.25)
+        _, tf = textbox(s, dx, y, M + cw - dx - Inches(0.30), rh,
                         anchor=MSO_ANCHOR.MIDDLE)
-        para(tf, True, text=desc, size=12.5, color=SLATE, font=F_BOLD,
-             line=1.25)
+        para(tf, True, text=desc, size=11.5 if image else 12.5, color=SLATE,
+             font=F_BOLD, line=1.25)
 
     y = top + 4 * (rh + gap) + Inches(0.16)
-    rect(s, M, y, CW, Inches(0.74), VIOLET_DEEP,
+    rect(s, M, y, cw, Inches(0.74), VIOLET_DEEP,
          shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.18)
     rect(s, M, y + Inches(0.16), Inches(0.075), Inches(0.42), MAGENTA)
-    _, tf = textbox(s, M + Inches(0.42), y, CW - Inches(0.9), Inches(0.74),
+    _, tf = textbox(s, M + Inches(0.42), y, cw - Inches(0.9), Inches(0.74),
                     anchor=MSO_ANCHOR.MIDDLE)
-    para(tf, True, text=question, size=15, color=WHITE, font=F_SER,
-         italic=True, line=1.2)
+    para(tf, True, text=question, size=14 if image else 15, color=WHITE,
+         font=F_SER, italic=True, line=1.2)
     return s
 
 

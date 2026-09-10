@@ -247,21 +247,143 @@ def title(slide, text, color=NAVY, t=None, size=27, w=None, l=None,
     return tf
 
 
-def footer(slide, source=None, page=None, dark=False, partner=True):
+def footer(slide, source=None, page=None, dark=False, partner=True, fw=None):
     line_c = LILAC_3 if not dark else VIOLET_SOFT
-    rect(slide, M, FOOT_Y, CW, Emu(9525), line_c)
+    fw = CW if fw is None else fw
+    rect(slide, M, FOOT_Y, fw, Emu(9525), line_c)
     if source:
-        _, tf = textbox(slide, M, FOOT_Y + Inches(0.13), CW - Inches(1.6),
+        _, tf = textbox(slide, M, FOOT_Y + Inches(0.13), fw - Inches(1.6),
                         Inches(0.4))
         para(tf, True, text=source, size=8.5,
              color=SLATE_LIGHT if not dark else RGBColor(0x9C, 0x8C, 0xC4),
              font=F_BOLD, line=1.2)
     if partner:
         picture(slide, MARK_WHITE if dark else MARK_COLOR,
-                SW - M - Inches(1.02), FOOT_Y + Inches(0.14), h=Inches(0.28))
+                M + fw - Inches(1.02), FOOT_Y + Inches(0.14), h=Inches(0.28))
     if page is not None:
-        _, tf = textbox(slide, SW - M - Inches(0.60), FOOT_Y + Inches(0.16),
+        _, tf = textbox(slide, M + fw - Inches(0.60), FOOT_Y + Inches(0.16),
                         Inches(0.60), Inches(0.3))
         para(tf, True, text=str(page), size=10,
              color=SLATE_LIGHT if not dark else RGBColor(0xB0, 0x9E, 0xD8),
              font=F_BOLD, bold=True, align=PP_ALIGN.RIGHT)
+
+
+# ============================================================================
+#  Приёмы из референс-листа: пончики, пилюли-теги, изображения, затемнения
+# ============================================================================
+
+IMG_CHAIN = os.path.join(ASSETS, "img_chain.jpg")
+IMG_LAYERS = os.path.join(ASSETS, "img_layers.jpg")
+IMG_INDUSTRIES = os.path.join(ASSETS, "img_industries.jpg")
+
+
+def donut(slide, cx, cy, d, segments, thickness=0.30, start=270.0, gap=1.2):
+    """Кольцевая диаграмма из дуг (blockArc).
+
+    segments: [(value, color), ...]; start — угол начала (270° = 12 часов).
+    """
+    total = float(sum(v for v, _ in segments)) or 1.0
+    a = start
+    out = []
+    for value, color in segments:
+        sweep = 360.0 * value / total
+        s = slide.shapes.add_shape(MSO_SHAPE.BLOCK_ARC,
+                                   int(cx - d / 2), int(cy - d / 2),
+                                   int(d), int(d))
+        s.adjustments[0] = ((a + gap / 2) % 360.0) * 0.6
+        s.adjustments[1] = ((a + sweep - gap / 2) % 360.0) * 0.6
+        s.adjustments[2] = thickness
+        s.fill.solid()
+        s.fill.fore_color.rgb = color
+        no_line(s)
+        s.shadow.inherit = False
+        out.append(s)
+        a += sweep
+    return out
+
+
+def pill(slide, l, t, text, fill=None, text_color=None, size=8.5,
+         border=None, h=None):
+    """Тег-пилюля из паттерна «распределение рисков»; возвращает ширину."""
+    h = h or Inches(0.235)
+    w = Inches(0.28) + Inches(0.078) * len(text)
+    s = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, int(l), int(t),
+                               int(w), int(h))
+    s.adjustments[0] = 0.5
+    s.shadow.inherit = False
+    if fill is None:
+        s.fill.background()
+    else:
+        s.fill.solid()
+        s.fill.fore_color.rgb = fill
+    if border is None:
+        no_line(s)
+    else:
+        s.line.color.rgb = border
+        s.line.width = Pt(0.75)
+    _, tf = textbox(slide, l, t + Inches(0.028), w, h)
+    para(tf, True, text=text, size=size, color=text_color or WHITE,
+         font=F_BOLD, bold=True, align=PP_ALIGN.CENTER, caps=True,
+         spacing=0.4)
+    return w
+
+
+def pill_row(slide, l, t, texts, max_w, fill=None, text_color=None,
+             gap=None, line_h=None, **kw):
+    """Раскладывает пилюли в строки, перенося по ширине max_w."""
+    gap = gap or Inches(0.09)
+    line_h = line_h or Inches(0.32)
+    x, y = l, t
+    for txt in texts:
+        w = Inches(0.28) + Inches(0.078) * len(txt)
+        if x > l and x + w > l + max_w:
+            x, y = l, y + line_h
+        pill(slide, x, y, txt, fill=fill, text_color=text_color, **kw)
+        x += w + gap
+    return y + line_h
+
+
+def image_fill(slide, path, l, t, w, h):
+    """Вставляет картинку «под обрез»: заполняет бокс, лишнее обрезается."""
+    from PIL import Image
+    iw, ih = Image.open(path).size
+    box_ar, img_ar = float(w) / float(h), float(iw) / float(ih)
+    pic = slide.shapes.add_picture(path, int(l), int(t), width=int(w),
+                                   height=int(h))
+    if img_ar > box_ar:
+        c = (1.0 - box_ar / img_ar) / 2.0
+        pic.crop_left = pic.crop_right = c
+    elif img_ar < box_ar:
+        c = (1.0 - img_ar / box_ar) / 2.0
+        pic.crop_top = pic.crop_bottom = c
+    return pic
+
+
+def scrim(slide, l, t, w, h, color=None, a_from=0.92, a_to=0.0, angle=0):
+    """Градиентная «вуаль» поверх картинки — чтобы текст читался."""
+    color = color or VIOLET_DEEP
+    s = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, int(l), int(t), int(w),
+                               int(h))
+    no_line(s)
+    s.shadow.inherit = False
+    f = s.fill
+    f.gradient()
+    stops = f.gradient_stops
+    while len(stops._gsLst) > 2:
+        stops._gsLst.remove(stops._gsLst[-1])
+    stops[0].color.rgb = color
+    stops[0].position = 0.0
+    stops[1].color.rgb = color
+    stops[1].position = 1.0
+    f.gradient_angle = angle
+    for i, alpha in ((0, a_from), (1, a_to)):
+        srgb = stops._gsLst[i].find(qn("a:srgbClr"))
+        for old in srgb.findall(qn("a:alpha")):
+            srgb.remove(old)
+        _sub(srgb, "a:alpha", val=int(alpha * 100000))
+    return s
+
+
+def tint(slide, l, t, w, h, color=None, alpha=0.42):
+    """Ровная подложка поверх картинки."""
+    return rect(slide, l, t, w, h, color or VIOLET_DEEP, alpha=alpha)

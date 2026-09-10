@@ -19,8 +19,8 @@ from deck_core import (
 ACCENTS = [MAGENTA, TEAL, VIOLET_MID, MAGENTA_HI, TEAL_DEEP]
 
 
-def _title_size(text, base=27.0):
-    n = len(text)
+def _title_size(text, base=27.0, ratio=1.0):
+    n = int(len(text) / max(ratio, 0.35))
     if n > 92:
         return 21.0
     if n > 70:
@@ -30,7 +30,7 @@ def _title_size(text, base=27.0):
     return base
 
 
-def head(slide, kicker, text, dark=False):
+def head(slide, kicker, text, dark=False, tw=None):
     """Standard page header: kicker rule + eyebrow + title."""
     c_title = WHITE if dark else NAVY
     c_kick = MAGENTA_HI if dark else MAGENTA
@@ -40,18 +40,20 @@ def head(slide, kicker, text, dark=False):
         _, tf = textbox(slide, M + Inches(0.36), TITLE_T, CW, Inches(0.26))
         para(tf, True, text=kicker, size=10.5, color=c_kick, font=F_BOLD,
              bold=True, caps=True, spacing=1.7)
-    put_title(slide, text, color=c_title, t=Inches(0.98),
-              size=_title_size(text))
+    put_title(slide, text, color=c_title, t=Inches(0.98), w=tw,
+              size=_title_size(text, ratio=1.0 if tw is None
+                               else float(tw) / float(CW)))
 
 
-def page(prs, kicker, text, source=None, num=None, dark=False, ground=LILAC):
+def page(prs, kicker, text, source=None, num=None, dark=False, ground=LILAC,
+         fw=None, tw=None):
     s = blank(prs)
     if dark:
         bg_gradient(s)
     else:
         bg_light(s, ground)
-    head(s, kicker, text, dark=dark)
-    footer(s, source=source, page=num, dark=dark)
+    head(s, kicker, text, dark=dark, tw=tw)
+    footer(s, source=source, page=num, dark=dark, fw=fw)
     return s
 
 
@@ -121,11 +123,19 @@ def slide_title(prs, kicker, line1, line2_accent, subtitle, bullets, meta,
 
 
 # --------------------------------------------------------------- divider ----
-def slide_divider(prs, num, kicker, text, lead, num_label=None):
+def slide_divider(prs, num, kicker, text, lead, num_label=None, image=None):
+    from deck_core import image_fill, scrim, tint
     s = blank(prs)
     bg_gradient(s, VIOLET_DEEP, VIOLET, angle=20)
-    hero_rings(s, Inches(11.2), Inches(4.5), sizes=(6.2, 4.7, 3.3),
-               color=MAGENTA_HI, alpha=0.26)
+    if image:
+        image_fill(s, image, 0, 0, SW, SH)
+        tint(s, 0, 0, SW, SH, VIOLET_DEEP, alpha=0.30)
+        scrim(s, 0, 0, Inches(9.2), SH, VIOLET_DEEP, a_from=0.90, a_to=0.0)
+        scrim(s, 0, Inches(5.4), SW, Inches(2.1), VIOLET_DEEP, a_from=0.0,
+              a_to=0.75, angle=90)
+    else:
+        hero_rings(s, Inches(11.2), Inches(4.5), sizes=(6.2, 4.7, 3.3),
+                   color=MAGENTA_HI, alpha=0.26)
     rect(s, Inches(0), Inches(0), Inches(0.10), SH, MAGENTA)
 
     _, tf = textbox(s, M, Inches(1.72), Inches(4.0), Inches(2.6))
@@ -271,10 +281,15 @@ def slide_grid(prs, kicker, text, cards, source=None, num=None, lead=None,
     n = len(cards)
     gap = Inches(0.20)
     cw = int((CW - gap * (n - 1)) / n)
-    ch = min(bottom - top, Inches(3.30))
+    has_tags_pre = any(len(c) > 2 and c[2] for c in cards)
+    ch = min(bottom - top, Inches(3.94) if has_tags_pre else Inches(3.30))
     top = top + int(((bottom - top) - ch) / 2)
 
-    for i, (label, body) in enumerate(cards):
+    from deck_core import pill_row
+    has_tags = any(len(c) > 2 and c[2] for c in cards)
+    for i, c in enumerate(cards):
+        label, body = c[0], c[1]
+        tags = c[2] if len(c) > 2 else None
         x = M + i * (cw + gap)
         card = rect(s, x, top, cw, ch, WHITE,
                     shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.05)
@@ -286,10 +301,16 @@ def slide_grid(prs, kicker, text, cards, source=None, num=None, lead=None,
                         cw - Inches(0.56), Inches(0.8))
         para(tf, True, text=label, size=17, color=NAVY, font=F_HEAD,
              bold=True, line=1.08)
+        body_h = ch - Inches(1.72) - (Inches(1.02) if has_tags else 0)
         _, tf = textbox(s, x + Inches(0.28), top + Inches(1.44),
-                        cw - Inches(0.56), ch - Inches(1.72))
+                        cw - Inches(0.56), body_h)
         para(tf, True, text=body, size=12, color=SLATE, font=F_BOLD,
              line=1.36)
+        if tags:
+            pill_row(s, x + Inches(0.28), top + ch - Inches(0.80), tags,
+                     cw - Inches(0.46), fill=None, border=acc,
+                     text_color=acc, size=8, gap=Inches(0.07),
+                     line_h=Inches(0.30))
 
     if footnote:
         y = bottom + Inches(0.26)
