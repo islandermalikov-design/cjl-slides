@@ -34,10 +34,6 @@ PANEL = "#F6F6F7"        # secondary information panel
 CARD = "#F5F5F7"         # KPI card fill
 CARD_LINE = "#EAEAEE"
 CARD_RULE = "#DFDFE5"
-TINT_RED = "#FDF2F1"     # accent block fill
-TINT_RED_LINE = "#F3CCC7"
-ARC = "#F0A79E"
-
 FONT = "Inter"
 
 CAP = 0.72               # cap height as a share of font size, used for centring
@@ -92,20 +88,6 @@ class Img:
     y: float
     w: float
     h: float
-
-
-@dataclass
-class Arc:
-    """Decorative brand sweep: circular arc, clipped to `clip`."""
-    cx: float
-    cy: float
-    r: float
-    a0: float
-    a1: float
-    color: str = ARC
-    sw: float = 2
-    opacity: float = 0.55
-    clip: tuple[float, float, float, float] | None = None
 
 
 @dataclass
@@ -268,8 +250,16 @@ def slide_sources() -> Slide:
             s.add(Text(cx, item_base,
                        [[Run(t, 17, 400, GRAY)] for t in items], step=item_step))
 
-    # brand gem, reduced in scale and parked in the panel's free right column
-    s.add(Img("gem", 1508, 762, 244, 244 * 612 / 777))
+    # "А ещё": the games note lives in the panel's right column, set off by a
+    # hairline rather than a card so the panel keeps one background
+    s.add(Line(1390, p_y + 44, 1390, p_y + p_h - 44, LINE_SOFT))
+    s.add(Img("trophy", 1444, 676, 112, 112))
+    s.add(Text(1444, 844, one(Run("А ЕЩЁ", 18, 700, RED, 0.14))))
+    nw = text_width("8", 84, 800)
+    s.add(Text(1444, 924, one(Run("8", 84, 800, RED))))
+    s.add(Text(1444 + nw + 14, 924, one(Run("млн человек", 28, 800, RED))))
+    # last line sits on the same baseline as the last product in the lists
+    s.add(Text(1444, 964, one(Run("сыграют в игры в 2026 году", 20, 500, BLACK))))
 
     s.add(page_number("2"))
     return s
@@ -291,7 +281,7 @@ def slide_volumes() -> Slide:
     )
 
     # ---- three KPI cards ----------------------------------------------------
-    card_y, card_h, card_w, gap = 290, 320, 560, 40
+    card_y, card_h, card_w, gap = 336, 384, 560, 40
     cards = [
         ("+1,8", "млн", ["новых розничных клиентов"], None),
         ("+205", "млрд руб.", ["розничных кредитных продуктов"], "КН, КПЗН, МКК"),
@@ -302,35 +292,17 @@ def slide_volumes() -> Slide:
         cx = x + 44
         inner_w = card_w - 88
         s.add(Rect(x, card_y, card_w, card_h, 28, fill=CARD, stroke=CARD_LINE, sw=1))
-        nw = text_width(num, 96, 800)
-        s.add(Text(cx, 424, one(Run(num, 96, 800, RED))))
-        s.add(Text(cx + nw + 14, 424, one(Run(unit, 30, 800, RED))))
-        s.add(Line(cx, 474, cx + inner_w, 474, CARD_RULE))
-        s.add(Text(cx, 518, [[Run(t, 28, 500, BLACK)] for t in desc], step=38))
+        nw = text_width(num, 104, 800)
+        s.add(Text(cx, 494, one(Run(num, 104, 800, RED))))
+        s.add(Text(cx + nw + 14, 494, one(Run(unit, 30, 800, RED))))
+        s.add(Line(cx, 552, cx + inner_w, 552, CARD_RULE))
+        s.add(Text(cx, 600, [[Run(t, 28, 500, BLACK)] for t in desc], step=40))
         if caption:
-            s.add(Text(cx, 518 + 38 * len(desc) + 8,
-                       one(Run(caption, 20, 500, GRAY_SOFT))))
+            # pinned to the card's baseline grid, like the second line opposite
+            s.add(Text(cx, 650, one(Run(caption, 20, 500, GRAY_SOFT))))
 
-    # ---- "А ЕЩЁ" accent bar -------------------------------------------------
-    a_y, a_h = 660, 300
-    a_c = a_y + a_h / 2
-    s.add(Rect(MARGIN, a_y, W - 2 * MARGIN, a_h, 28, fill=TINT_RED))
-    clip = (MARGIN, a_y, W - 2 * MARGIN, a_h)
-    for r in (840, 960, 1080):
-        s.add(Arc(2020, 1700, r, 235, 305, ARC, 2, 0.38, clip))
-
-    s.add(Img("trophy", 152, a_c - 76, 152, 152))
-    s.add(Line(366, a_c - 80, 366, a_c + 80, TINT_RED_LINE))
-
-    s.add(Text(430, a_c - 44, one(Run("А ЕЩЁ", 20, 700, RED, 0.14))))
-    nw = text_width("197", 92, 800)
-    s.add(Text(430, a_c + 62, one(Run("197", 92, 800, RED))))
-    s.add(Text(430 + nw + 16, a_c + 62, one(Run("млн руб.", 32, 800, RED))))
-
-    s.add(vcentered(900, a_c, [
-        [Run("заработали через запуск игр", 30, 500, BLACK)],
-        [Run("для Розницы и ММБ", 30, 500, BLACK)],
-    ], 42))
+    # brand gem closes the composition in the lower right
+    s.add(Img("gem", 1572, 772, 252, 252 * 612 / 777))
 
     s.add(page_number("3"))
     return s

@@ -10,19 +10,17 @@ switch to the corporate face, change PPTX_FONT below and rebuild.
 
 from __future__ import annotations
 
-import math
 import os
 
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_CONNECTOR, MSO_SHAPE
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE, PP_ALIGN
-from pptx.oxml.ns import qn
 from pptx.util import Pt
 
 import metrics
 import spec
-from spec import Arc, Img, Line, Rect, Text
+from spec import Img, Line, Rect, Text
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -108,52 +106,6 @@ def _add_image(slide, el: Img):
     return slide.shapes.add_picture(path, emu(el.x), emu(el.y), emu(el.w), emu(el.h))
 
 
-def _set_line_alpha(shape, opacity: float) -> None:
-    """python-pptx has no alpha setter for line fills; write the DrawingML."""
-    ln = shape.line._get_or_add_ln()
-    for node in ln.findall(qn("a:solidFill")):
-        ln.remove(node)
-    fill = ln.makeelement(qn("a:solidFill"), {})
-    clr = ln.makeelement(qn("a:srgbClr"), {"val": str(shape.line.color.rgb)})
-    alpha = ln.makeelement(qn("a:alpha"), {"val": str(int(opacity * 100000))})
-    clr.append(alpha)
-    fill.append(clr)
-    ln.insert(0, fill)
-
-
-def _add_arc(slide, el: Arc):
-    """Circular arc as a freeform polyline, split where the clip rect cuts it."""
-    steps = 96
-    runs, current = [], []
-    for i in range(steps + 1):
-        ang = math.radians(el.a0 + (el.a1 - el.a0) * i / steps)
-        x = el.cx + el.r * math.cos(ang)
-        y = el.cy + el.r * math.sin(ang)
-        inside = True
-        if el.clip:
-            cx, cy, cw, ch = el.clip
-            inside = cx <= x <= cx + cw and cy <= y <= cy + ch
-        if inside:
-            current.append((x, y))
-        elif current:
-            runs.append(current)
-            current = []
-    if current:
-        runs.append(current)
-
-    for pts in runs:
-        if len(pts) < 2:
-            continue
-        builder = slide.shapes.build_freeform(emu(pts[0][0]), emu(pts[0][1]))
-        builder.add_line_segments([(emu(x), emu(y)) for x, y in pts[1:]], close=False)
-        shape = builder.convert_to_shape()
-        shape.fill.background()
-        shape.shadow.inherit = False
-        shape.line.color.rgb = rgb(el.color)
-        shape.line.width = Pt(el.sw * 0.5)
-        _set_line_alpha(shape, el.opacity)
-
-
 def build(slides, path: str) -> str:
     prs = Presentation()
     prs.slide_width = emu(spec.W)
@@ -174,8 +126,6 @@ def build(slides, path: str) -> str:
                 _add_text(slide, el)
             elif isinstance(el, Img):
                 _add_image(slide, el)
-            elif isinstance(el, Arc):
-                _add_arc(slide, el)
             else:
                 raise TypeError(f"unsupported primitive: {el!r}")
 

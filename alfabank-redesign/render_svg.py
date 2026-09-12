@@ -8,12 +8,11 @@ a browser) and edited element by element.
 from __future__ import annotations
 
 import base64
-import math
 import os
 from xml.sax.saxutils import escape
 
 import spec
-from spec import Arc, Img, Line, Rect, Text
+from spec import Img, Line, Rect, Text
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -73,18 +72,8 @@ def _text(el: Text) -> str:
     return "\n".join(out)
 
 
-def _arc_path(a: Arc) -> str:
-    x0 = a.cx + a.r * math.cos(math.radians(a.a0))
-    y0 = a.cy + a.r * math.sin(math.radians(a.a0))
-    x1 = a.cx + a.r * math.cos(math.radians(a.a1))
-    y1 = a.cy + a.r * math.sin(math.radians(a.a1))
-    large = 1 if abs(a.a1 - a.a0) > 180 else 0
-    return (f"M {_fmt(x0)} {_fmt(y0)} A {_fmt(a.r)} {_fmt(a.r)} 0 {large} 1 "
-            f"{_fmt(x1)} {_fmt(y1)}")
-
-
 def render(slide: spec.Slide, images: dict[str, str]) -> str:
-    body, defs, clip_id = [], [], 0
+    body = []
 
     for el in slide.elements:
         if isinstance(el, Rect):
@@ -108,17 +97,6 @@ def render(slide: spec.Slide, images: dict[str, str]) -> str:
                 f'<image x="{_fmt(el.x)}" y="{_fmt(el.y)}" width="{_fmt(el.w)}" '
                 f'height="{_fmt(el.h)}" preserveAspectRatio="xMidYMid meet" '
                 f'href="data:image/png;base64,{images[el.name]}"/>')
-        elif isinstance(el, Arc):
-            attrs = (f'd="{_arc_path(el)}" fill="none" stroke="{el.color}" '
-                     f'stroke-width="{_fmt(el.sw)}" opacity="{el.opacity}"')
-            if el.clip:
-                clip_id += 1
-                cid = f"clip{clip_id}"
-                x, y, w, h = el.clip
-                defs.append(f'<clipPath id="{cid}"><rect x="{_fmt(x)}" y="{_fmt(y)}" '
-                            f'width="{_fmt(w)}" height="{_fmt(h)}" rx="28"/></clipPath>')
-                attrs += f' clip-path="url(#{cid})"'
-            body.append(f"<path {attrs}/>")
         else:
             raise TypeError(f"unsupported primitive: {el!r}")
 
@@ -128,7 +106,7 @@ def render(slide: spec.Slide, images: dict[str, str]) -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" '
         f'viewBox="0 0 {spec.W} {spec.H}" width="{spec.W}" height="{spec.H}">\n'
         f"<title>{escape(slide.title)}</title>\n"
-        f"<defs><style>{style}</style>{''.join(defs)}</defs>\n"
+        f"<defs><style>{style}</style></defs>\n"
         f'<rect width="{spec.W}" height="{spec.H}" fill="#FFFFFF"/>\n'
         + "\n".join(body) + "\n</svg>\n"
     )
