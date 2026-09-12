@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Автоматизация «Кода женщины»</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=DM+Sans:wght@400;500&family=Noto+Sans:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: light;
+  --color-primary:#E9E0D2;
+  --color-secondary:#32251D;
+  --color-accent:#A65E41;
+  --paper:var(--color-primary);
+  --paper-2:#F2ECE2;
+  --ink:var(--color-secondary);
+  --ink-2:#7A6657;
+  --clay:var(--color-accent);
+  --rule:rgba(50,37,29,.24);
+  --rule-soft:rgba(50,37,29,.12);
+  --u:min(1vw,1.7778vh);
+  --serif:"Cormorant Garamond","Noto Serif",Georgia,serif;
+  --sans:"DM Sans","Noto Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;}
+.deck{min-height:100svh;display:flex;align-items:center;justify-content:center;background:var(--paper);}
+.stage{position:relative;width:min(100vw,177.78vh);height:min(56.25vw,100vh);}
+.slide{position:absolute;inset:0;width:min(100vw,177.78vh);height:min(56.25vw,100vh);
+  overflow:hidden;background:var(--paper);display:none;}
+.slide.is-active{display:block;}
+.nav-armed .slide.is-active{animation:enter .5s cubic-bezier(.2,.7,.3,1) both;}
+@keyframes enter{from{opacity:0;transform:translateY(calc(.8*var(--u)));}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.nav-armed .slide.is-active{animation:none;}}
+
+/* ——— общие элементы ——— */
+.pad > *{min-width:0;}
+.pad{position:relative;height:100%;padding:calc(6*var(--u)) calc(7.5*var(--u)) calc(9*var(--u));}
+.eyebrow{margin:0;font-family:var(--sans);font-size:calc(1.15*var(--u));font-weight:500;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--clay);}
+.seam{height:1px;background:var(--rule);border:0;margin:0;}
+.h1{margin:0;font-family:var(--serif);font-weight:300;font-size:calc(11.4*var(--u));
+  line-height:.88;letter-spacing:-.02em;text-wrap:balance;}
+.h2{margin:0;font-family:var(--serif);font-weight:300;font-size:calc(5.6*var(--u));
+  line-height:1.02;letter-spacing:-.01em;text-wrap:balance;}
+.said{font-family:var(--serif);font-weight:400;font-size:calc(3.4*var(--u));line-height:1.22;}
+.field{position:absolute;background:var(--paper-2);}
+
+/* ——— 1. титул ——— */
+.s1 .field{right:0;top:0;bottom:0;width:37%;border-left:1px solid var(--rule-soft);}
+.s1 .pad{display:grid;grid-template-rows:auto 1fr auto;row-gap:calc(3.4*var(--u));}
+.s1-top{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--rule);padding-bottom:calc(1.4*var(--u));}
+.s1-date{margin:0;font-size:calc(1.15*var(--u));letter-spacing:.26em;text-transform:uppercase;color:var(--ink-2);}
+.s1-mid{align-self:end;}
+.s1-foot{display:flex;align-items:center;gap:calc(2.2*var(--u));}
+.s1-foot .bar{width:calc(9*var(--u));height:1px;background:var(--clay);flex:0 0 auto;}
+.s1-sub{margin:0;font-family:var(--sans);font-size:calc(1.9*var(--u));letter-spacing:.06em;color:var(--ink);}
+
+/* ——— 2. что сейчас ——— */
+.s2 .pad{display:grid;grid-template-columns:32% 1fr;column-gap:calc(6*var(--u));align-content:start;}
+.s2 .h2{padding-top:calc(2*var(--u));}
+.s2-list{margin:0;padding:0;list-style:none;border-top:1px solid var(--rule);}
+.s2-list li{display:grid;grid-template-columns:calc(5*var(--u)) 1fr;align-items:baseline;
+  gap:calc(2*var(--u));padding:calc(3.2*var(--u)) 0;border-bottom:1px solid var(--rule-soft);}
+.s2-list .num{font-size:calc(1.15*var(--u));letter-spacing:.2em;color:var(--clay);}
+.s2-list .txt{font-family:var(--serif);font-weight:400;font-size:calc(4*var(--u));line-height:1.1;}
+
+/* ——— 3. цифра ——— */
+.s3 .field{left:0;top:0;bottom:0;width:52%;}
+.s3 .pad{display:grid;grid-template-columns:52% 1fr;align-items:center;column-gap:calc(5*var(--u));
+  padding-left:calc(7.5*var(--u));}
+.fig{display:flex;align-items:baseline;gap:calc(1.6*var(--u));}
+.fig-num{font-family:var(--serif);font-weight:300;font-size:calc(27*var(--u));line-height:.8;
+  color:var(--clay);letter-spacing:-.04em;}
+.fig-den{font-family:var(--serif);font-weight:300;font-size:calc(5.4*var(--u));color:var(--ink-2);}
+.s3-cap{margin:0;max-width:calc(33*var(--u));}
+.s3-cap .seam{width:calc(7*var(--u));background:var(--clay);margin-bottom:calc(2.4*var(--u));}
+
+/* ——— 4. схема ——— */
+.s4 .pad{display:grid;grid-template-rows:auto 1fr;row-gap:calc(1*var(--u));}
+.s4-head{display:flex;align-items:baseline;justify-content:space-between;
+  border-bottom:1px solid var(--rule);padding-bottom:calc(1.4*var(--u));}
+.dg{width:100%;height:100%;display:block;}
+.dg .ln{fill:none;stroke:var(--rule);stroke-width:1.4;}
+.dg .hd{fill:none;stroke:var(--clay);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.dg .box{fill:none;stroke:rgba(50,37,29,.38);stroke-width:1.2;}
+.dg .box-key{fill:var(--paper-2);stroke:var(--clay);stroke-width:1.4;}
+.dg .t{font-family:var(--serif);font-weight:400;font-size:33px;fill:var(--ink);}
+.dg .t-key{font-family:var(--serif);font-weight:500;font-size:37px;fill:var(--ink);}
+.dg .t-soft{font-family:var(--sans);font-weight:400;font-size:26px;fill:var(--ink-2);letter-spacing:.04em;}
+.dg .t-root{font-family:var(--sans);font-weight:500;font-size:24px;fill:var(--ink);letter-spacing:.22em;}
+
+/* ——— 5. четыре шага ——— */
+.s5 .field{right:0;top:0;height:62%;width:41%;border-left:1px solid var(--rule-soft);}
+.s5 .pad{display:grid;grid-template-columns:56% 1fr;grid-template-rows:1fr auto;
+  column-gap:calc(5*var(--u));}
+.s5-left{align-self:center;min-width:0;}
+.s5-right{align-self:center;min-width:0;padding-left:calc(3*var(--u));}
+.s5-big{margin:0;font-family:var(--serif);font-weight:300;font-size:calc(5.2*var(--u));
+  line-height:.98;letter-spacing:-.01em;}
+.s5-big em{font-style:normal;color:var(--clay);}
+.s5-note{margin:calc(2*var(--u)) 0 0;font-size:calc(1.5*var(--u));color:var(--ink-2);letter-spacing:.04em;}
+.chain{grid-column:1/-1;min-width:0;display:flex;align-items:flex-start;gap:calc(1.8*var(--u));
+  border-top:1px solid var(--rule);padding-top:calc(3*var(--u));}
+.node{flex:0 1 auto;min-width:0;display:flex;flex-direction:column;gap:calc(1*var(--u));max-width:calc(16*var(--u));}
+.node .ord{font-size:calc(1.05*var(--u));letter-spacing:.24em;color:var(--clay);}
+.node .nm{font-family:var(--serif);font-weight:400;font-size:calc(3.2*var(--u));line-height:1.05;}
+.arrow{flex:1 1 auto;min-width:calc(3*var(--u));height:1px;background:var(--rule);
+  position:relative;margin-top:calc(3.2*var(--u));}
+.arrow::after{content:"";position:absolute;right:0;top:50%;width:calc(.75*var(--u));height:calc(.75*var(--u));
+  border-top:1px solid var(--clay);border-right:1px solid var(--clay);
+  transform:translateY(-50%) rotate(45deg);transform-origin:center;}
+
+/* ——— 6. гостевая ветка ——— */
+.s6 .pad{display:grid;grid-template-rows:auto 1fr auto;}
+.s6-chain{display:flex;align-items:flex-start;gap:calc(2.4*var(--u));align-self:center;
+  padding:0 calc(2*var(--u));}
+.s6-chain .step{flex:0 1 auto;}
+.s6-chain .step p{margin:0 0 calc(1.2*var(--u));font-family:var(--serif);font-weight:400;
+  font-size:calc(3.9*var(--u));line-height:1.05;}
+.s6-chain .step .under{height:1px;background:var(--rule);}
+.s6-chain .step:last-child .under{background:var(--clay);}
+.s6-foot{display:flex;justify-content:space-between;align-items:baseline;gap:calc(4*var(--u));
+  border-top:1px solid var(--rule);padding-top:calc(2*var(--u));}
+.s6-foot p{margin:0;font-size:calc(1.5*var(--u));color:var(--ink-2);letter-spacing:.03em;}
+
+/* ——— 7. два этапа ——— */
+.s7 .pad{display:grid;grid-template-rows:auto 1fr;padding-left:0;padding-right:0;}
+.s7 .eyebrow{padding:0 calc(7.5*var(--u));}
+.bands{display:grid;grid-template-rows:1fr 1fr;align-content:center;margin-top:calc(3*var(--u));}
+.band{display:grid;grid-template-columns:calc(26*var(--u)) 1fr;align-items:center;
+  gap:calc(4*var(--u));padding:calc(4.4*var(--u)) calc(7.5*var(--u));}
+.band-1{background:var(--paper-2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule-soft);}
+.band-2{border-bottom:1px solid var(--rule);}
+.band p{margin:0;font-family:var(--serif);}
+.band .when{font-weight:400;font-size:calc(4.2*var(--u));color:var(--clay);line-height:1;
+  font-variant-numeric:tabular-nums;}
+.band .what{font-weight:300;font-size:calc(5*var(--u));line-height:1.05;}
+
+/* ——— 8. деньги ——— */
+.s8 .pad{display:grid;grid-template-rows:auto 1fr;}
+.cols{display:grid;grid-template-columns:1fr 1fr;column-gap:calc(7*var(--u));
+  align-content:center;margin-top:calc(2*var(--u));}
+.col{padding-top:calc(2.6*var(--u));border-top:1px solid var(--rule);}
+.col+.col{padding-left:calc(7*var(--u));border-left:1px solid var(--rule-soft);}
+.col-h{margin:0 0 calc(2.6*var(--u));font-size:calc(1.15*var(--u));letter-spacing:.26em;
+  text-transform:uppercase;color:var(--ink-2);}
+.rows{margin:0;padding:0;list-style:none;}
+.rows li{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:calc(2*var(--u));
+  padding:calc(1.7*var(--u)) 0;border-bottom:1px solid var(--rule-soft);}
+.rows .k{font-family:var(--serif);font-weight:400;font-size:calc(2.9*var(--u));}
+.rows .v{font-family:var(--serif);font-weight:500;font-size:calc(2.9*var(--u));
+  color:var(--clay);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.col-note{margin:calc(2.2*var(--u)) 0 0;font-size:calc(1.4*var(--u));color:var(--ink-2);letter-spacing:.03em;}
+
+/* ——— поля страницы ——— */
+.chrome{position:absolute;left:calc(7.5*var(--u));right:calc(7.5*var(--u));bottom:calc(3.2*var(--u));
+  display:flex;align-items:center;justify-content:space-between;pointer-events:none;}
+.idx{font-size:calc(1.05*var(--u));letter-spacing:.24em;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.idx-cur{color:var(--ink);}
+.rail{display:flex;gap:calc(.9*var(--u));pointer-events:auto;}
+.tick{width:calc(2.6*var(--u));height:calc(1.8*var(--u));padding:0;border:0;background:none;cursor:pointer;position:relative;}
+.tick::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--rule);transition:background .2s,height .2s;}
+.tick.is-on::after{background:var(--clay);height:2px;}
+.tick:focus-visible{outline:1px solid var(--clay);outline-offset:calc(.3*var(--u));}
+
+@media print{
+  @page{size:landscape;margin:0;}
+  .deck,.stage{display:block;height:auto;min-height:0;}
+  .slide{position:relative;display:block !important;width:100%;height:auto;aspect-ratio:16/9;
+    break-after:page;page-break-after:always;}
+  .chrome{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+<div class="stage">
+
+<!-- 1 -->
+<section class="slide s1 is-active" aria-label="Слайд 1">
+  <div class="field" aria-hidden="true"></div>
+  <div class="pad">
+    <div class="s1-top">
+      <p class="eyebrow">Предложение</p>
+      <p class="s1-date">Сентябрь 2026</p>
+    </div>
+    <div class="s1-mid">
+      <h1 class="h1">Код<br>женщины</h1>
+    </div>
+    <div class="s1-foot">
+      <span class="bar" aria-hidden="true"></span>
+      <p class="s1-sub">Автоматизация воронки</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide s2" aria-label="Слайд 2">
+  <div class="pad">
+    <h2 class="h2">Что происходит<br>сейчас</h2>
+    <ol class="s2-list">
+      <li><span class="num">01</span><span class="txt">Приходит заявка</span></li>
+      <li><span class="num">02</span><span class="txt">Кто-то должен ответить</span></li>
+      <li><span class="num">03</span><span class="txt">Кто-то должен проверить оплату и добавить в чат</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide s3" aria-label="Слайд 3">
+  <div class="field" aria-hidden="true"></div>
+  <div class="pad">
+    <p class="fig"><span class="fig-num">70</span><span class="fig-den">из 100</span></p>
+    <div class="s3-cap">
+      <hr class="seam">
+      <p class="said" style="margin:0">Столько женщин на сайте не готовы платить сегодня — и уходят навсегда</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide s4" aria-label="Слайд 4">
+  <div class="pad">
+    <div class="s4-head">
+      <h2 class="h2" style="font-size:calc(3.6*var(--u))">Два входа — один клуб</h2>
+    </div>
+    <svg class="dg" viewBox="0 0 1240 545" preserveAspectRatio="xMidYMid meet" role="img"
+         aria-label="Сайт ведёт к двум кнопкам: вступить в клуб или познакомиться; обе ветки сходятся в закрытом клубе">
+      <text class="t-root" x="620" y="24" text-anchor="middle" dominant-baseline="middle">САЙТ</text>
+      <path class="ln" d="M620,44 V112"/>
+      <path class="ln" d="M300,112 H940"/>
+      <path class="ln" d="M300,112 V148"/>
+      <path class="ln" d="M940,112 V148"/>
+      <path class="hd" d="M294,148 L300,156 L306,148"/>
+      <path class="hd" d="M934,148 L940,156 L946,148"/>
+      <rect class="box" x="140" y="160" width="320" height="66"/>
+      <rect class="box" x="780" y="160" width="320" height="66"/>
+      <text class="t" x="300" y="195" text-anchor="middle" dominant-baseline="middle">Вступить в клуб</text>
+      <text class="t" x="940" y="195" text-anchor="middle" dominant-baseline="middle">Познакомиться</text>
+      <path class="ln" d="M300,226 V272"/>
+      <path class="ln" d="M940,226 V272"/>
+      <path class="hd" d="M294,272 L300,280 L306,272"/>
+      <path class="hd" d="M934,272 L940,280 L946,272"/>
+      <text class="t-soft" x="300" y="310" text-anchor="middle" dominant-baseline="middle">Оплата и доступ</text>
+      <text class="t-soft" x="940" y="310" text-anchor="middle" dominant-baseline="middle">Квиз и анонсы</text>
+      <path class="ln" d="M300,340 V396"/>
+      <path class="ln" d="M940,340 V396"/>
+      <path class="ln" d="M300,396 H940"/>
+      <path class="ln" d="M620,396 V432"/>
+      <path class="hd" d="M614,432 L620,440 L626,432"/>
+      <rect class="box-key" x="440" y="444" width="360" height="88"/>
+      <text class="t-key" x="620" y="490" text-anchor="middle" dominant-baseline="middle">Закрытый клуб</text>
+    </svg>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide s5" aria-label="Слайд 5">
+  <div class="field" aria-hidden="true"></div>
+  <div class="pad">
+    <div class="s5-left">
+      <p class="eyebrow">Если она готова</p>
+    </div>
+    <div class="s5-right">
+      <p class="s5-big"><em>2 минуты,</em><br>круглосуточно</p>
+      <p class="s5-note">без вашего участия</p>
+    </div>
+    <div class="chain">
+      <div class="node"><span class="ord">01</span><span class="nm">Кнопка</span></div>
+      <span class="arrow" aria-hidden="true"></span>
+      <div class="node"><span class="ord">02</span><span class="nm">Бот</span></div>
+      <span class="arrow" aria-hidden="true"></span>
+      <div class="node"><span class="ord">03</span><span class="nm">Оплата</span></div>
+      <span class="arrow" aria-hidden="true"></span>
+      <div class="node"><span class="ord">04</span><span class="nm">Доступ<br>в чат</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="slide s6" aria-label="Слайд 6">
+  <div class="pad">
+    <p class="eyebrow">Если она ещё думает</p>
+    <div class="s6-chain">
+      <div class="step"><p>Квиз</p><div class="under" aria-hidden="true"></div></div>
+      <span class="arrow" aria-hidden="true" style="margin-top:calc(2.5*var(--u));max-width:calc(9*var(--u))"></span>
+      <div class="step"><p>Метка интереса</p><div class="under" aria-hidden="true"></div></div>
+      <span class="arrow" aria-hidden="true" style="margin-top:calc(2.5*var(--u));max-width:calc(9*var(--u))"></span>
+      <div class="step"><p>Персональные анонсы</p><div class="under" aria-hidden="true"></div></div>
+    </div>
+    <div class="s6-foot">
+      <p>Раз в 2–3 дня</p>
+      <p>Кнопка «Вступить» доступна всегда</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide s7" aria-label="Слайд 7">
+  <div class="pad">
+    <p class="eyebrow">Два этапа</p>
+    <div class="bands">
+      <div class="band band-1">
+        <p class="when">К 23 сентября</p>
+        <p class="what">Оплата и доступ работают сами</p>
+      </div>
+      <div class="band band-2">
+        <p class="when">К 15 октября</p>
+        <p class="what">Прогрев, квиз, продления</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide s8" aria-label="Слайд 8">
+  <div class="pad">
+    <p class="eyebrow">Что это стоит</p>
+    <div class="cols">
+      <section class="col">
+        <p class="col-h">Сервисы</p>
+        <ul class="rows">
+          <li><span class="k">Старт</span><span class="v">до 1 000 ₽</span></li>
+          <li><span class="k">В месяц</span><span class="v">2–6 тыс. ₽</span></li>
+        </ul>
+      </section>
+      <section class="col">
+        <p class="col-h">Работы</p>
+        <ul class="rows">
+          <li><span class="k">Этап 1</span><span class="v">—</span></li>
+          <li><span class="k">Этап 2</span><span class="v">—</span></li>
+          <li><span class="k">Сопровождение</span><span class="v">—</span></li>
+        </ul>
+        <p class="col-note">обсудим на созвоне</p>
+      </section>
+    </div>
+  </div>
+</section>
+
+<footer class="chrome">
+  <p class="idx"><span class="idx-cur">01</span> / 08</p>
+  <nav class="rail" aria-label="Навигация по слайдам">
+    <button class="tick is-on" type="button" aria-label="Слайд 1"></button>
+    <button class="tick" type="button" aria-label="Слайд 2"></button>
+    <button class="tick" type="button" aria-label="Слайд 3"></button>
+    <button class="tick" type="button" aria-label="Слайд 4"></button>
+    <button class="tick" type="button" aria-label="Слайд 5"></button>
+    <button class="tick" type="button" aria-label="Слайд 6"></button>
+    <button class="tick" type="button" aria-label="Слайд 7"></button>
+    <button class="tick" type="button" aria-label="Слайд 8"></button>
+  </nav>
+</footer>
+
+</div>
+</div>
+<script>
+(function(){
+  var stage=document.querySelector('.stage');
+  var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var ticks=Array.prototype.slice.call(document.querySelectorAll('.tick'));
+  var cur=document.querySelector('.idx-cur');
+  var i=0;
+  function show(n,armed){
+    n=Math.max(0,Math.min(slides.length-1,n));
+    if(n===i&&armed)return;
+    if(armed)stage.classList.add('nav-armed');
+    slides[i].classList.remove('is-active');
+    ticks[i].classList.remove('is-on');
+    i=n;
+    slides[i].classList.add('is-active');
+    ticks[i].classList.add('is-on');
+    cur.textContent=('0'+(i+1)).slice(-2);
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){show(i+1,true);e.preventDefault();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(i-1,true);e.preventDefault();}
+    else if(e.key==='Home'){show(0,true);e.preventDefault();}
+    else if(e.key==='End'){show(slides.length-1,true);e.preventDefault();}
+  });
+  stage.addEventListener('click',function(e){
+    if(e.target.closest('.chrome'))return;
+    show(i+1,true);
+  });
+  ticks.forEach(function(t,n){t.addEventListener('click',function(){show(n,true);});});
+  var x0=null;
+  stage.addEventListener('touchstart',function(e){x0=e.touches[0].clientX;},{passive:true});
+  stage.addEventListener('touchend',function(e){
+    if(x0===null)return;
+    var dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>40)show(dx<0?i+1:i-1,true);
+    x0=null;
+  },{passive:true});
+})();
+</script>
+</body>
+</html>
