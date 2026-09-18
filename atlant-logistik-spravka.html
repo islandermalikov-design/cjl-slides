@@ -168,7 +168,26 @@ body{
   padding-left:calc(var(--u)*4);border-left:1px solid var(--hair)}
 .cta{justify-self:end;text-align:right;max-width:calc(var(--u)*30);
   font-size:calc(var(--u)*1.5);font-weight:700;color:var(--accent);line-height:1.3}
-.cta span{color:#fff;opacity:.5;padding-left:calc(var(--u)*.6)}
+.cta .arr{display:inline-block;vertical-align:baseline;width:calc(var(--u)*2.2);height:auto;
+  margin-left:calc(var(--u)*.7);fill:none;stroke:#fff;stroke-opacity:.55;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* ——— печать / экспорт в PDF: два слайда = две страницы 16:9 ——— */
+@page{size:13.333in 7.5in;margin:0}
+@media print{
+  html,body{height:auto;overflow:visible;background:#fff}
+  .deck{position:static;display:block;place-items:initial}
+  .slide{
+    grid-area:auto;
+    width:13.333in;height:7.5in;
+    --u:calc(13.333in / 100);
+    opacity:1!important;visibility:visible!important;
+    break-after:page;page-break-after:always;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .slide:last-child{break-after:auto;page-break-after:auto}
+  .anim{opacity:1!important;animation:none!important;transform:none!important}
+}
 </style>
 </head>
 <body>
@@ -312,7 +331,7 @@ body{
       <p class="mail">logistikatlant@ya.ru</p>
     </div>
     <p class="addr anim" style="--d:.66s">Москва, Волгоградский пр-т,<br>д. 73, стр. 1</p>
-    <p class="cta anim" style="--d:.72s">Рассчитаем маршрут и подберём<br>транспорт под вашу задачу<span>&#8594;</span></p>
+    <p class="cta anim" style="--d:.72s">Рассчитаем маршрут и подберём<br>транспорт под вашу задачу<svg class="arr" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h21M16 1l5 5-5 5"/></svg></p>
   </footer>
   <div class="num">02</div>
 </section>
