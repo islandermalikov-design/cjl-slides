@@ -125,17 +125,17 @@ body{
 .s2-bar{position:absolute;top:0;left:0;width:calc(var(--u)*.8);height:calc(100% - var(--u)*12);background:var(--accent)}
 .s2-main{
   position:absolute;left:0;right:0;top:0;height:calc(100% - var(--u)*12);
-  display:grid;grid-template-columns:minmax(0,1fr) calc(var(--u)*29);
+  display:grid;grid-template-columns:minmax(0,1fr) calc(var(--u)*28);
   grid-template-rows:minmax(0,1fr);gap:calc(var(--u)*4.4);
-  padding:calc(var(--u)*4.6) calc(var(--u)*6.5) calc(var(--u)*3);
+  padding:calc(var(--u)*4.2) calc(var(--u)*6.5) calc(var(--u)*2.6);
 }
 .s2 .eyebrow{color:var(--muted)}
-.s2-head h2{margin-top:calc(var(--u)*1.5);font-size:calc(var(--u)*3.7);font-weight:800;
+.s2-head h2{margin-top:calc(var(--u)*1.4);font-size:calc(var(--u)*3.4);font-weight:800;
   line-height:1.02;letter-spacing:-.035em}
-.list{list-style:none;margin-top:calc(var(--u)*2.2)}
+.list{list-style:none;margin-top:calc(var(--u)*1.8)}
 .list li{
-  display:grid;grid-template-columns:calc(var(--u)*2.6) 1fr;align-items:center;gap:calc(var(--u)*1.5);
-  padding:calc(var(--u)*.6) 0;border-bottom:1px solid var(--hair-d);
+  display:grid;grid-template-columns:calc(var(--u)*2.35) 1fr;align-items:center;gap:calc(var(--u)*1.4);
+  padding:calc(var(--u)*.47) 0;border-bottom:1px solid var(--hair-d);
   font-size:calc(var(--u)*1.42);line-height:1.35;font-weight:400;color:var(--muted);
 }
 .list li:last-child{border-bottom:0}
@@ -147,7 +147,7 @@ body{
   display:flex;flex-direction:column}
 .card-label{font-size:calc(var(--u)*1.1);font-weight:700;letter-spacing:.2em;
   text-transform:uppercase;color:var(--muted)}
-.card-title{margin-top:calc(var(--u)*1.2);font-size:calc(var(--u)*1.9);font-weight:700;
+.card-title{margin-top:calc(var(--u)*1.2);font-size:calc(var(--u)*1.8);font-weight:700;
   line-height:1.2;letter-spacing:-.02em}
 .card-title em{font-style:normal;color:var(--accent)}
 .map-wrap{flex:1;display:grid;place-items:center;
@@ -277,7 +277,7 @@ body{
     <div>
       <div class="s2-head">
         <p class="eyebrow anim" style="--d:.05s"><i></i>Почему мы</p>
-        <h2 class="anim" style="--d:.12s">Шесть причин<br>работать с нами</h2>
+        <h2 class="anim" style="--d:.12s">Семь причин<br>работать с нами</h2>
       </div>
 
       <ul class="list">
@@ -304,6 +304,10 @@ body{
         <li class="anim" style="--d:.55s">
           <svg viewBox="0 0 24 24"><rect x="4" y="2.4" width="16" height="19.2" rx="2.2"/><rect x="7.4" y="5.8" width="9.2" height="3.6" rx="1"/><path d="M8 13.4h.01M12 13.4h.01M16 13.4h.01M8 17.4h.01M12 17.4h.01M16 17.4h.01" stroke-width="2.3"/></svg>
           <p><strong>Индивидуальный расчёт</strong> и прозрачные тарифы</p>
+        </li>
+        <li class="anim" style="--d:.62s">
+          <svg viewBox="0 0 24 24"><path d="M12 2.4L21.6 12 12 21.6 2.4 12z"/><path d="M3 11.6h18"/><path d="M9.5 5.6v5.2M12 3.4v7.4M14.5 5.6v5.2" stroke-opacity=".55"/></svg>
+          <p><strong>ДОПОГ 9 класса опасности:</strong> машины оснащены, водители с допуском</p>
         </li>
       </ul>
     </div>
