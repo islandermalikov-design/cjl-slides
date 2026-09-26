@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!-- Стиль: Minimal Warm — тёплый оранжевый + белый + тёмно-серый -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бот отзывов в MAX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;800;900&display=swap">
+<style>
+/* Шрифты из белого списка cjl-slides не содержат кириллицы, поэтому, как и в правиле
+   «наложения» для CJK, используется Noto Sans — у неё полная кириллица. */
+:root {
+  color-scheme: light;
+  --color-primary: #FF6A1A;   /* тёплый оранжевый */
+  --color-secondary: #262321; /* тёмно-серый с тёплым оттенком */
+  --color-accent: #FFFFFF;    /* белый */
+  --orange-soft: #FFF1E7;
+  --orange-mid: #FFD2B5;
+  --ink: #262321;
+  --ink-2: #6B635D;
+  --ink-3: #A59C95;
+  --line: #EDE6E0;
+  --paper: #FFFFFF;
+  --bad: #D93B2B;
+  --good: #2F9A5A;
+  --letterbox: #1A1817;
+  --font: "Noto Sans", "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--letterbox);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+.app { height: 100%; display: flex; flex-direction: column; }
+.stage {
+  flex: 1; min-height: 0;
+  container-type: size;
+  display: grid; place-items: center;
+}
+.slide {
+  grid-area: 1 / 1;
+  width: min(100cqw, 177.78cqh);
+  height: min(56.25cqw, 100cqh);
+  overflow: hidden;
+  position: relative;
+  container-type: size;
+  background: var(--paper);
+  font-size: 1.6cqw;
+  line-height: 1.4;
+}
+.slide:not(.active) { display: none; }
+.slide.active .in { animation: rise .5s cubic-bezier(.2,.7,.2,1) both; }
+.slide.active .in:nth-child(2) { animation-delay: .06s; }
+.slide.active .in:nth-child(3) { animation-delay: .12s; }
+@keyframes rise { from { transform: translateY(1.2cqw); opacity: .001; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .slide.active .in { animation: none; } }
+
+.notes { display: none; }
+
+/* общий текст */
+h1, h2, h3, p { margin: 0; }
+h1, h2 { font-weight: 900; letter-spacing: -0.03em; line-height: 1.02; text-wrap: balance; }
+h2 { font-size: 4.3cqw; }
+h3 { font-size: 1.75cqw; font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; }
+p { font-size: 1.6cqw; color: var(--ink-2); }
+.eyebrow {
+  font-size: 1.05cqw; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--color-primary);
+}
+.pad { position: absolute; inset: 0; padding: 5cqw 6cqw; }
+.num { font-variant-numeric: tabular-nums; }
+.or { color: var(--color-primary); }
+.ic { display: inline-grid; place-items: center; flex: none; }
+.ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.chip-ic {
+  width: 4.4cqw; height: 4.4cqw; border-radius: 1.2cqw;
+  background: var(--orange-soft); color: var(--color-primary); padding: 1cqw;
+}
+.page-no {
+  position: absolute; right: 2.4cqw; bottom: 1.8cqw;
+  font-size: 1cqw; font-weight: 700; color: var(--ink-3); letter-spacing: .08em;
+  cursor: pointer; user-select: none;
+}
+.dark .page-no { color: #7D746E; }
+.s6 .page-no { color: rgba(255,255,255,.75); }
+
+/* ---------- 1. Титульный ---------- */
+.s1 .blob {
+  position: absolute; right: -8cqw; top: -10cqw; width: 58cqw; height: 76cqw;
+  background: var(--color-primary); border-radius: 0 0 0 30cqw;
+}
+.s1 .content {
+  position: absolute; left: 6cqw; top: 0; bottom: 0; width: 46cqw;
+  display: flex; flex-direction: column; justify-content: center; gap: 2.4cqw;
+}
+.s1 h1 { font-size: 6.6cqw; }
+.s1 .sub { font-size: 2.2cqw; font-weight: 500; color: var(--ink); }
+.s1 .meta { display: flex; gap: 1.2cqw; align-items: center; font-size: 1.2cqw; color: var(--ink-2); font-weight: 500; }
+.s1 .meta b { width: .6cqw; height: .6cqw; border-radius: 50%; background: var(--color-primary); }
+.s1 .bubbles { position: absolute; right: 6cqw; top: 11cqw; width: 34cqw; display: flex; flex-direction: column; gap: 1.4cqw; }
+.bub {
+  background: var(--paper); border-radius: 2cqw 2cqw 2cqw .5cqw; padding: 1.6cqw 2cqw;
+  box-shadow: 0 1.2cqw 3cqw rgba(120, 40, 0, .22);
+  font-size: 1.5cqw; color: var(--ink); font-weight: 500;
+}
+.bub.me { align-self: flex-end; border-radius: 2cqw 2cqw .5cqw 2cqw; background: var(--color-secondary); color: #fff; }
+.stars { display: flex; gap: .6cqw; margin-top: 1.1cqw; }
+.stars span {
+  flex: 1; text-align: center; border-radius: .9cqw; padding: .7cqw 0;
+  background: var(--orange-soft); color: var(--color-primary); font-weight: 800; font-size: 1.4cqw;
+}
+.stars span.on { background: var(--color-primary); color: #fff; }
+
+/* ---------- 2. Проблема ---------- */
+.s2 { background: var(--color-secondary); color: #fff; }
+.s2 .grid { position: absolute; inset: 0; display: grid; grid-template-columns: 44% 56%; }
+.s2 .left { padding: 6cqw 3cqw 5cqw 6cqw; display: flex; flex-direction: column; justify-content: space-between; }
+.s2 h2 { font-size: 4.6cqw; }
+.s2 .review {
+  background: #33302D; border-radius: 1.6cqw; padding: 1.8cqw 2cqw; display: grid; gap: .6cqw; width: 30cqw;
+}
+.s2 .review .st { color: var(--color-primary); font-size: 2.6cqw; letter-spacing: .1em; line-height: 1; }
+.s2 .review .st i { color: #5A544F; font-style: normal; }
+.s2 .review p { color: #D8D1CB; font-size: 1.4cqw; }
+.s2 .review small { color: #8E857E; font-size: 1.05cqw; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.s2 .right { padding: 6cqw 6cqw 5cqw 2cqw; display: flex; flex-direction: column; justify-content: center; gap: 1.2cqw; }
+.s2 .row { display: grid; grid-template-columns: auto 1fr; gap: 2cqw; align-items: center; padding: 2cqw 0; border-bottom: 1px solid #3E3A36; }
+.s2 .row:last-child { border-bottom: 0; }
+.s2 .row .ic { width: 5.6cqw; height: 5.6cqw; border-radius: 50%; background: var(--color-primary); color: #fff; padding: 1.35cqw; }
+.s2 .row h3 { color: #fff; font-size: 2.1cqw; }
+.s2 .row p { color: #B9B0A9; margin-top: .3cqw; }
+
+/* ---------- 3. Решение ---------- */
+.s3 .big {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 40cqw; background: var(--color-primary);
+  display: flex; flex-direction: column; justify-content: center; padding-left: 6cqw; color: #fff;
+}
+.s3 .big .d { font-size: 12cqw; font-weight: 900; letter-spacing: -0.05em; line-height: .9; }
+.s3 .big .cap { font-size: 1.9cqw; font-weight: 700; margin-top: 2.4cqw; max-width: 28cqw; opacity: .95; }
+.s3 .body { position: absolute; left: 46cqw; right: 6cqw; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 3.4cqw; }
+.s3 .steps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: start; gap: 1cqw; }
+.s3 .step { display: grid; justify-items: start; gap: 1cqw; }
+.s3 .step .ic { width: 5cqw; height: 5cqw; border-radius: 1.4cqw; padding: 1.2cqw; background: var(--orange-soft); color: var(--color-primary); }
+.s3 .step b { font-size: 1.1cqw; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.s3 .step h3 { font-size: 1.6cqw; }
+.s3 .arrow { color: var(--orange-mid); width: 2.6cqw; height: 5cqw; }
+
+/* ---------- 4. Почему MAX ---------- */
+.s4 .head { position: absolute; left: 6cqw; top: 5.5cqw; width: 30cqw; display: grid; gap: 2cqw; }
+.s4 .head h2 { font-size: 5cqw; }
+.s4 .head .logo {
+  width: 11cqw; height: 11cqw; border-radius: 3cqw; background: var(--color-secondary); color: #fff;
+  display: grid; place-items: center; font-weight: 900; font-size: 3.4cqw; letter-spacing: -0.04em;
+}
+.s4 .tiles {
+  position: absolute; left: 40cqw; right: 0; top: 0; bottom: 0; background: var(--orange-soft);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 0;
+}
+.s4 .tile { background: var(--paper); padding: 3.4cqw 3cqw; display: flex; flex-direction: column; gap: 1.2cqw; justify-content: center; }
+.s4 .tile .ic { width: 4.6cqw; height: 4.6cqw; color: var(--color-primary); }
+.s4 .tile h3 { font-size: 2.1cqw; }
+.s4 .tile p { font-size: 1.45cqw; }
+
+/* ---------- 5. Как это работает ---------- */
+.s5 .pad { display: flex; flex-direction: column; justify-content: center; gap: 5cqw; }
+.s5 .top { display: flex; align-items: end; justify-content: space-between; gap: 4cqw; }
+.flow { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.6cqw; }
+.flow::before {
+  content: ""; position: absolute; left: 4cqw; right: calc((100% - 6.4cqw) / 5 - 4cqw); top: 3.85cqw; height: .3cqw; background: var(--orange-mid);
+}
+.fs { position: relative; display: grid; gap: 1.2cqw; align-content: start; }
+.fs .dot {
+  width: 8cqw; height: 8cqw; border-radius: 50%; background: var(--paper); border: .3cqw solid var(--color-primary);
+  color: var(--color-primary); padding: 2cqw; position: relative;
+}
+.fs.hl .dot { background: var(--color-primary); color: #fff; }
+.fs .n {
+  position: absolute; left: 5.8cqw; top: -.4cqw; width: 2.6cqw; height: 2.6cqw; border-radius: 50%;
+  background: var(--color-secondary); color: #fff; font-size: 1.2cqw; font-weight: 800; display: grid; place-items: center;
+}
+.fs h3 { font-size: 1.7cqw; }
+.fs p { font-size: 1.35cqw; }
+.fork { display: grid; gap: .7cqw; margin-top: .3cqw; }
+.fork span { font-size: 1.2cqw; font-weight: 700; border-radius: .8cqw; padding: .5cqw .9cqw; width: fit-content; }
+.fork .g { background: #E6F4EC; color: #1F6E40; }
+.fork .b { background: #FCE7E4; color: #A8281B; }
+
+/* ---------- 6. Сценарий диалога ---------- */
+.s6 .intro { position: absolute; left: 6cqw; top: 6cqw; width: 30cqw; display: grid; gap: 2.4cqw; }
+.s6 .intro h2 { font-size: 4.4cqw; }
+.s6 .legend { display: grid; gap: 1.4cqw; }
+.s6 .legend div { display: flex; gap: 1.2cqw; align-items: center; font-size: 1.5cqw; font-weight: 500; }
+.s6 .legend i { width: 2.4cqw; height: 2.4cqw; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 1.2cqw; color: #fff; flex: none; }
+.s6 .bgband { position: absolute; left: 40cqw; right: 0; top: 0; bottom: 0; background: var(--color-primary); }
+.phones { position: absolute; left: 43cqw; right: 3cqw; top: 3.2cqw; bottom: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 3cqw; }
+.phone {
+  background: var(--color-secondary); border-radius: 3.4cqw 3.4cqw 0 0; padding: 1cqw 1cqw 0;
+  box-shadow: 0 2cqw 4cqw rgba(80, 25, 0, .35);
+  display: flex; flex-direction: column; min-height: 0;
+}
+.screen { background: #F6F2EE; border-radius: 2.6cqw 2.6cqw 0 0; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.screen .bar { display: flex; align-items: center; gap: .9cqw; padding: 1.3cqw 1.4cqw 1cqw; background: var(--paper); border-bottom: 1px solid var(--line); }
+.screen .ava { width: 2.8cqw; height: 2.8cqw; border-radius: 50%; background: var(--color-primary); color: #fff; font-weight: 900; font-size: 1.1cqw; display: grid; place-items: center; }
+.screen .bar b { display: block; font-size: 1.25cqw; }
+.screen .bar small { font-size: .95cqw; color: var(--good); font-weight: 700; }
+.msgs { padding: 1.2cqw; display: flex; flex-direction: column; gap: .8cqw; }
+.m { font-size: 1.12cqw; line-height: 1.35; padding: .9cqw 1.1cqw; border-radius: 1.3cqw 1.3cqw 1.3cqw .3cqw; background: var(--paper); max-width: 92%; color: var(--ink); }
+.m.me { align-self: flex-end; background: var(--color-primary); color: #fff; border-radius: 1.3cqw 1.3cqw .3cqw 1.3cqw; font-weight: 800; }
+.kb { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4cqw; }
+.kb span, .kb2 span { background: var(--paper); border: 1px solid var(--orange-mid); color: var(--color-primary); font-weight: 800; font-size: 1cqw; text-align: center; border-radius: .7cqw; padding: .55cqw 0; }
+.kb span.sel { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.kb2 { display: grid; grid-template-columns: 1fr 1fr; gap: .4cqw; }
+.cta { background: var(--color-secondary) !important; color: #fff !important; border: 0 !important; }
+
+/* ---------- 7. Работа с негативом ---------- */
+.s7 { background: var(--color-secondary); color: #fff; }
+.s7 .anchor { position: absolute; left: 6cqw; top: 5.5cqw; width: 30cqw; display: grid; gap: 1.6cqw; }
+.s7 .score { font-size: 12cqw; font-weight: 900; letter-spacing: -0.05em; color: var(--color-primary); line-height: .85; }
+.s7 .score small { font-size: 5cqw; }
+.s7 h2 { font-size: 3.6cqw; color: #fff; }
+.s7 .anchor p { color: #B9B0A9; }
+.s7 .lane { position: absolute; left: 42cqw; right: 6cqw; top: 5.5cqw; bottom: 5cqw; display: grid; grid-template-rows: auto auto auto; gap: 1.4cqw; align-content: center; }
+.s7 .card { background: #33302D; border-radius: 1.8cqw; padding: 2cqw 2.2cqw; display: grid; gap: 1.2cqw; }
+.s7 .card .t { display: flex; gap: 1.2cqw; align-items: center; }
+.s7 .card .t .ic { width: 3.6cqw; height: 3.6cqw; border-radius: 1cqw; padding: .8cqw; background: var(--color-primary); color: #fff; }
+.s7 .card h3 { color: #fff; font-size: 1.9cqw; }
+.s7 .card .k { font-size: 1.05cqw; font-weight: 700; letter-spacing: .1em; color: #8E857E; text-transform: uppercase; }
+.s7 .reasons { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8cqw; }
+.s7 .reasons span { display: flex; align-items: center; gap: .7cqw; background: #423E3A; border-radius: 1cqw; padding: .9cqw 1cqw; font-size: 1.35cqw; font-weight: 700; }
+.s7 .reasons .ic { width: 2.2cqw; height: 2.2cqw; color: var(--color-primary); }
+.s7 .down { justify-self: start; margin-left: 3.6cqw; width: 2cqw; height: 2cqw; color: #6B635D; }
+.s7 .card.hot { background: var(--color-primary); }
+.s7 .card.hot .t .ic { background: #fff; color: var(--color-primary); }
+.s7 .card.hot .k { color: #FFE3D2; }
+.s7 .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4cqw; }
+
+/* ---------- 8. Информирование ---------- */
+.s8 .pad { display: flex; flex-direction: column; justify-content: center; gap: 4.4cqw; }
+.s8 .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4cqw; }
+.s8 .col { border-top: .5cqw solid var(--color-primary); padding-top: 2.6cqw; display: flex; flex-direction: column; gap: 2cqw; min-height: 22cqw; }
+.s8 .col .t { display: flex; gap: 1.2cqw; align-items: center; }
+.s8 .col h3 { font-size: 2.2cqw; }
+.s8 .col .m { background: var(--orange-soft); font-size: 1.6cqw; max-width: 100%; padding: 1.6cqw 1.8cqw; border-radius: 2cqw 2cqw 2cqw .4cqw; }
+.s8 .chip-ic { width: 5.4cqw; height: 5.4cqw; padding: 1.3cqw; }
+.s8 .badge { align-self: flex-start; font-size: 1.1cqw; font-weight: 800; padding: .5cqw 1cqw; border-radius: 99cqw; background: var(--color-secondary); color: #fff; display: inline-flex; gap: .5cqw; align-items: center; }
+.s8 .badge .ic { width: 1.4cqw; height: 1.4cqw; }
+.s8 .deco { position: absolute; right: -4cqw; top: -6cqw; width: 26cqw; height: 26cqw; border-radius: 50%; background: var(--orange-soft); }
+
+/* ---------- 9. Аналитика ---------- */
+.s9 { background: #F7F3EF; }
+.s9 .pad { padding: 3.6cqw 5cqw 3.4cqw; display: grid; grid-template-rows: auto auto 1fr; gap: 1.6cqw; }
+.s9 .top { display: flex; justify-content: space-between; align-items: end; }
+.s9 h2 { font-size: 3.6cqw; }
+.demo { font-size: 1.05cqw; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); border: 1px dashed var(--ink-3); border-radius: 99cqw; padding: .4cqw 1.1cqw; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2cqw; }
+.kpi { background: var(--paper); border-radius: 1.4cqw; padding: 1.3cqw 1.6cqw; display: grid; gap: .2cqw; }
+.kpi .l { font-size: 1.1cqw; color: var(--ink-2); font-weight: 500; }
+.kpi .v { font-size: 3cqw; font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
+.kpi .d { font-size: 1cqw; font-weight: 700; }
+.up { color: var(--good); } .dn { color: var(--bad); }
+.panels { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 1.2cqw; min-height: 0; }
+.panel { background: var(--paper); border-radius: 1.4cqw; padding: 1.4cqw 1.6cqw; display: flex; flex-direction: column; gap: 1cqw; min-height: 0; }
+.panel .pt { font-size: 1.25cqw; font-weight: 800; }
+.panel svg { width: 100%; flex: 1; min-height: 0; overflow: visible; }
+.panel svg text { font-family: var(--font); fill: var(--ink-2); }
+.hb { display: grid; gap: .8cqw; }
+.hb .r { display: grid; grid-template-columns: 7.6cqw 1fr 3cqw; gap: .8cqw; align-items: center; font-size: 1.1cqw; }
+.hb .r > span:first-child { color: var(--ink-2); }
+.hb .tr { height: 1.1cqw; background: var(--orange-soft); border-radius: .3cqw; overflow: hidden; }
+.hb .tr i { display: block; height: 100%; background: var(--color-primary); border-radius: 0 .3cqw .3cqw 0; }
+.hb .r b { text-align: right; }
+.cour { display: grid; gap: .5cqw; margin-top: .4cqw; }
+.cour div { display: flex; justify-content: space-between; font-size: 1.1cqw; padding: .45cqw 0; border-bottom: 1px solid var(--line); }
+.cour div:last-child { border-bottom: 0; }
+.cour .warn b { color: var(--bad); }
+.sub-t { font-size: 1cqw; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: .4cqw; }
+
+/* ---------- 10. Ожидаемые результаты ---------- */
+.s10 .pad { display: grid; grid-template-rows: auto 1fr auto; gap: 3cqw; }
+.s10 .kgrid { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 1.6cqw; }
+.kt { border-radius: 2cqw; padding: 2.4cqw 2.2cqw; display: flex; flex-direction: column; justify-content: space-between; gap: 2cqw; background: var(--orange-soft); }
+.kt.main { background: var(--color-primary); color: #fff; }
+.kt.dk { background: var(--color-secondary); color: #fff; }
+.kt .ic { width: 3.6cqw; height: 3.6cqw; color: var(--color-primary); }
+.kt.main .ic, .kt.dk .ic { color: #fff; }
+.kt.dk .ic { color: var(--color-primary); }
+.kt .val { font-size: 5.4cqw; font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+.kt.main .val { font-size: 7.4cqw; }
+.kt h3 { font-size: 1.7cqw; }
+.kt p { font-size: 1.3cqw; }
+.kt.main p, .kt.dk p { color: rgba(255,255,255,.8); }
+.ph { border-bottom: .3cqw dashed currentColor; }
+.s10 .foot { font-size: 1.25cqw; color: var(--ink-2); display: flex; gap: 1cqw; align-items: center; }
+.s10 .foot .ic { width: 1.8cqw; height: 1.8cqw; color: var(--color-primary); }
+
+/* ---------- 11. Что нужно для запуска ---------- */
+.s11 .side { position: absolute; left: 0; top: 0; bottom: 0; width: 34cqw; background: var(--orange-soft); padding: 6cqw 3cqw 5cqw 6cqw; display: flex; flex-direction: column; justify-content: space-between; }
+.s11 .side h2 { font-size: 4.6cqw; }
+.s11 .side .big { font-size: 12cqw; font-weight: 900; color: var(--color-primary); letter-spacing: -0.05em; line-height: .8; }
+.s11 .side .big small { display: block; line-height: 1.3; font-size: 1.5cqw; letter-spacing: 0; color: var(--ink-2); font-weight: 500; margin-top: 1.4cqw; }
+.s11 .list { position: absolute; left: 38cqw; right: 6cqw; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+.req { display: grid; grid-template-columns: auto 1fr auto; gap: 2cqw; align-items: center; padding: 2.1cqw 0; border-bottom: 1px solid var(--line); }
+.req:last-child { border-bottom: 0; }
+.req .ic { width: 5cqw; height: 5cqw; border-radius: 1.4cqw; padding: 1.2cqw; background: var(--color-secondary); color: #fff; }
+.req h3 { font-size: 2cqw; }
+.req p { font-size: 1.35cqw; margin-top: .2cqw; }
+.req .own { font-size: 1.1cqw; font-weight: 800; color: var(--color-primary); background: var(--orange-soft); border-radius: 99cqw; padding: .5cqw 1.2cqw; white-space: nowrap; }
+.req.opt .ic { background: var(--paper); color: var(--ink-2); border: 2px dashed var(--ink-3); }
+
+/* ---------- 12. План внедрения ---------- */
+.s12 .pad { padding-bottom: 0; display: grid; grid-template-rows: auto 1fr auto; gap: 2.6cqw; }
+.tl { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.6cqw; align-self: center; }
+.tl::before { content: ""; position: absolute; left: 0; right: 0; top: 1.3cqw; height: .3cqw; background: var(--orange-mid); }
+.ph-step { position: relative; display: grid; gap: 1cqw; align-content: start; }
+.ph-step .pin { width: 2.9cqw; height: 2.9cqw; border-radius: 50%; background: var(--paper); border: .35cqw solid var(--color-primary); }
+.ph-step.done .pin { background: var(--color-primary); }
+.ph-step .w { font-size: 1.1cqw; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--color-primary); }
+.ph-step h3 { font-size: 2cqw; }
+.ph-step p { font-size: 1.3cqw; }
+.ph-step.launch h3 { color: var(--color-primary); }
+.next { margin: 0 -6cqw; background: var(--color-secondary); color: #fff; padding: 2.6cqw 6cqw 3cqw; display: grid; grid-template-columns: 22cqw 1fr; gap: 4cqw; align-items: center; }
+.next h2 { font-size: 3.2cqw; color: var(--color-primary); }
+.next ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqw; counter-reset: n; }
+.next li { counter-increment: n; display: grid; grid-template-columns: auto 1fr; gap: 1cqw; font-size: 1.45cqw; line-height: 1.3; font-weight: 500; }
+.next li::before { content: counter(n); width: 2.4cqw; height: 2.4cqw; border-radius: 50%; background: var(--color-primary); color: #fff; font-weight: 900; font-size: 1.2cqw; display: grid; place-items: center; }
+
+/* ---------- заметки спикера ---------- */
+.notes-panel {
+  flex: none; background: #262321; color: #EDE6E0; border-top: 3px solid var(--color-primary);
+  padding: 14px max(16px, 4vw) 18px; font-size: 16px; line-height: 1.5;
+  max-height: 30vh; overflow: auto;
+}
+.notes-panel .lbl { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--color-primary); margin-bottom: 6px; }
+.notes-panel p { color: inherit; font-size: inherit; max-width: 75ch; }
+</style>
+</head>
+<body>
+<div class="app">
+<main class="stage" id="stage">
+
+<!-- 1. Титульный -->
+<section class="slide s1 active">
+  <div class="blob"></div>
+  <div class="content">
+    <div class="eyebrow in">Проект · обратная связь по заказам</div>
+    <h1 class="in">Чат-бот в&nbsp;<span class="or">MAX</span> для оценки заказов</h1>
+    <p class="sub in">Слышим каждого клиента — автоматически</p>
+    <div class="meta"><span>Для руководства компании</span><b></b><span>2026</span></div>
+  </div>
+  <div class="bubbles" aria-hidden="true">
+    <div class="bub in">Анна, как вам вчерашний заказ?
+      <div class="stars"><span>1</span><span>2</span><span>3</span><span>4</span><span class="on">5★</span></div>
+    </div>
+    <div class="bub me in">★★★★★ Всё горячее, спасибо!</div>
+  </div>
+  <aside class="notes">Добрый день. Сегодня я предлагаю проект, который поможет нам узнавать мнение каждого клиента о заказе без ручной работы операторов. Речь о чат-боте в мессенджере MAX, который сам собирает оценки и сразу сигнализирует о проблемах.</aside>
+</section>
+
+<!-- 2. Проблема -->
+<section class="slide s2 dark">
+  <div class="grid">
+    <div class="left">
+      <div style="display:grid;gap:2cqw">
+        <div class="eyebrow">Проблема</div>
+        <h2 class="in">Мы узнаём о&nbsp;проблемах последними</h2>
+      </div>
+      <div class="review in">
+        <small>Отзыв на картах · через 3 дня</small>
+        <div class="st">★★<i>★★★</i></div>
+        <p>«Привезли холодное, курьер опоздал на 40 минут»</p>
+      </div>
+    </div>
+    <div class="right">
+      <div class="row in"><span class="ic" data-i="mute"></span><div><h3>Клиенты молчат</h3><p>Отзыв сами оставляют единицы</p></div></div>
+      <div class="row in"><span class="ic" data-i="megaphone"></span><div><h3>Негатив уходит наружу</h3><p>Соцсети и карты вместо нас</p></div></div>
+      <div class="row in"><span class="ic" data-i="clock"></span><div><h3>Реагируем поздно</h3><p>Клиент уже ушёл к конкуренту</p></div></div>
+    </div>
+  </div>
+  <aside class="notes">Довольные клиенты почти никогда не пишут отзывы сами, а недовольные чаще идут не к нам, а в соцсети и на карты. В итоге о проблеме мы узнаём через несколько дней, когда рейтинг уже просел, а клиент ушёл. У нас нет системного канала, который ловит недовольство раньше, чем оно становится публичным.</aside>
+</section>
+
+<!-- 3. Решение -->
+<section class="slide s3">
+  <div class="big">
+    <div class="d in">Д+1</div>
+    <div class="cap in">бот пишет клиенту на следующий день после заказа</div>
+  </div>
+  <div class="body">
+    <div style="display:grid;gap:1.6cqw">
+      <div class="eyebrow">Решение</div>
+      <h2 class="in">Мы спрашиваем первыми, клиенту остаётся нажать кнопку</h2>
+    </div>
+    <div class="steps in">
+      <div class="step"><span class="ic" data-i="bag"></span><b>Сегодня</b><h3>Клиент получил заказ</h3></div>
+      <span class="arrow ic" data-i="arrow"></span>
+      <div class="step"><span class="ic" data-i="chat"></span><b>Завтра</b><h3>Бот в MAX пишет сам</h3></div>
+      <span class="arrow ic" data-i="arrow"></span>
+      <div class="step"><span class="ic" data-i="star"></span><b>1 касание</b><h3>Оценка от 1 до 5</h3></div>
+    </div>
+  </div>
+  <aside class="notes">Решение простое: на следующий день после доставки бот сам пишет клиенту в MAX и просит оценить заказ. Клиенту не нужно ничего искать или печатать — достаточно нажать одну кнопку со звёздами. Пауза в один день выбрана специально: впечатление ещё свежее, но сообщение не мешает самому заказу.</aside>
+</section>
+
+<!-- 4. Почему MAX -->
+<section class="slide s4">
+  <div class="head">
+    <div class="logo in">MAX</div>
+    <div class="eyebrow">Канал</div>
+    <h2 class="in">Почему именно MAX</h2>
+  </div>
+  <div class="tiles">
+    <div class="tile in"><span class="ic" data-i="flag"></span><h3>Национальный мессенджер</h3><p>Аудитория быстро растёт</p></div>
+    <div class="tile in"><span class="ic" data-i="phone"></span><h3>По номеру телефона</h3><p>Пишем по номерам из нашей базы</p></div>
+    <div class="tile in"><span class="ic" data-i="coin"></span><h3>Дешевле SMS</h3><p>Сообщение стоит меньше, чем SMS</p></div>
+    <div class="tile in"><span class="ic" data-i="image"></span><h3>Кнопки и картинки</h3><p>Оценка в одно касание, фото блюд</p></div>
+  </div>
+  <aside class="notes">MAX — национальный мессенджер, и его аудитория быстро растёт, в том числе среди наших клиентов. Писать можно по номеру телефона, который у нас уже есть в базе заказов, а сообщение обходится дешевле SMS. Главное отличие от SMS — кнопки и картинки: клиент ставит оценку одним нажатием, а не отвечает текстом.</aside>
+</section>
+
+<!-- 5. Как это работает -->
+<section class="slide s5">
+  <div class="pad">
+    <div class="top">
+      <div style="display:grid;gap:1.4cqw">
+        <div class="eyebrow">Как это работает</div>
+        <h2 class="in">Пять шагов, без ручной работы</h2>
+      </div>
+      <p style="max-width:26cqw">Запускается автоматически каждое утро</p>
+    </div>
+    <div class="flow in">
+      <div class="fs"><span class="dot ic" data-i="db"></span><span class="n">1</span><h3>Выгрузка из CRM</h3><p>Вчерашние доставленные заказы</p></div>
+      <div class="fs"><span class="dot ic" data-i="filter"></span><span class="n">2</span><h3>Фильтрация</h3><p>Без отказов от рассылок и повторов за неделю</p></div>
+      <div class="fs hl"><span class="dot ic" data-i="star"></span><span class="n">3</span><h3>Сообщение в MAX</h3><p>Кнопки ⭐1–5</p></div>
+      <div class="fs"><span class="dot ic" data-i="fork"></span><span class="n">4</span><h3>Развилка</h3>
+        <div class="fork"><span class="g">4–5 → «спасибо» и ссылка на карты</span><span class="b">1–3 → уточнить причину</span></div>
+      </div>
+      <div class="fs"><span class="dot ic" data-i="chart"></span><span class="n">5</span><h3>CRM и дашборд</h3><p>Оценка в карточке клиента</p></div>
+    </div>
+  </div>
+  <aside class="notes">Каждое утро система забирает из CRM вчерашние доставленные заказы и убирает тех, кто отказался от сообщений или уже получал опрос недавно. Остальным бот отправляет сообщение с кнопками оценки, а дальше сценарий расходится: довольных благодарим и приглашаем оставить отзыв на картах, недовольных расспрашиваем о причине. Все ответы возвращаются в CRM и попадают на дашборд.</aside>
+</section>
+
+<!-- 6. Сценарий диалога -->
+<section class="slide s6">
+  <div class="intro">
+    <div class="eyebrow">Сценарий диалога</div>
+    <h2 class="in">Коротко, по имени, с номером заказа</h2>
+    <div class="legend in">
+      <div><i style="background:var(--good)">5</i>Благодарим и зовём на карты</div>
+      <div><i style="background:var(--bad)">2</i>Спрашиваем, что пошло не так</div>
+    </div>
+  </div>
+  <div class="bgband"></div>
+  <div class="phones">
+    <div class="phone in">
+      <div class="screen">
+        <div class="bar"><span class="ava">Е</span><div><b>Еда рядом · бот</b><small>в сети</small></div></div>
+        <div class="msgs">
+          <div class="m">Здравствуйте, Анна! Вчера мы привезли ваш заказ <b>№48213</b>. Оцените его, пожалуйста:
+          </div>
+          <div class="kb"><span>1</span><span>2</span><span>3</span><span>4</span><span class="sel">5★</span></div>
+          <div class="m me">★★★★★</div>
+          <div class="m">Спасибо, Анна! Рады, что всё понравилось 🧡 Поделитесь впечатлением на картах?</div>
+          <div class="kb2"><span class="cta" style="grid-column:1/-1">Оставить отзыв</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone in">
+      <div class="screen">
+        <div class="bar"><span class="ava">Е</span><div><b>Еда рядом · бот</b><small>в сети</small></div></div>
+        <div class="msgs">
+          <div class="m">Здравствуйте, Олег! Вчера мы привезли ваш заказ <b>№48377</b>. Оцените его, пожалуйста:</div>
+          <div class="kb"><span>1</span><span class="sel">2★</span><span>3</span><span>4</span><span>5</span></div>
+          <div class="m me">★★</div>
+          <div class="m">Жаль, что так вышло. Что пошло не так?</div>
+          <div class="kb2"><span>Еда</span><span>Время</span><span>Курьер</span><span>Комплектация</span></div>
+          <div class="m">Спасибо! Менеджер свяжется с вами сегодня.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Так выглядит диалог глазами клиента: бот обращается по имени и называет номер заказа, поэтому сообщение не похоже на спам. При оценке 5 бот благодарит и предлагает оставить отзыв на картах. При оценке 2 он уточняет причину кнопками и обещает связь с менеджером. Название бота и тексты здесь условные, их доработаем с маркетингом.</aside>
+</section>
+
+<!-- 7. Работа с негативом -->
+<section class="slide s7 dark">
+  <div class="anchor">
+    <div class="eyebrow">Работа с негативом</div>
+    <div class="score in num">1–3<small>★</small></div>
+    <h2 class="in">Каждая плохая оценка сразу попадает к&nbsp;менеджеру</h2>
+  </div>
+  <div class="lane">
+    <div class="card in">
+      <div class="t"><span class="ic" data-i="chat"></span><div><div class="k">Бот уточняет</div><h3>Что пошло не так?</h3></div></div>
+      <div class="reasons">
+        <span><i class="ic" data-i="bowl"></i>Еда</span>
+        <span><i class="ic" data-i="clock"></i>Время</span>
+        <span><i class="ic" data-i="scooter"></i>Курьер</span>
+        <span><i class="ic" data-i="box"></i>Комплектация</span>
+      </div>
+    </div>
+    <div class="card hot in">
+      <div class="t"><span class="ic" data-i="bell"></span><div><div class="k">Мгновенно</div><h3>Уведомление менеджеру филиала</h3></div></div>
+    </div>
+    <div class="two in">
+      <div class="card"><div class="t"><span class="ic" data-i="call"></span><div><div class="k">В тот же день</div><h3>Звонок клиенту</h3></div></div></div>
+      <div class="card"><div class="t"><span class="ic" data-i="gift"></span><div><div class="k">По ситуации</div><h3>Компенсация</h3></div></div></div>
+    </div>
+  </div>
+  <aside class="notes">Самое ценное в проекте — работа с негативом. Если клиент ставит от 1 до 3 звёзд, бот уточняет причину, а менеджер филиала сразу получает уведомление с номером заказа и ответом. Дальше мы звоним клиенту или предлагаем компенсацию, пока он ещё не написал отзыв на картах.</aside>
+</section>
+
+<!-- 8. Информирование -->
+<section class="slide s8">
+  <div class="deco"></div>
+  <div class="pad">
+    <div style="display:grid;gap:1.4cqw;position:relative">
+      <div class="eyebrow">Больше, чем опрос</div>
+      <h2 class="in">Тот же бот держит клиента в курсе</h2>
+    </div>
+    <div class="cols">
+      <div class="col in">
+        <div class="t"><span class="ic chip-ic" data-i="scooter"></span><h3>Статус заказа</h3></div>
+        <div class="m">Заказ №48213 уже у курьера, будет через 25 минут</div>
+      </div>
+      <div class="col in">
+        <div class="t"><span class="ic chip-ic" data-i="percent"></span><h3>Акции</h3></div>
+        <div class="m">В пятницу вторая пицца за полцены</div>
+        <span class="badge"><i class="ic" data-i="shield"></i>Только с согласия клиента</span>
+      </div>
+      <div class="col in">
+        <div class="t"><span class="ic chip-ic" data-i="bell"></span><h3>Напоминания</h3></div>
+        <div class="m">Ваши бонусы сгорают через 3 дня</div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Раз канал уже подключён, его можно использовать шире, чем для опросов. Бот может сообщать статус заказа, напоминать о бонусах и рассказывать об акциях. Рекламные сообщения отправляем только тем, кто дал на это отдельное согласие, чтобы не превратить канал в спам.</aside>
+</section>
+
+<!-- 9. Аналитика -->
+<section class="slide s9">
+  <div class="pad">
+    <div class="top">
+      <div style="display:grid;gap:1cqw">
+        <div class="eyebrow">Аналитика</div>
+        <h2 class="in">Дашборд качества за неделю</h2>
+      </div>
+      <span class="demo">Пример · демо-данные</span>
+    </div>
+    <div class="kpis in">
+      <div class="kpi"><span class="l">Средняя оценка</span><span class="v num">4,6</span><span class="d up">▲ 0,1 к прошлой неделе</span></div>
+      <div class="kpi"><span class="l">Доля негатива (1–3★)</span><span class="v num">9%</span><span class="d dn">▲ 1 п.п. к прошлой неделе</span></div>
+      <div class="kpi"><span class="l">Получено оценок</span><span class="v num">1 240</span><span class="d up">▲ 12%</span></div>
+      <div class="kpi"><span class="l">Ответили на опрос</span><span class="v num">31%</span><span class="d" style="color:var(--ink-2)">от отправленных</span></div>
+    </div>
+    <div class="panels in">
+      <div class="panel">
+        <span class="pt">Средняя оценка по дням</span>
+        <svg viewBox="0 0 400 250" role="img" aria-label="Средняя оценка по дням недели, от 4,3 до 4,8">
+          <g stroke="#EDE6E0" stroke-width="1">
+            <line x1="34" y1="10" x2="392" y2="10"/><line x1="34" y1="110" x2="392" y2="110"/><line x1="34" y1="210" x2="392" y2="210"/>
+          </g>
+          <g font-size="13" text-anchor="end"><text x="26" y="14">5,0</text><text x="26" y="114">4,5</text><text x="26" y="214">4,0</text></g>
+          <path d="M40 110 L98 90 L156 130 L214 70 L272 150 L330 90 L388 50 L388 210 L40 210 Z" fill="#FF6A1A" fill-opacity=".1"/>
+          <polyline points="40,110 98,90 156,130 214,70 272,150 330,90 388,50" fill="none" stroke="#FF6A1A" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+          <g fill="#FF6A1A" stroke="#FFFFFF" stroke-width="2">
+            <circle cx="272" cy="150" r="6"><title>Пт: 4,3</title></circle>
+            <circle cx="388" cy="50" r="6"><title>Вс: 4,8</title></circle>
+          </g>
+          <text x="272" y="176" font-size="14" text-anchor="middle" style="fill:#D93B2B;font-weight:700">4,3</text>
+          <text x="388" y="34" font-size="14" text-anchor="end" style="fill:#262321;font-weight:700">4,8</text>
+          <g font-size="13" text-anchor="middle"><text x="40" y="238">Пн</text><text x="98" y="238">Вт</text><text x="156" y="238">Ср</text><text x="214" y="238">Чт</text><text x="272" y="238">Пт</text><text x="330" y="238">Сб</text><text x="388" y="238">Вс</text></g>
+        </svg>
+      </div>
+      <div class="panel">
+        <span class="pt">По филиалам</span>
+        <div class="hb num">
+          <div class="r"><span>Центр</span><span class="tr"><i style="width:94%"></i></span><b>4,7</b></div>
+          <div class="r"><span>Север</span><span class="tr"><i style="width:92%"></i></span><b>4,6</b></div>
+          <div class="r"><span>Запад</span><span class="tr"><i style="width:88%"></i></span><b>4,4</b></div>
+          <div class="r"><span>Юг</span><span class="tr"><i style="width:82%"></i></span><b>4,1</b></div>
+        </div>
+        <span class="sub-t">Курьеры</span>
+        <div class="cour num">
+          <div><span>Иван К.</span><b>4,9</b></div>
+          <div><span>Олег С.</span><b>4,8</b></div>
+          <div class="warn"><span>Дмитрий П. · внимание</span><b>3,6</b></div>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="pt">Топ причин недовольства</span>
+        <div class="hb num">
+          <div class="r"><span>Время</span><span class="tr"><i style="width:100%"></i></span><b>41%</b></div>
+          <div class="r"><span>Еда</span><span class="tr"><i style="width:66%"></i></span><b>27%</b></div>
+          <div class="r"><span>Комплект.</span><span class="tr"><i style="width:46%"></i></span><b>19%</b></div>
+          <div class="r"><span>Курьер</span><span class="tr"><i style="width:32%"></i></span><b>13%</b></div>
+        </div>
+        <p style="font-size:1.15cqw;margin-top:auto">Доля от всех оценок 1–3★ за неделю</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Все оценки собираются в дашборд, где видно среднюю оценку по дням, филиалам и курьерам, долю негатива и главные причины недовольства. Цифры на слайде демонстрационные, они показывают формат отчёта. На таком дашборде сразу видно, например, что в пятницу просели оценки, а основная претензия — время доставки.</aside>
+</section>
+
+<!-- 10. Ожидаемые результаты -->
+<section class="slide s10">
+  <div class="pad">
+    <div style="display:grid;gap:1.4cqw">
+      <div class="eyebrow">Ожидаемые результаты</div>
+      <h2 class="in">Что получим через 3 месяца</h2>
+    </div>
+    <div class="kgrid in">
+      <div class="kt main"><span class="ic" data-i="chat"></span><div class="val num">×<span class="ph">5</span></div><div><h3>Больше отзывов</h3><p>к текущему числу отзывов в месяц</p></div></div>
+      <div class="kt dk"><span class="ic" data-i="zap"></span><div class="val num">&lt;<span class="ph">30</span>&nbsp;мин</div><div><h3>Реакция на негатив</h3><p>от оценки до звонка клиенту</p></div></div>
+      <div class="kt"><span class="ic" data-i="heart"></span><div class="val num">+<span class="ph">10</span>%</div><div><h3>Удержание</h3><p>повторные заказы после компенсации</p></div></div>
+      <div class="kt"><span class="ic" data-i="pin"></span><div class="val num"><span class="ph">4,7</span>★</div><div><h3>Рейтинг на картах</h3><p>средний по всем филиалам</p></div></div>
+    </div>
+    <div class="foot"><span class="ic" data-i="info"></span>Подчёркнутые значения — заглушки. Точные цели зафиксируем по итогам пилота.</div>
+  </div>
+  <aside class="notes">Мы ожидаем четыре эффекта: больше отзывов, быструю реакцию на негатив, удержание недовольных клиентов и рост рейтинга на картах. Подчёркнутые цифры пока условные: реальные цели мы зафиксируем после пилота на одном филиале, когда увидим фактический отклик. Главная метрика для решения — время от плохой оценки до звонка клиенту.</aside>
+</section>
+
+<!-- 11. Что нужно для запуска -->
+<section class="slide s11">
+  <div class="side">
+    <div style="display:grid;gap:1.6cqw">
+      <div class="eyebrow">Требования</div>
+      <h2 class="in">Что нужно для запуска</h2>
+    </div>
+    <div class="big num in">4<small>условия, три обязательных и одно резервное</small></div>
+  </div>
+  <div class="list">
+    <div class="req in"><span class="ic" data-i="building"></span><div><h3>Бизнес-аккаунт MAX</h3><p>Регистрация компании и бота</p></div><span class="own">Маркетинг</span></div>
+    <div class="req in"><span class="ic" data-i="plug"></span><div><h3>Интеграция с CRM</h3><p>Выгрузка заказов и запись оценок</p></div><span class="own">IT</span></div>
+    <div class="req in"><span class="ic" data-i="shield"></span><div><h3>Согласие клиентов</h3><p>152-ФЗ: галочка при заказе, отказ в один клик</p></div><span class="own">Юристы</span></div>
+    <div class="req opt in"><span class="ic" data-i="sms"></span><div><h3>SMS как резервный канал</h3><p>Для тех, у кого нет MAX</p></div><span class="own">IT</span></div>
+  </div>
+  <aside class="notes">Для запуска нужны четыре вещи: бизнес-аккаунт в MAX, интеграция с нашей CRM и корректно оформленное согласие клиентов на сообщения по 152-ФЗ. Четвёртый пункт, SMS, нужен как резерв для клиентов, у которых нет MAX. Справа указано, какой отдел отвечает за каждый пункт.</aside>
+</section>
+
+<!-- 12. План внедрения и следующие шаги -->
+<section class="slide s12">
+  <div class="pad">
+    <div style="display:grid;gap:1.4cqw">
+      <div class="eyebrow">План внедрения</div>
+      <h2 class="in">От договора до всей сети</h2>
+    </div>
+    <div class="tl in">
+      <div class="ph-step done"><span class="pin"></span><span class="w num">Недели 1–2</span><h3>Подготовка и договор</h3><p>Аккаунт MAX, юристы, ТЗ для IT</p></div>
+      <div class="ph-step"><span class="pin"></span><span class="w num">Недели 3–4</span><h3>Настройка сценария</h3><p>Тексты, CRM, уведомления</p></div>
+      <div class="ph-step"><span class="pin"></span><span class="w num">Недели 5–8</span><h3>Тест на одном филиале</h3><p>Замеряем отклик и скорость реакции</p></div>
+      <div class="ph-step launch"><span class="pin"></span><span class="w num">С недели 9</span><h3>Запуск на всю сеть</h3><p>Поэтапно, по филиалам</p></div>
+    </div>
+    <div class="next in">
+      <h2>Следующие шаги</h2>
+      <ol>
+        <li>Утвердить проект и&nbsp;бюджет пилота</li>
+        <li>Выбрать пилотный филиал и&nbsp;ответственных</li>
+        <li>Подать заявку на бизнес-аккаунт MAX</li>
+      </ol>
+    </div>
+  </div>
+  <aside class="notes">Внедрение займёт около двух месяцев до запуска на всю сеть: две недели на подготовку, две на настройку, месяц на пилот в одном филиале. Пилот нужен, чтобы проверить тексты, отклик и нагрузку на менеджеров до масштабирования. От вас сегодня нам нужно три решения: утвердить проект, выбрать пилотный филиал и дать старт заявке на бизнес-аккаунт MAX.</aside>
+</section>
+
+</main>
+<div class="notes-panel" id="notesPanel" hidden>
+  <div class="lbl" id="notesLbl">Заметки спикера</div>
+  <p id="notesText"></p>
+</div>
+</div>
+
+<script>
+(function () {
+  var I = {
+    chat: 'M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z',
+    star: 'M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z',
+    megaphone: 'M3 10v4h3l7 4V6l-7 4H3z M16.5 9a4 4 0 0 1 0 6 M19.5 6a8 8 0 0 1 0 12',
+    mute: 'M4 5h16v11H9l-5 4z M9 9l6 4 M15 9l-6 4',
+    clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 7v5l3 2',
+    phone: 'M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z M11 18h2',
+    call: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z',
+    box: 'M3 7l9-4 9 4v10l-9 4-9-4z M3 7l9 4 9-4 M12 11v10',
+    bag: 'M5 8h14l-1 13H6z M9 8V6a3 3 0 0 1 6 0v2',
+    scooter: 'M6 19a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z M18 19a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z M8.5 16.5H15l2-7h-4 M17 9.5 15 4h-3',
+    bowl: 'M3 11h18a9 9 0 0 1-18 0z M8 7.5c0-1.5 1-2 1-3.5 M12 7.5c0-1.5 1-2 1-3.5 M16 7.5c0-1.5 1-2 1-3.5',
+    db: 'M12 8c4.4 0 8-1.3 8-3s-3.6-3-8-3-8 1.3-8 3 3.6 3 8 3z M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5 M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+    filter: 'M3 4h18l-7 8.5V19l-4 2v-8.5z',
+    chart: 'M3 3v18h18 M7 15l4-4 3 3 5-6',
+    fork: 'M12 21v-6 M12 15 6 9V3 M12 15l6-6V3',
+    shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4',
+    sms: 'M4 4h16v12H8l-4 4z M8 9h8 M8 12h5',
+    bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z M10 21h4',
+    percent: 'M19 5 5 19 M7 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4z M17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
+    plug: 'M9 2v6 M15 2v6 M6 8h12v3a6 6 0 0 1-12 0z M12 17v5',
+    building: 'M4 21V5l8-3 8 3v16 M2 21h20 M9 9h1 M14 9h1 M9 13h1 M14 13h1 M10 21v-4h4v4',
+    heart: 'M12 20s-8-4.8-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6.2-8 11-8 11z',
+    zap: 'M13 2 4 14h7l-1 8 9-12h-7z',
+    gift: 'M4 10h16v11H4z M2 6h20v4H2z M12 6v15 M12 6C10 2 7 3 8 6 M12 6c2-4 5-3 4 0',
+    coin: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M10 17V7h3a3 3 0 0 1 0 6H8 M8 15h5',
+    image: 'M3 5h18v14H3z M3 16l5-5 5 5 3-3 5 5 M16 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+    flag: 'M5 21V4 M5 4h13l-2 4 2 4H5',
+    pin: 'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+    arrow: 'M4 12h15 M13 6l6 6-6 6',
+    info: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 11v6 M12 7.5v.5'
+  };
+  document.querySelectorAll('[data-i]').forEach(function (el) {
+    var d = I[el.getAttribute('data-i')];
+    if (d) el.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '"/></svg>';
+  });
+
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var panel = document.getElementById('notesPanel');
+  var nText = document.getElementById('notesText');
+  var nLbl = document.getElementById('notesLbl');
+  var cur = 0, total = slides.length;
+
+  slides.forEach(function (s, i) {
+    var no = document.createElement('div');
+    no.className = 'page-no num';
+    no.textContent = String(i + 1).padStart(2, '0') + ' / ' + total;
+    no.addEventListener('click', function (e) { e.stopPropagation(); toggleNotes(); });
+    s.appendChild(no);
+  });
+
+  function show(i) {
+    cur = Math.max(0, Math.min(total - 1, i));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === cur); });
+    var n = slides[cur].querySelector('.notes');
+    nText.textContent = n ? n.textContent : '';
+    nLbl.textContent = 'Заметки спикера · слайд ' + (cur + 1);
+    try { history.replaceState(null, '', '#s' + (cur + 1)); } catch (e) {}
+  }
+  function toggleNotes() { panel.hidden = !panel.hidden; }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(cur - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(total - 1);
+    else if (e.key === 'n' || e.key === 'N' || e.key === 'т' || e.key === 'Т') toggleNotes();
+  });
+
+  var x0 = null;
+  document.getElementById('stage').addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  document.getElementById('stage').addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  var m = /^#s(\d+)$/.exec(location.hash);
+  show(m ? parseInt(m[1], 10) - 1 : 0);
+})();
+</script>
+</body>
+</html>
