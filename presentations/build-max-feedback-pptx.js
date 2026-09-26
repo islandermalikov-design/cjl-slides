@@ -437,6 +437,6 @@ async function icon(name, color) {
     s.addNotes('Внедрение займёт около двух месяцев до запуска на всю сеть: две недели на подготовку, две на настройку, месяц на пилот в одном филиале. Пилот нужен, чтобы проверить тексты, отклик и нагрузку на менеджеров до масштабирования. От вас сегодня нам нужно три решения: утвердить проект, выбрать пилотный филиал и дать старт заявке на бизнес-аккаунт MAX.');
   }
 
-  await pres.writeFile({ fileName: 'require('path').join(__dirname, 'max-feedback-bot.pptx')' });
+  await pres.writeFile({ fileName: require('path').join(__dirname, 'max-feedback-bot.pptx') });
   console.log('written');
 })();
