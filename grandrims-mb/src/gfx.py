@@ -19,8 +19,21 @@ FONT_MED = os.path.expanduser('~/.fonts/MontserratMedium.ttf')
 rng = np.random.default_rng(7)
 
 
+HD = os.path.join(SP, 'assets_hd')
+USE_HD = os.environ.get('NO_HD') != '1'
+
+
 def load(name):
-    return Image.open(os.path.join(AS, name + '.png')).convert('RGB')
+    """Load a source photo; the enhanced 2x version if present. Box coordinates stay in ORIGINAL pixels
+    (im.info['scale'] carries the factor, see crop_fill)."""
+    hd = os.path.join(HD, name + '.png')
+    if USE_HD and os.path.exists(hd):
+        im = Image.open(hd).convert('RGB')
+        im.info['scale'] = 2
+        return im
+    im = Image.open(os.path.join(AS, name + '.png')).convert('RGB')
+    im.info['scale'] = 1
+    return im
 
 
 def smooth(t):
@@ -31,6 +44,8 @@ def smooth(t):
 # ---------------------------------------------------------------- photo work
 def crop_fill(im, box, size):
     """Crop `box` (x0,y0,x1,y1) from im and resize (LANCZOS) to size, keeping the box aspect."""
+    s = im.info.get('scale', 1)
+    box = tuple(int(round(v * s)) for v in box)
     c = im.crop(box)
     if abs((c.width / c.height) - (size[0] / size[1])) > 0.01:
         # adjust box symmetrically to the target aspect
@@ -178,7 +193,7 @@ def save_jpg(im, name, q=90):
 # ---------------------------------------------------------------- logo
 def make_logo():
     """Cut the GRANDRIMS wordmark out of the branded GLS photo (only available brand artwork)."""
-    im = load('gls_black').crop((530, 672, 748, 720))
+    im = Image.open(os.path.join(AS, 'gls_black.png')).convert('RGB').crop((530, 672, 748, 720))  # original pixels, not enhanced
     a = np.asarray(im).astype(np.float32)
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
     white = (np.minimum(np.minimum(r, g), b) > 165)
