@@ -115,6 +115,7 @@ HL = lambda t, size=88, color=WHITE, font=F_L: (t, font, size, color)
 
 # ------------------------------------------------------------------ assets
 logo_path, (LW, LH) = logo_variants()
+wh4 = load('wheels4'); gcl = load('g_class'); bset = load('brake_set'); bsingle = load('brake_single')
 gls = load('gls_black'); sw = load('s_white'); w124 = load('w124'); may = load('maybach'); vcl = load('vclass')
 
 # ================================================================== 01 COVER
@@ -231,32 +232,36 @@ notes(s, 'Технологии и преимущества. Все факты �
 
 # ================================================================== 05 DESIGN (light)
 bg = base_light()
-def tile(im, box, size):
-    return grade(crop_fill(im, box, size), sat=0.9, contrast=1.06, cool=0.03, grain=2.6)
-main = tile(sw, (576, 296, 786, 574), (560, 800))
-t1 = tile(gls, (646, 335, 866, 585), (304, 250))
-t2 = tile(may, (690, 715, 900, 905), (304, 250))
-t3 = tile(w124, (430, 685, 650, 885), (304, 250))
-bg.paste(main, (84, 520)); bg.paste(t1, (692, 520)); bg.paste(t2, (692, 795)); bg.paste(t3, (692, 1070))
+def tile(im, box, size, **kw):
+    return grade(crop_fill(im, box, size), **dict(dict(sat=0.95, contrast=1.06, cool=0.03, grain=2.6), **kw))
+hero = tile(wh4, (0, 0, 1280, 1048), (912, 747), sat=1.0, contrast=1.05, cool=0.02, mult=1.0)
+tw, th, ty0 = 288, 230, 1195
+t1 = tile(sw, (578, 348, 788, 516), (tw, th))
+t2 = tile(may, (685, 738, 895, 906), (tw, th))
+t3 = tile(gls, (647, 368, 857, 536), (tw, th))
+bg.paste(hero, (84, 420))
+xs = (84, 84 + tw + 24, 84 + 2 * (tw + 24))
+for x, t in zip(xs, (t1, t2, t3)): bg.paste(t, (x, ty0))
 b5 = save_jpg(bg, 'bg05.jpg')
 s = new_slide(b5)
 eyebrow(s, MARGIN, 96, 'Дизайн дисков', color=GRAYT)
 text(s, MARGIN, 190, 920, 240, [
     P(('Дизайн в характере', F_L, 84, INK), ls=92),
     P(('автомобиля', F_L, 84, INK), ls=92)], name='Title')
-for (x, y), n in (((84, 520), '01'), ((692, 520), '02'), ((692, 795), '03'), ((692, 1070), '04')):
-    text(s, x + 18, y + 14, 80, 30, [P((n, F_M, 22, WHITE, {'spc': 3}))])
-leg = [('01', 'Многоспицевый', 'турбинный рисунок'), ('02', 'Массивный моноблок', 'чёрный лак, полированная кромка'),
-       ('03', 'Maybach-style', 'хром и объём'), ('04', 'Спортивный', 'пять лучей, широкий вылет')]
-y = 1382
+for (x, y), n in (((84, 420), '01'), ((xs[0], ty0), '02'), ((xs[1], ty0), '03'), ((xs[2], ty0), '04')):
+    rect(s, x, y, 66, 44, INK, 0.62)
+    text(s, x + 16, y + 9, 80, 30, [P((n, F_M, 22, WHITE, {'spc': 3}))])
+leg = [('01', 'Кованый комплект', 'чёрный лак, контрастная кромка'), ('02', 'Многоспицевый', 'турбинный рисунок'),
+       ('03', 'Maybach-style', 'хром и объём'), ('04', 'Массивный моноблок', 'чёрный лак, полированная кромка')]
+y = 1458
 for n, a, b in leg:
     hline(s, MARGIN, y, W - 2 * MARGIN, INK, 1, 0.22)
-    text(s, MARGIN, y + 20, 90, 40, [P((n, F_M, 22, GRAYT, {'spc': 3}))])
-    text(s, 190, y + 14, 500, 44, [P((a, F_M, 30, INK))])
-    text(s, 190, y + 54, 700, 34, [P((b, F_L, 24, GRAYT))])
-    y += 100
+    text(s, MARGIN, y + 18, 90, 40, [P((n, F_M, 22, GRAYT, {'spc': 3}))])
+    text(s, 190, y + 10, 700, 44, [P((a, F_M, 30, INK))])
+    text(s, 190, y + 46, 780, 34, [P((b, F_L, 24, GRAYT))])
+    y += 88
 footer(s, 5, dark=False)
-notes(s, 'Дизайн дисков. Кадры — фрагменты фото автомобилей (S-Class, GLS, Maybach GLS, W124). При получении предметных фото дисков заменить плитки 01–04.')
+notes(s, 'Дизайн дисков. 01 — предметное фото комплекта GRANDRIMS; 02–04 — фрагменты фото автомобилей (S-Class, Maybach GLS, GLS).')
 
 # ================================================================== 06 MAYBACH
 bg = base_dark(hot=(0.5, 0.35), hot_amt=10, lines=False)
@@ -296,26 +301,26 @@ text(s, MARGIN, 1716, 700, 70, [P(('Многоспицевые и спортив
 footer(s, 7)
 notes(s, 'AMG / Performance. Фото: красный W124 с пятилучевыми дисками. Для более «AMG»-подачи можно заменить на фото с AMG-автомобилем.')
 
-# ================================================================== 08 G-CLASS  (photo slot)
-ph8 = placeholder('slot_gclass.jpg', W, H, 'ФОТО G-CLASS', 'Место под фото · Изменить рисунок')
-ov8 = overlay_png(np.dstack([np.zeros((H, W, 3), np.uint8) + np.array((5, 6, 8), np.uint8),
-                             (np.repeat(np.maximum(vgrad(H, 0.5, 0.0, 0, 300), vgrad(H, 0.0, 0.94, 1300, 1800))[:, None], W, 1) * 255).astype(np.uint8)]), 'ov08.png')
-s = new_slide(None)
-pic(s, ph8, 0, 0, W, H, 'PHOTO SLOT — G-Class')
-pic(s, ov8, 0, 0, W, H, 'shade')
+# ================================================================== 08 G-CLASS
+bg = base_dark(hot=(0.5, 0.4), hot_amt=12)
+bg = add_layer(bg, star_layer(900, 300, 440, alpha=0.06), (214, 220, 226))
+ph = grade(crop_fill(gcl, (50, 190, 1210, 930), (1080, 689)), sat=0.66, contrast=1.14, gamma=1.28, cool=0.06, vign=0.35, grain=3.0, mult=0.9)
+bg = paste_faded(bg, ph, 0, 470, fade_top=300, fade_bot=230)
+b8 = save_jpg(bg, 'bg08.jpg')
+s = new_slide(b8)
 eyebrow(s, MARGIN, 96, 'G-Class')
-text(s, MARGIN, 1380, 920, 240, [
+text(s, MARGIN, 1300, 920, 240, [
     P(('Характер', F_L, 88, WHITE), ls=98),
     P(('без компромиссов', F_L, 88, WHITE), ls=98)], name='Title')
-text(s, MARGIN, 1630, 720, 100, [P(('Массивные кованые диски, рассчитанные на нагрузки и характер G-Class.', F_L, 30, SILV), ls=44)])
+text(s, MARGIN, 1550, 720, 100, [P(('Массивные кованые диски, рассчитанные на нагрузки и характер G-Class.', F_L, 30, SILV), ls=44)])
 footer(s, 8)
-notes(s, 'ТРЕБУЕТСЯ ФОТО: G-Class с установленными дисками. Правой кнопкой по фону → «Изменить рисунок» (кадр 9:16, 1080×1920). Затемняющий градиент и текст останутся.')
+notes(s, 'G-Class. Водяной знак с исходного фото убран кадрированием.')
 
-# ================================================================== 09 BRAKES  (photo slot)
+# ================================================================== 09 BRAKES
 bg = base_dark(hot=(0.5, 0.5), hot_amt=10)
 bg = add_layer(bg, star_layer(960, 300, 400, alpha=0.06), (214, 220, 226))
 b9 = save_jpg(bg, 'bg09.jpg')
-ph9 = placeholder('slot_brakes.jpg', W, 860, 'ФОТО ТОРМОЗНОГО КОМПЛЕКТА AMG', 'Место под фото · Изменить рисунок')
+ph9 = save_jpg(grade(crop_fill(bset, (60, 0, 1170, 885), (1080, 860)), sat=1.0, contrast=1.08, gamma=1.12, cool=0.02, vign=0.3, grain=2.6, mult=0.95), 'brakes_set.jpg')
 s = new_slide(b9)
 eyebrow(s, MARGIN, 96, 'Тормозные системы')
 text(s, MARGIN, 186, 920, 400, [
@@ -323,7 +328,8 @@ text(s, MARGIN, 186, 920, 400, [
     P(('на оригинальных', F_L, 68, WHITE), ls=78),
     P(('компонентах', F_L, 68, WHITE), ls=78),
     P(('Mercedes-Benz', F_M, 68, WHITE), ls=78)], name='Title')
-pic(s, ph9, 0, 640, W, 860, 'PHOTO SLOT — brakes')
+pic(s, ph9, 0, 640, W, 860, 'Photo — brake set')
+hline(s, 0, 640, W, SILV, 1, 0.4); hline(s, 0, 1500, W, SILV, 1, 0.4)
 cols = [('СУППОРТЫ', 'AMG'), ('ДИСКИ', 'Карбон-керамика'), ('КОМПОНЕНТЫ', 'Оригинальные')]
 cw = (W - 2 * MARGIN) / 3
 for i, (a_, b_) in enumerate(cols):
@@ -332,27 +338,27 @@ for i, (a_, b_) in enumerate(cols):
     text(s, x, 1592, cw - 24, 30, [P((a_, F_M, 20, COLD, {'spc': 4}))])
     text(s, x, 1630, cw - 10, 80, [P((b_, F_L, 32, WHITE), ls=40)])
 footer(s, 9)
-notes(s, 'ТРЕБУЕТСЯ ФОТО: золотые суппорты AMG и карбон-керамические диски (кадр 1080×860). Заменить рисунок «PHOTO SLOT — brakes».')
+notes(s, 'Тормозные комплекты AMG Carbon Ceramic. Водяной знак с исходного фото убран кадрированием.')
 
-# ================================================================== 10 CARBON CERAMIC G 63  (photo slot + price)
+# ================================================================== 10 CARBON CERAMIC G 63
 bg = base_dark(hot=(0.5, 0.35), hot_amt=14, lines=False)
 b10 = save_jpg(bg, 'bg10.jpg')
-ph10 = placeholder('slot_g63.jpg', W, 640, 'ФОТО КОМПЛЕКТА G 63', 'Золотые суппорты AMG + карбон-керамические диски')
+ph10 = save_jpg(grade(crop_fill(bsingle, (0, 5, 960, 645), (1080, 720)), sat=1.0, contrast=1.10, gamma=1.14, cool=0.02, vign=0.32, grain=2.6, mult=0.95), 'brake_g63.jpg')
 s = new_slide(b10)
 eyebrow(s, MARGIN, 96, 'Отдельное предложение')
 text(s, MARGIN, 176, 920, 300, [
     P(('Карбон-керамическая', F_L, 66, WHITE), ls=76),
     P(('тормозная система', F_L, 66, WHITE), ls=76),
     P(('Mercedes-Benz G 63', F_M, 66, WHITE), ls=76)], name='Title')
-pic(s, ph10, 0, 460, W, 640, 'PHOTO SLOT — G 63 carbon ceramic')
-hline(s, 0, 460, W, SILV, 1, 0.5); hline(s, 0, 1100, W, SILV, 1, 0.5)
-text(s, MARGIN, 1146, 920, 420, [
+pic(s, ph10, 0, 440, W, 720, 'Photo — G 63 carbon ceramic')
+hline(s, 0, 440, W, SILV, 1, 0.5); hline(s, 0, 1160, W, SILV, 1, 0.5)
+text(s, MARGIN, 1196, 920, 400, [
     dict(runs=[('Стоимость представленного на фотографии комплекта карбон-керамической тормозной системы для Mercedes-Benz G 63 составляет', F_L, 34, SILV), 'BR', ('… ₽.', F_S, 150, WHITE)], lsm=1.25)
 ], name='Price text')
-hline(s, MARGIN, 1590, 120, SILV, 1, 0.6)
-text(s, MARGIN, 1616, 912, 150, [P(('Стоимость тормозной системы для конкретной модели автомобиля рассчитывается индивидуально с учётом конфигурации и необходимых компонентов.', F_L, 25, COLD), ls=36)], name='Note')
+hline(s, MARGIN, 1610, 120, SILV, 1, 0.6)
+text(s, MARGIN, 1634, 912, 150, [P(('Стоимость тормозной системы для конкретной модели автомобиля рассчитывается индивидуально с учётом конфигурации и необходимых компонентов.', F_L, 25, COLD), ls=36)], name='Note')
 footer(s, 10)
-notes(s, 'ТРЕБУЕТСЯ: (1) фото комплекта G 63 — золотые суппорты AMG + карбон-керамические диски (кадр 1080×640), заменить «PHOTO SLOT — G 63 carbon ceramic»; (2) внести цену вместо «…» в текстовом поле «Price text». Цена не придумана.')
+notes(s, 'ТРЕБУЕТСЯ: внести цену вместо «…» в текстовом поле «Price text». Цена не придумана.')
 
 # ================================================================== 11 PROCESS
 bg = base_dark(hot=(0.15, 0.6), hot_amt=10)
