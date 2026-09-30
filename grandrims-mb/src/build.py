@@ -115,7 +115,7 @@ HL = lambda t, size=88, color=WHITE, font=F_L: (t, font, size, color)
 
 # ------------------------------------------------------------------ assets
 logo_path, (LW, LH) = logo_variants()
-wh4 = load('wheels4'); gcl = load('g_class'); e63 = load('e63'); whs = load('wheels_star'); whm = load('wheels_maybach'); bset = load('brake_set'); bsingle = load('brake_single')
+wh4 = load('wheels4'); gcl = load('g_class'); e63 = load('e63'); gwh = load('g_wheels'); awh = load('amg_wheels'); whs = load('wheels_star'); whm = load('wheels_maybach'); bset = load('brake_set'); bsingle = load('brake_single')
 gls = load('gls_black'); sw = load('s_white'); w124 = load('w124'); may = load('maybach'); vcl = load('vclass')
 
 # ================================================================== 01 COVER
@@ -237,8 +237,8 @@ def tile(im, box, size, **kw):
 hero = tile(whs, (90, 50, 1280, 943), (912, 684), sat=1.0, contrast=1.05, cool=0.02, mult=1.0)
 tw, th, ty0 = 288, 230, 1136
 t1 = tile(whm, (330, 400, 930, 870), (tw, th), sat=1.0)
-t2 = tile(sw, (578, 348, 788, 516), (tw, th))
-t3 = tile(gls, (647, 368, 857, 536), (tw, th))
+t2 = tile(awh, (630, 150, 1050, 485), (tw, th), sat=1.0)
+t3 = tile(gwh, (55, 380, 655, 859), (tw, th), sat=1.0)
 bg.paste(hero, (84, 420))
 xs = (84, 84 + tw + 24, 84 + 2 * (tw + 24))
 for x, t in zip(xs, (t1, t2, t3)): bg.paste(t, (x, ty0))
@@ -252,7 +252,7 @@ for (x, y), n in (((84, 420), '01'), ((xs[0], ty0), '02'), ((xs[1], ty0), '03'),
     rect(s, x, y, 66, 44, INK, 0.62)
     text(s, x + 16, y + 9, 80, 30, [P((n, F_M, 22, WHITE, {'spc': 3}))])
 leg = [('01', 'Строгий Mercedes-Benz', 'чёрный лак и полированная кромка спиц'), ('02', 'Maybach-style', 'полированные поверхности и объём'),
-       ('03', 'Многоспицевый', 'турбинный рисунок'), ('04', 'Массивный моноблок', 'монолитный чёрный диск')]
+       ('03', 'AMG-style', 'многоспицевый рисунок, матовый графит'), ('04', 'G-Class', 'массивный моноблок, матовый чёрный')]
 y = 1404
 for n, a, b in leg:
     hline(s, MARGIN, y, W - 2 * MARGIN, INK, 1, 0.22)
@@ -261,7 +261,7 @@ for n, a, b in leg:
     text(s, 190, y + 46, 780, 34, [P((b, F_L, 24, GRAYT))])
     y += 88
 footer(s, 5, dark=False)
-notes(s, 'Дизайн дисков. 01 и 02 — предметные фото комплектов; 03–04 — фрагменты фото автомобилей (S-Class, GLS).')
+notes(s, 'Дизайн дисков. Все четыре кадра — предметные фото комплектов: строгий Mercedes-Benz, Maybach-style, AMG-style, G-Class.')
 
 # ================================================================== 06 MAYBACH
 bg = base_dark(hot=(0.5, 0.35), hot_amt=10, lines=False)
@@ -306,13 +306,18 @@ bg = base_dark(hot=(0.5, 0.4), hot_amt=12)
 bg = add_layer(bg, star_layer(900, 300, 440, alpha=0.06), (214, 220, 226))
 ph = grade(crop_fill(gcl, (50, 190, 1210, 930), (1080, 689)), sat=0.66, contrast=1.14, gamma=1.28, cool=0.06, vign=0.35, grain=3.0, mult=0.9)
 bg = paste_faded(bg, ph, 0, 470, fade_top=300, fade_bot=230)
+# detail ring: matte G-Class wheel (product photo)
+wd8 = grade(crop_fill(gwh, (45, 350, 625, 930), (280, 280)), sat=0.9, contrast=1.10, gamma=1.05, cool=0.03, grain=2.4, mult=1.0)
+m8 = Image.new('L', (280, 280), 0); ImageDraw.Draw(m8).ellipse((0, 0, 279, 279), fill=255)
+bg = bg.copy(); bg.paste(wd8, (716, 1510), m8)
+ImageDraw.Draw(bg).ellipse((716 - 10, 1510 - 10, 716 + 290, 1510 + 290), outline=(196, 201, 206), width=2)
 b8 = save_jpg(bg, 'bg08.jpg')
 s = new_slide(b8)
 eyebrow(s, MARGIN, 96, 'G-Class')
 text(s, MARGIN, 1300, 920, 240, [
     P(('Характер', F_L, 88, WHITE), ls=98),
     P(('без компромиссов', F_L, 88, WHITE), ls=98)], name='Title')
-text(s, MARGIN, 1550, 720, 100, [P(('Массивные кованые диски, рассчитанные на нагрузки и характер G-Class.', F_L, 30, SILV), ls=44)])
+text(s, MARGIN, 1550, 560, 170, [P(('Массивные кованые диски, рассчитанные на нагрузки и характер G-Class.', F_L, 30, SILV), ls=44)])
 footer(s, 8)
 notes(s, 'G-Class. Водяной знак с исходного фото убран кадрированием.')
 
