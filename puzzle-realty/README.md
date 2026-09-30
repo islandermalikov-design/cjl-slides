@@ -1,6 +1,6 @@
 # Puzzle Realty — презентация «Система привлечения клиентов в посёлок без бюджета»
 
-14 слайдов, 16:9, редактируемый .pptx (нативные фигуры и текст).
+14 слайдов, 16:9, собраны на шаблоне конгресса (`assets/congress-template.potx`, баннер сверху идёт с мастер-слайда). Редактируемый .pptx: нативные фигуры и текст, заголовки в настоящих title-плейсхолдерах, тема — Gilroy + фирменные цвета.
 
 - `out/puzzle-realty-zero-budget.pptx` — готовый файл; `out/puzzle-realty-zero-budget.pdf` — превью
 - `build_deck.py` — генератор (`python3 build_deck.py`, нужны `python-pptx`, `pillow`, `qrcode`)
