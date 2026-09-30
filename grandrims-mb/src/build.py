@@ -123,7 +123,7 @@ HL = lambda t, size=88, color=WHITE, font=F_L: (t, font, size, color)
 
 # ------------------------------------------------------------------ assets
 logo_dark, logo_light, (LW, LH) = logo_pair()
-wh4 = load('wheels4'); gcl = load('g_class'); e63 = load('e63'); gwh = load('g_wheels'); awh = load('amg_wheels'); whs = load('wheels_star'); whm = load('wheels_maybach'); bset = load('brake_set'); bsingle = load('brake_single')
+wh4 = load('wheels4'); gcl = load('g_class'); e63 = load('e63'); gwh = load('g_wheels'); wco = load('wheels_carbon'); whp = load('wheels_polished'); awh = load('amg_wheels'); whs = load('wheels_star'); whm = load('wheels_maybach'); bset = load('brake_set'); bsingle = load('brake_single')
 gls = load('gls_black'); sw = load('s_white'); w124 = load('w124'); may = load('maybach'); vcl = load('vclass')
 
 # ================================================================== 01 COVER
@@ -179,9 +179,9 @@ text(s, MARGIN, 190, 920, 300, [
     P(('под любые задачи', F_L, 84, SILV), ls=92)], name='Title')
 text(s, MARGIN, 508, 880, 120, [P(('Инженерная точность, высокая прочность и сниженный вес.', F_L, 36, SILV), ls=54)])
 hline(s, MARGIN, 690, W - 2 * MARGIN, SILV, 1, 0.3)
-text(s, MARGIN, 700, 560, 220, [P(('18–24″', F_L, 168, WHITE), ls=190)], name='Sizes')
-text(s, 650, 738, 346, 40, [P(('ДОСТУПНЫЕ РАЗМЕРЫ', F_M, 20, COLD, {'spc': 4}))])
-text(s, 650, 790, 346, 150, [P(('Индивидуальное исполнение с учётом дизайна, параметров и нагрузок автомобиля.', F_L, 27, SILV), ls=39)])
+text(s, MARGIN, 712, 620, 200, [P(('18″–24″', F_L, 140, WHITE), ls=160)], name='Sizes')
+text(s, 712, 752, 284, 60, [P(('ДОСТУПНЫЕ РАЗМЕРЫ', F_M, 20, COLD, {'spc': 4}))])
+text(s, MARGIN, 884, 912, 100, [P(('Индивидуальное исполнение с учётом дизайна, параметров и нагрузок автомобиля.', F_L, 28, SILV), ls=40)])
 footer(s, 3)
 notes(s, 'Кованые диски. Кадр — предметное фото комплекта целиком, без кадрирования.')
 
@@ -209,7 +209,7 @@ text(s, MARGIN, 190, 920, 200, [
     P(('в основе', F_L, 84, SILV), ls=92)], name='Title')
 rows = [
     ('6061-T6', 'Кованый алюминиевый сплав авиационного класса'),
-    ('18–24″', 'Размеры от 18 до 24 дюймов под параметры автомобиля'),
+    ('18″–24″', 'Размеры от 18 до 24 дюймов под параметры автомобиля'),
     ('3D', 'Визуализация и точная подгонка до запуска в производство'),
     ('от 15', 'рабочих дней — производство индивидуального комплекта'),
     ('∞', 'Гарантия на целостность конструкции дисков на весь срок эксплуатации'),
@@ -233,7 +233,7 @@ text(s, 560, yb, 436, 200, [
     P(('Шины, датчики давления и аксессуары — в сборе.*', F_L, 26, SILV), ls=37)])
 text(s, MARGIN, 1752, 912, 60, [P(('* Актуальные цены на шины, колёсные датчики и аксессуары предоставляются менеджером по запросу.', F_L, 20, COLD), ls=28)])
 footer(s, 4)
-notes(s, 'Технологии и преимущества. Все факты — из исходного КП: 6061-T6, 18–24″, 3D, от 15 рабочих дней, пожизненная гарантия на целостность конструкции, сервис, готовые комплекты.')
+notes(s, 'Технологии и преимущества. Все факты — из исходного КП: 6061-T6, 18″–24″, 3D, от 15 рабочих дней, пожизненная гарантия на целостность конструкции, сервис, готовые комплекты.')
 
 # ================================================================== 05 DESIGN (light)
 bg = base_light()
@@ -274,7 +274,7 @@ bg = base_dark(hot=(0.5, 0.35), hot_amt=10, lines=False)
 ph = grade(crop_fill(may, (0, 0, 960, 1280), (1080, 1440)), sat=0.62, contrast=1.16, gamma=1.28, cool=0.06, vign=0.4, grain=3.0, mult=0.86)
 bg = paste_faded(bg, ph, 0, 480, fade_top=420, fade_bot=160)
 # product photo of the wheel set (whole frame, 4:3) bottom right
-wd = grade(crop_fill(whm, (0, 0, 1280, 960), (360, 270)), sat=0.9, contrast=1.08, gamma=1.05, cool=0.03, grain=2.2, mult=0.95)
+wd = grade(crop_fill(whp, (0, 0, 1280, 960), (360, 270)), sat=0.9, contrast=1.08, gamma=1.05, cool=0.03, grain=2.2, mult=0.95)
 bgc = bg.copy(); bgc.paste(wd, (636, 1490))
 ImageDraw.Draw(bgc).rectangle((636 - 1, 1490 - 1, 636 + 360, 1490 + 270), outline=(196, 201, 206), width=1)
 bg = bgc
@@ -312,9 +312,9 @@ bg = add_layer(bg, star_layer(900, 300, 440, alpha=0.06), (214, 220, 226))
 ph = grade(crop_fill(gcl, (50, 190, 1210, 930), (1080, 689)), sat=0.66, contrast=1.14, gamma=1.28, cool=0.06, vign=0.35, grain=3.0, mult=0.9)
 bg = paste_faded(bg, ph, 0, 470, fade_top=300, fade_bot=230)
 # product photo of the matte G-Class wheel set (whole frame, 4:3) bottom right
-wd8 = grade(crop_fill(gwh, (0, 0, 1280, 959), (360, 270)), sat=0.95, contrast=1.08, gamma=1.02, cool=0.02, grain=2.2, mult=1.0)
+wd8 = grade(crop_fill(wco, (0, 0, 1280, 1004), (360, 282)), sat=0.95, contrast=1.08, gamma=1.02, cool=0.02, grain=2.2, mult=1.0)
 bg = bg.copy(); bg.paste(wd8, (636, 1490))
-ImageDraw.Draw(bg).rectangle((636 - 1, 1490 - 1, 636 + 360, 1490 + 270), outline=(196, 201, 206), width=1)
+ImageDraw.Draw(bg).rectangle((636 - 1, 1490 - 1, 636 + 360, 1490 + 282), outline=(196, 201, 206), width=1)
 b8 = save_jpg(bg, 'bg08.jpg')
 s = new_slide(b8)
 eyebrow(s, MARGIN, 96, 'G-Class')
@@ -352,22 +352,31 @@ notes(s, 'Тормозные комплекты AMG Carbon Ceramic. Водяно
 # ================================================================== 10 CARBON CERAMIC G 63
 bg = base_dark(hot=(0.5, 0.35), hot_amt=14, lines=False)
 b10 = save_jpg(bg, 'bg10.jpg')
-ph10 = save_jpg(grade(crop_fill(bsingle, (0, 5, 960, 645), (1080, 720)), sat=1.0, contrast=1.10, gamma=1.14, cool=0.02, vign=0.32, grain=2.6, mult=0.95), 'brake_g63.jpg')
+ph10 = save_jpg(grade(crop_fill(bsingle, (0, 20, 960, 491), (1080, 530)), sat=1.0, contrast=1.10, gamma=1.14, cool=0.02, vign=0.32, grain=2.6, mult=0.95), 'brake_g63.jpg')
 s = new_slide(b10)
 eyebrow(s, MARGIN, 96, 'Отдельное предложение')
-text(s, MARGIN, 176, 920, 300, [
+text(s, MARGIN, 176, 920, 240, [
     P(('Карбон-керамическая', F_L, 66, WHITE), ls=76),
     P(('тормозная система', F_L, 66, WHITE), ls=76),
     P(('Mercedes-Benz G 63', F_M, 66, WHITE), ls=76)], name='Title')
-pic(s, ph10, 0, 440, W, 720, 'Photo — G 63 carbon ceramic')
-hline(s, 0, 440, W, SILV, 1, 0.5); hline(s, 0, 1160, W, SILV, 1, 0.5)
-text(s, MARGIN, 1196, 920, 400, [
-    dict(runs=[('Стоимость представленного на фотографии комплекта карбон-керамической тормозной системы для Mercedes-Benz G 63 составляет', F_L, 34, SILV), 'BR', ('… ₽.', F_S, 150, WHITE)], lsm=1.25)
+pic(s, ph10, 0, 430, W, 530, 'Photo — G 63 carbon ceramic')
+hline(s, 0, 430, W, SILV, 1, 0.5); hline(s, 0, 960, W, SILV, 1, 0.5)
+text(s, MARGIN, 992, 700, 30, [P(('В КОМПЛЕКТЕ', F_M, 20, COLD, {'spc': 4}))])
+kit = [('01', 'Передний суппорт Brembo 6pot + карбон-керамические тормозные диски 420\u00a0мм'),
+       ('02', 'Задний суппорт OEM 1pot + карбон-керамические тормозные диски 400\u00a0мм')]
+yk = 1034
+for n_, t_ in kit:
+    text(s, MARGIN, yk + 6, 60, 30, [P((n_, F_M, 20, COLD, {'spc': 3}))])
+    text(s, 160, yk, 836, 90, [P((t_, F_L, 28, WHITE), ls=40)])
+    yk += 92
+text(s, MARGIN, 1236, 912, 44, [P(('Подходит для Mercedes-Benz W463\u00a0/\u00a0W465', F_M, 28, SILV))])
+hline(s, MARGIN, 1304, 120, SILV, 1, 0.6)
+text(s, MARGIN, 1326, 920, 330, [
+    dict(runs=[('Стоимость представленного на фотографии комплекта карбон-керамической тормозной системы для Mercedes-Benz G\u00a063 составляет', F_L, 32, SILV), 'BR', ('от 1\u00a0150\u00a0000\u00a0₽.', F_S, 92, WHITE)], lsm=1.25)
 ], name='Price text')
-hline(s, MARGIN, 1610, 120, SILV, 1, 0.6)
-text(s, MARGIN, 1634, 912, 150, [P(('Стоимость тормозной системы для конкретной модели автомобиля рассчитывается индивидуально с учётом конфигурации и необходимых компонентов.', F_L, 25, COLD), ls=36)], name='Note')
+text(s, MARGIN, 1668, 912, 110, [P(('Стоимость тормозной системы для конкретной модели автомобиля рассчитывается индивидуально с учётом конфигурации и необходимых компонентов.', F_L, 24, COLD), ls=34)], name='Note')
 footer(s, 10)
-notes(s, 'ТРЕБУЕТСЯ: внести цену вместо «…» в текстовом поле «Price text». Цена не придумана.')
+notes(s, 'Состав комплекта и цена — из сообщения заказчика: передний суппорт Brembo 6pot + карбон-керамические диски 420 мм, задний суппорт OEM 1pot + диски 400 мм; W463 / W465; 1 150 000 ₽ (стрелка вверх в исходнике передана как «от»).')
 
 # ================================================================== 11 PROCESS
 bg = base_dark(hot=(0.15, 0.6), hot_amt=10)
@@ -419,19 +428,19 @@ cols_x = (MARGIN, 470, 996)
 text(s, MARGIN, hy, 200, 30, [P(('РАЗМЕР', F_M, 20, GRAYT, {'spc': 3}))])
 text(s, 400, hy, 260, 30, [P(('МОНОБЛОК', F_M, 20, GRAYT, {'spc': 3}), align='r')])
 text(s, 700, hy, 296, 30, [P(('2-СОСТАВНЫЕ', F_M, 20, GRAYT, {'spc': 3}), align='r')])
-mono = ['190 500', '201 500', '213 000', '235 000', '257 500', '280 000', '313 000']
-two = ['320 000', '341 500', '364 000', '397 500', '442 500', '504 000', '543 000']
+mono = ['179 000', '190 000', '205 000', '218 000', '230 000', '245 000', '270 000']
+two = ['279 000', '290 000', '305 000', '318 000', '330 000', '345 000', '370 000']
 ry = hy + 46
 for i, sz in enumerate(range(18, 25)):
     hline(s, MARGIN, ry, W - 2 * MARGIN, INK, 1, 0.16)
     text(s, MARGIN, ry + 18, 200, 44, [P((f'{sz}″', F_M, 34, INK))])
-    text(s, 330, ry + 20, 330, 44, [P((f'от {mono[i]} ₽', F_L, 34, INK), align='r')])
-    text(s, 666, ry + 20, 330, 44, [P((f'от {two[i]} ₽', F_L, 34, INK), align='r')])
+    text(s, 330, ry + 20, 330, 44, [P((f'{mono[i]} ₽', F_L, 34, INK), align='r')])
+    text(s, 666, ry + 20, 330, 44, [P((f'{two[i]} ₽', F_L, 34, INK), align='r')])
     ry += 82
 hline(s, MARGIN, ry, W - 2 * MARGIN, INK, 1, 0.16)
 text(s, MARGIN, ry + 26, 912, 100, [P(('* Актуальные цены на шины, колёсные датчики и аксессуары предоставляются менеджером по запросу. Стоимость тормозных систем рассчитывается индивидуально.', F_L, 24, GRAYT), ls=34)])
 footer(s, 12, dark=False)
-notes(s, 'Прайс-лист перенесён без изменений из исходного КП (значения «от», моноблоки и 2-составные, 18–24″). Единица цены (за диск / за комплект) в исходнике не указана — при необходимости уточнить и добавить.')
+notes(s, 'Цены на диски (моноблоки и 2-составные, 18″–24″) — из актуального сообщения заказчика; заменили прежний прайс «от» из старого КП. Единица цены (за диск / за комплект) не указана.')
 
 # ================================================================== 13 FINAL
 canvas = crop_fill(vcl, (0, 0, 731, 1280), (1080, 1920))
