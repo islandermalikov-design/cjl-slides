@@ -115,7 +115,7 @@ HL = lambda t, size=88, color=WHITE, font=F_L: (t, font, size, color)
 
 # ------------------------------------------------------------------ assets
 logo_path, (LW, LH) = logo_variants()
-wh4 = load('wheels4'); gcl = load('g_class'); bset = load('brake_set'); bsingle = load('brake_single')
+wh4 = load('wheels4'); gcl = load('g_class'); e63 = load('e63'); whs = load('wheels_star'); whm = load('wheels_maybach'); bset = load('brake_set'); bsingle = load('brake_single')
 gls = load('gls_black'); sw = load('s_white'); w124 = load('w124'); may = load('maybach'); vcl = load('vclass')
 
 # ================================================================== 01 COVER
@@ -234,10 +234,10 @@ notes(s, 'Технологии и преимущества. Все факты �
 bg = base_light()
 def tile(im, box, size, **kw):
     return grade(crop_fill(im, box, size), **dict(dict(sat=0.95, contrast=1.06, cool=0.03, grain=2.6), **kw))
-hero = tile(wh4, (0, 0, 1280, 1048), (912, 747), sat=1.0, contrast=1.05, cool=0.02, mult=1.0)
-tw, th, ty0 = 288, 230, 1195
-t1 = tile(sw, (578, 348, 788, 516), (tw, th))
-t2 = tile(may, (685, 738, 895, 906), (tw, th))
+hero = tile(whs, (90, 50, 1280, 943), (912, 684), sat=1.0, contrast=1.05, cool=0.02, mult=1.0)
+tw, th, ty0 = 288, 230, 1136
+t1 = tile(whm, (330, 400, 930, 870), (tw, th), sat=1.0)
+t2 = tile(sw, (578, 348, 788, 516), (tw, th))
 t3 = tile(gls, (647, 368, 857, 536), (tw, th))
 bg.paste(hero, (84, 420))
 xs = (84, 84 + tw + 24, 84 + 2 * (tw + 24))
@@ -251,9 +251,9 @@ text(s, MARGIN, 190, 920, 240, [
 for (x, y), n in (((84, 420), '01'), ((xs[0], ty0), '02'), ((xs[1], ty0), '03'), ((xs[2], ty0), '04')):
     rect(s, x, y, 66, 44, INK, 0.62)
     text(s, x + 16, y + 9, 80, 30, [P((n, F_M, 22, WHITE, {'spc': 3}))])
-leg = [('01', 'Кованый комплект', 'чёрный лак, контрастная кромка'), ('02', 'Многоспицевый', 'турбинный рисунок'),
-       ('03', 'Maybach-style', 'хром и объём'), ('04', 'Массивный моноблок', 'чёрный лак, полированная кромка')]
-y = 1458
+leg = [('01', 'Строгий Mercedes-Benz', 'чёрный лак и полированная кромка спиц'), ('02', 'Maybach-style', 'полированные поверхности и объём'),
+       ('03', 'Многоспицевый', 'турбинный рисунок'), ('04', 'Массивный моноблок', 'монолитный чёрный диск')]
+y = 1404
 for n, a, b in leg:
     hline(s, MARGIN, y, W - 2 * MARGIN, INK, 1, 0.22)
     text(s, MARGIN, y + 18, 90, 40, [P((n, F_M, 22, GRAYT, {'spc': 3}))])
@@ -261,14 +261,14 @@ for n, a, b in leg:
     text(s, 190, y + 46, 780, 34, [P((b, F_L, 24, GRAYT))])
     y += 88
 footer(s, 5, dark=False)
-notes(s, 'Дизайн дисков. 01 — предметное фото комплекта GRANDRIMS; 02–04 — фрагменты фото автомобилей (S-Class, Maybach GLS, GLS).')
+notes(s, 'Дизайн дисков. 01 и 02 — предметные фото комплектов; 03–04 — фрагменты фото автомобилей (S-Class, GLS).')
 
 # ================================================================== 06 MAYBACH
 bg = base_dark(hot=(0.5, 0.35), hot_amt=10, lines=False)
 ph = grade(crop_fill(may, (0, 0, 960, 1280), (1080, 1440)), sat=0.62, contrast=1.16, gamma=1.28, cool=0.06, vign=0.4, grain=3.0, mult=0.86)
 bg = paste_faded(bg, ph, 0, 480, fade_top=420, fade_bot=160)
 # detail ring (chrome wheel) bottom right
-wd = grade(crop_fill(may, (696, 726, 884, 914), (280, 280)), sat=0.7, contrast=1.14, gamma=1.1, cool=0.05, grain=2.8, mult=0.9)
+wd = grade(crop_fill(whm, (340, 360, 940, 960), (280, 280)), sat=0.85, contrast=1.10, gamma=1.05, cool=0.04, grain=2.4, mult=0.95)
 mask = Image.new('L', (280, 280), 0); ImageDraw.Draw(mask).ellipse((0, 0, 279, 279), fill=255)
 bgc = bg.copy(); bgc.paste(wd, (716, 1500), mask)
 dr = ImageDraw.Draw(bgc); dr.ellipse((716 - 10, 1500 - 10, 716 + 290, 1500 + 290), outline=(196, 201, 206), width=2)
@@ -285,21 +285,21 @@ footer(s, 6)
 notes(s, 'Maybach / luxury. Фото: белый Maybach GLS с полированными дисками; круглая вставка — фрагмент колеса.')
 
 # ================================================================== 07 AMG / PERFORMANCE
-ph = crop_fill(w124, (175, 0, 895, 1280), (1080, 1920))
-bg = grade(ph, sat=0.92, contrast=1.14, gamma=1.12, cool=0.03, vign=0.45, grain=3.4, mult=0.94)
-a = np.maximum(vgrad(H, 0.55, 0.0, 0, 380), vgrad(H, 0.0, 0.92, 1240, 1760))
+ph = crop_fill(e63, (0, 0, 664, 1180), (1080, 1920))
+bg = grade(ph, sat=0.95, contrast=1.10, gamma=0.98, cool=0.02, vign=0.30, grain=3.2, mult=1.02)
+a = np.maximum(vgrad(H, 0.45, 0.0, 0, 620), vgrad(H, 0.0, 0.85, 1700, 1900))
 arr = np.zeros((H, W, 4), np.uint8); arr[..., :3] = (5, 6, 8); arr[..., 3] = (np.repeat(a[:, None], W, 1) * 255).astype(np.uint8)
 bgi = bg.convert('RGBA'); bgi.alpha_composite(Image.fromarray(arr)); bg = bgi.convert('RGB')
 b7 = save_jpg(bg, 'bg07.jpg')
 s = new_slide(b7)
 eyebrow(s, MARGIN, 96, 'Performance')
-text(s, MARGIN, 1372, 920, 330, [
+text(s, MARGIN, 180, 920, 330, [
     P(('Динамика', F_L, 104, WHITE), ls=110),
     P(('в каждой', F_L, 104, WHITE), ls=110),
     P(('детали', F_L, 104, WHITE), ls=110)], name='Title')
-text(s, MARGIN, 1716, 700, 70, [P(('Многоспицевые и спортивные рисунки — с характером, но без излишеств.', F_L, 27, SILV), ls=38)])
+text(s, MARGIN, 540, 700, 110, [P(('Многоспицевые и спортивные рисунки — с характером, но без излишеств.', F_L, 30, SILV), ls=44)])
 footer(s, 7)
-notes(s, 'AMG / Performance. Фото: красный W124 с пятилучевыми дисками. Для более «AMG»-подачи можно заменить на фото с AMG-автомобилем.')
+notes(s, 'AMG / Performance. Фото: серый Mercedes-AMG E-Class, вид сзади, ночь. Водяной знак с исходного фото убран кадрированием.')
 
 # ================================================================== 08 G-CLASS
 bg = base_dark(hot=(0.5, 0.4), hot_amt=12)
