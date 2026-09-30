@@ -210,6 +210,26 @@ def make_logo():
     return lg
 
 
+def logo_pair():
+    """Official 'grandrims russia' logo (supplied on white). Returns (dark_bg_path, light_bg_path, (w, h)).
+    Both are cut out of the white plate without redrawing; the dark-slide variant only swaps the black letters for white."""
+    im = Image.open(os.path.join(AS, 'logo_src.png')).convert('RGB')
+    a = np.asarray(im).astype(np.float32)
+    alpha = np.clip(1 - a.min(-1) / 255.0, 0, 1)
+    alpha = np.where(alpha < 0.03, 0, alpha)
+    C = np.clip((a - 255 * (1 - alpha)[..., None]) / np.maximum(alpha, 1e-3)[..., None], 0, 255)
+    ys, xs = np.where(alpha > 0.1)
+    box = (xs.min() - 4, ys.min() - 4, xs.max() + 5, ys.max() + 5)
+    red = np.clip((C[..., 0] - np.maximum(C[..., 1], C[..., 2])) / 160.0, 0, 1)[..., None]
+    Cd = red * C + (1 - red) * 255.0
+    out = []
+    for name, col in (('logo_dark.png', Cd), ('logo_light.png', C)):
+        rgba = np.dstack([col, alpha * 255]).astype(np.uint8)
+        lg = Image.fromarray(rgba, 'RGBA').crop(box)
+        p = os.path.join(OUT, name); lg.save(p); out.append(p)
+    return out[0], out[1], lg.size
+
+
 def logo_variants():
     lg = make_logo()
     k = 4

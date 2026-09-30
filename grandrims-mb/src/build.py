@@ -100,9 +100,17 @@ def eyebrow(s, x, y, label, color=SILV, red=True, align='l', w=700):
         text(s, x, y, w, 34, [P((label.upper(), F_M, 22, color, {'spc': 4}))], name='eyebrow')
 
 
+def brand(s, dark=True, x=None, y=76, w=214):
+    """Official GRANDRIMS logo (white-letter variant on dark slides, original on light)."""
+    h = w * LH / LW
+    pic(s, logo_dark if dark else logo_light, (W - MARGIN - w) if x is None else x, y, w, h, 'GRANDRIMS logo')
+
+
 def footer(s, n, dark=True, show_brand=True):
     c = COLD if dark else (110, 116, 122)
-    text(s, MARGIN, 1838, 500, 30, [P(('GRANDRIMS', F_M, 20, c, {'spc': 5}))])
+    if show_brand:
+        brand(s, dark)
+    text(s, MARGIN, 1838, 560, 30, [P(('КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ', F_M, 20, c, {'spc': 5}))])
     rect(s, MARGIN - 20, 1846, 8, 8, RED)
     text(s, W - MARGIN - 300, 1838, 300, 30, [dict(runs=[(f'{n:02d}', F_M, 20, WHITE if dark else INK, {'spc': 3}), (f' / {TOTAL}', F_M, 20, c, {'spc': 3})], align='r')])
 
@@ -114,7 +122,7 @@ def notes(s, t):
 HL = lambda t, size=88, color=WHITE, font=F_L: (t, font, size, color)
 
 # ------------------------------------------------------------------ assets
-logo_path, (LW, LH) = logo_variants()
+logo_dark, logo_light, (LW, LH) = logo_pair()
 wh4 = load('wheels4'); gcl = load('g_class'); e63 = load('e63'); gwh = load('g_wheels'); awh = load('amg_wheels'); whs = load('wheels_star'); whm = load('wheels_maybach'); bset = load('brake_set'); bsingle = load('brake_single')
 gls = load('gls_black'); sw = load('s_white'); w124 = load('w124'); may = load('maybach'); vcl = load('vclass')
 
@@ -126,7 +134,7 @@ ph = grade(crop_fill(gls, (233, 0, 1075, 674), (1080, 864)), sat=0.80, contrast=
 bg = paste_faded(bg, ph, 0, 600, fade_top=330, fade_bot=300)
 cover_bg = save_jpg(bg, 'bg01.jpg')
 s = new_slide(cover_bg)
-pic(s, logo_path, MARGIN, 96, 236, 236 * LH / LW, 'GRANDRIMS logo')
+brand(s, True, x=MARGIN, y=84, w=280)
 text(s, W - MARGIN - 420, 108, 420, 34, [P(('КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ', F_M, 20, COLD, {'spc': 4}), align='r')])
 text(s, MARGIN, 310, 920, 380, [
     P(('Индивидуальные', F_L, 92, WHITE), ls=100),
@@ -159,10 +167,9 @@ notes(s, 'Имиджевый вход. Фото: белый S-Class.')
 # ================================================================== 03 FORGED WHEELS
 bg = base_dark(hot=(0.2, 0.3), hot_amt=12)
 bg = add_layer(bg, star_layer(1040, 1100, 520, alpha=0.055), (214, 220, 226))
-# two detail crops, staggered
-d1 = grade(crop_fill(gls, (645, 318, 862, 640), (440, 700)), sat=0.85, contrast=1.10, cool=0.04, vign=0.25, grain=3.2)
-d2 = grade(crop_fill(sw, (566, 296, 783, 618), (440, 700)), sat=0.80, contrast=1.06, cool=0.04, vign=0.25, grain=3.2)
-bg.paste(d1, (84, 990)); bg.paste(d2, (556, 1060))
+# whole product photo of a forged set (4:3, no crop)
+d1 = grade(crop_fill(awh, (0, 0, 1085, 814), (912, 684)), sat=1.0, contrast=1.06, cool=0.03, grain=2.6)
+bg.paste(d1, (84, 1000))
 b3 = save_jpg(bg, 'bg03.jpg')
 s = new_slide(b3)
 eyebrow(s, MARGIN, 96, 'Кованые диски')
@@ -175,10 +182,8 @@ hline(s, MARGIN, 690, W - 2 * MARGIN, SILV, 1, 0.3)
 text(s, MARGIN, 700, 560, 220, [P(('18–24″', F_L, 168, WHITE), ls=190)], name='Sizes')
 text(s, 650, 738, 346, 40, [P(('ДОСТУПНЫЕ РАЗМЕРЫ', F_M, 20, COLD, {'spc': 4}))])
 text(s, 650, 790, 346, 150, [P(('Индивидуальное исполнение с учётом дизайна, параметров и нагрузок автомобиля.', F_L, 27, SILV), ls=39)])
-text(s, 84, 1700, 440, 30, [P(('GLS', F_M, 20, COLD, {'spc': 4}))])
-text(s, 556, 1770, 440, 30, [P(('S-CLASS', F_M, 20, COLD, {'spc': 4}))])
 footer(s, 3)
-notes(s, 'Кованые диски. Детали колёс — кадрированные фрагменты фото GLS и S-Class. Если пришлёт предметные фото дисков GRANDRIMS — заменить этими кадрами.')
+notes(s, 'Кованые диски. Кадр — предметное фото комплекта целиком, без кадрирования.')
 
 # ================================================================== 04 TECH
 bg = base_dark(hot=(0.9, 0.5), hot_amt=10)
@@ -234,11 +239,12 @@ notes(s, 'Технологии и преимущества. Все факты �
 bg = base_light()
 def tile(im, box, size, **kw):
     return grade(crop_fill(im, box, size), **dict(dict(sat=0.95, contrast=1.06, cool=0.03, grain=2.6), **kw))
-hero = tile(whs, (90, 50, 1280, 943), (912, 684), sat=1.0, contrast=1.05, cool=0.02, mult=1.0)
-tw, th, ty0 = 288, 230, 1136
-t1 = tile(whm, (330, 400, 930, 870), (tw, th), sat=1.0)
-t2 = tile(awh, (630, 150, 1050, 485), (tw, th), sat=1.0)
-t3 = tile(gwh, (55, 380, 655, 859), (tw, th), sat=1.0)
+# whole product photos (4:3), no tight crops
+hero = tile(whs, (60, 45, 1280, 960), (912, 684), sat=1.0, contrast=1.05, cool=0.02, mult=1.0)
+tw, th, ty0 = 288, 216, 1136
+t1 = tile(whm, (0, 0, 1280, 960), (tw, th), sat=1.0)
+t2 = tile(awh, (0, 0, 1085, 814), (tw, th), sat=1.0)
+t3 = tile(gwh, (0, 0, 1280, 959), (tw, th), sat=1.0)
 bg.paste(hero, (84, 420))
 xs = (84, 84 + tw + 24, 84 + 2 * (tw + 24))
 for x, t in zip(xs, (t1, t2, t3)): bg.paste(t, (x, ty0))
@@ -253,7 +259,7 @@ for (x, y), n in (((84, 420), '01'), ((xs[0], ty0), '02'), ((xs[1], ty0), '03'),
     text(s, x + 16, y + 9, 80, 30, [P((n, F_M, 22, WHITE, {'spc': 3}))])
 leg = [('01', 'Строгий Mercedes-Benz', 'чёрный лак и полированная кромка спиц'), ('02', 'Maybach-style', 'полированные поверхности и объём'),
        ('03', 'AMG-style', 'многоспицевый рисунок, матовый графит'), ('04', 'G-Class', 'массивный моноблок, матовый чёрный')]
-y = 1404
+y = 1392
 for n, a, b in leg:
     hline(s, MARGIN, y, W - 2 * MARGIN, INK, 1, 0.22)
     text(s, MARGIN, y + 18, 90, 40, [P((n, F_M, 22, GRAYT, {'spc': 3}))])
@@ -267,11 +273,10 @@ notes(s, 'Дизайн дисков. Все четыре кадра — пред
 bg = base_dark(hot=(0.5, 0.35), hot_amt=10, lines=False)
 ph = grade(crop_fill(may, (0, 0, 960, 1280), (1080, 1440)), sat=0.62, contrast=1.16, gamma=1.28, cool=0.06, vign=0.4, grain=3.0, mult=0.86)
 bg = paste_faded(bg, ph, 0, 480, fade_top=420, fade_bot=160)
-# detail ring (chrome wheel) bottom right
-wd = grade(crop_fill(whm, (340, 360, 940, 960), (280, 280)), sat=0.85, contrast=1.10, gamma=1.05, cool=0.04, grain=2.4, mult=0.95)
-mask = Image.new('L', (280, 280), 0); ImageDraw.Draw(mask).ellipse((0, 0, 279, 279), fill=255)
-bgc = bg.copy(); bgc.paste(wd, (716, 1500), mask)
-dr = ImageDraw.Draw(bgc); dr.ellipse((716 - 10, 1500 - 10, 716 + 290, 1500 + 290), outline=(196, 201, 206), width=2)
+# product photo of the wheel set (whole frame, 4:3) bottom right
+wd = grade(crop_fill(whm, (0, 0, 1280, 960), (360, 270)), sat=0.9, contrast=1.08, gamma=1.05, cool=0.03, grain=2.2, mult=0.95)
+bgc = bg.copy(); bgc.paste(wd, (636, 1490))
+ImageDraw.Draw(bgc).rectangle((636 - 1, 1490 - 1, 636 + 360, 1490 + 270), outline=(196, 201, 206), width=1)
 bg = bgc
 b6 = save_jpg(bg, 'bg06.jpg')
 s = new_slide(b6)
@@ -280,9 +285,9 @@ text(s, MARGIN, 180, 920, 300, [
     P(('Сдержанная', F_L, 100, WHITE), ls=108),
     P(('роскошь', F_L, 100, WHITE), ls=108)], name='Title')
 hline(s, MARGIN, 1596, 470, SILV, 1, 0.5)
-text(s, MARGIN, 1626, 540, 150, [P(('Полированный металл и монолитный рисунок. Фактура в главной роли.', F_L, 30, SILV), ls=44)])
+text(s, MARGIN, 1626, 500, 150, [P(('Полированный металл и монолитный рисунок. Фактура в главной роли.', F_L, 30, SILV), ls=44)])
 footer(s, 6)
-notes(s, 'Maybach / luxury. Фото: белый Maybach GLS с полированными дисками; круглая вставка — фрагмент колеса.')
+notes(s, 'Maybach / luxury. Фото: белый Maybach GLS с полированными дисками; справа — предметное фото комплекта.')
 
 # ================================================================== 07 AMG / PERFORMANCE
 ph = crop_fill(e63, (0, 0, 664, 1180), (1080, 1920))
@@ -306,18 +311,17 @@ bg = base_dark(hot=(0.5, 0.4), hot_amt=12)
 bg = add_layer(bg, star_layer(900, 300, 440, alpha=0.06), (214, 220, 226))
 ph = grade(crop_fill(gcl, (50, 190, 1210, 930), (1080, 689)), sat=0.66, contrast=1.14, gamma=1.28, cool=0.06, vign=0.35, grain=3.0, mult=0.9)
 bg = paste_faded(bg, ph, 0, 470, fade_top=300, fade_bot=230)
-# detail ring: matte G-Class wheel (product photo)
-wd8 = grade(crop_fill(gwh, (45, 350, 625, 930), (280, 280)), sat=0.9, contrast=1.10, gamma=1.05, cool=0.03, grain=2.4, mult=1.0)
-m8 = Image.new('L', (280, 280), 0); ImageDraw.Draw(m8).ellipse((0, 0, 279, 279), fill=255)
-bg = bg.copy(); bg.paste(wd8, (716, 1510), m8)
-ImageDraw.Draw(bg).ellipse((716 - 10, 1510 - 10, 716 + 290, 1510 + 290), outline=(196, 201, 206), width=2)
+# product photo of the matte G-Class wheel set (whole frame, 4:3) bottom right
+wd8 = grade(crop_fill(gwh, (0, 0, 1280, 959), (360, 270)), sat=0.95, contrast=1.08, gamma=1.02, cool=0.02, grain=2.2, mult=1.0)
+bg = bg.copy(); bg.paste(wd8, (636, 1490))
+ImageDraw.Draw(bg).rectangle((636 - 1, 1490 - 1, 636 + 360, 1490 + 270), outline=(196, 201, 206), width=1)
 b8 = save_jpg(bg, 'bg08.jpg')
 s = new_slide(b8)
 eyebrow(s, MARGIN, 96, 'G-Class')
 text(s, MARGIN, 1300, 920, 240, [
     P(('Характер', F_L, 88, WHITE), ls=98),
     P(('без компромиссов', F_L, 88, WHITE), ls=98)], name='Title')
-text(s, MARGIN, 1550, 560, 170, [P(('Массивные кованые диски, рассчитанные на нагрузки и характер G-Class.', F_L, 30, SILV), ls=44)])
+text(s, MARGIN, 1550, 500, 170, [P(('Массивные кованые диски, рассчитанные на нагрузки и характер G-Class.', F_L, 30, SILV), ls=44)])
 footer(s, 8)
 notes(s, 'G-Class. Водяной знак с исходного фото убран кадрированием.')
 
@@ -437,7 +441,7 @@ arr = np.zeros((H, W, 4), np.uint8); arr[..., :3] = (5, 6, 8); arr[..., 3] = (np
 bgi = bg.convert('RGBA'); bgi.alpha_composite(Image.fromarray(arr)); bg = bgi.convert('RGB')
 b13 = save_jpg(bg, 'bg13.jpg')
 s = new_slide(b13)
-pic(s, logo_path, MARGIN, 96, 236, 236 * LH / LW, 'GRANDRIMS logo')
+brand(s, True, x=MARGIN, y=84, w=280)
 text(s, MARGIN, 210, 920, 400, [
     P(('Создаём решения,', F_L, 88, WHITE), ls=98),
     P(('достойные', F_L, 88, WHITE), ls=98),
