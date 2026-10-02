@@ -53,12 +53,12 @@ const PAL = {
 const pres = new pptxgen();
 pres.layout = "LAYOUT_WIDE"; // 13.33 x 7.5 in
 pres.theme = { headFontFace: THEME.headFontFace, bodyFontFace: THEME.bodyFontFace };
-pres.title = "КВЧ-терапия и амплипульстерапия при СРК — доклад к защите";
+pres.title = "КВЧ-терапия и амплипульстерапия с СРК — доклад к защите";
 pres.author = "Привалова Н.И.";
 const C = pres.SchemeColor;
 
 const W = 13.33;
-const FOOT = "Привалова Н.И.  ·  КВЧ-терапия и амплипульстерапия в комплексном санаторно-курортном лечении при СРК";
+const FOOT = "Привалова Н.И.  ·  КВЧ-терапия и амплипульстерапия в комплексном санаторно-курортном лечении с СРК";
 
 // ---------- Макеты ----------
 pres.defineSlideMaster({
