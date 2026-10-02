@@ -154,52 +154,12 @@ async function main() {
   for (const [k, [c, col]] of Object.entries(need)) ic[k] = await icon(c, col);
 
   // ---------- картинки ----------
-  const imgTitle = await prepImg("1.webp", 250, 899, 900, 899 / 941, 0.05);
   const imgCage = await prepImg("2.webp", 0, 1558, 1100, 5.3 / 3.2, 0.03);
   const R = 0.05;
   const imgCable = await prepImg("3.webp", 380, 1192, 640, 1.267, R);
   const imgCase = await prepImg("4.webp", 240, 1192, 640, 1.267, R);
   const imgRoom = await prepImg("5.webp", 380, 1192, 640, 1.267, R);
   const imgRack = await prepImg("1.webp", 120, 1192, 640, 1.267, R);
-
-  // =================================================================
-  // СЛАЙД 1. Титульный
-  // =================================================================
-  {
-    const s = pres.addSlide();
-    pageNo += 1;
-    s.background = { color: NAVY };
-    // декоративные окружности (силовые «волны»)
-    [[6.6, 2.8, 5.2], [6.6, 2.8, 4.0]].forEach(([cx, cy, d], i) =>
-      s.addShape(pres.ShapeType.ellipse, {
-        x: cx - d / 2, y: cy - d / 2, w: d, h: d, fill: { type: "none" }, line: { color: NAVY2, width: 1 + i * 0.5 },
-      })
-    );
-    s.addImage({ data: imgTitle, x: 5.15, y: 0.55, w: 4.35, h: 4.35 * 941 / 899 > 4.5 ? 4.5 : 4.35 * 941 / 899, sizing: { type: "contain", w: 4.35, h: 4.5 } });
-
-    s.addShape(pres.ShapeType.roundRect, { x: 0.6, y: 0.62, w: 1.55, h: 0.3, rectRadius: 0.15, fill: { color: NAVY2 }, line: { color: CYAN, width: 0.75 } });
-    txt(s, "СЕМИНАР № 8", 0.6, 0.62, 1.55, 0.3, { fontSize: 9, bold: true, color: CYAN, align: "center", valign: "middle", charSpacing: 2 });
-
-    txt(s, "Экранирование электрических и магнитных полей", 0.6, 1.2, 4.4, 1.75, {
-      fontSize: 30, bold: true, color: WHITE, valign: "top",
-    });
-    txt(s, "Физические основы защиты информации", 0.6, 3.0, 4.4, 0.4, { fontSize: 15, color: CYAN });
-
-    const rows = [["Студент", "[Фамилия Имя Отчество]"], ["Группа", "[номер группы]"], ["Преподаватель", "[ФИО преподавателя]"]];
-    rows.forEach(([a, b], i) => {
-      const y = 3.72 + i * 0.44;
-      s.addShape(pres.ShapeType.line, { x: 0.6, y, w: 4.3, h: 0, line: { color: "24406B", width: 0.75 } });
-      txt(s, a.toUpperCase(), 0.6, y + 0.08, 1.3, 0.3, { fontSize: 8, bold: true, color: "8FA6BF", charSpacing: 1.5, valign: "middle" });
-      txt(s, b, 1.95, y + 0.08, 3.0, 0.3, { fontSize: 12, color: WHITE, valign: "middle" });
-    });
-    s.addNotes(
-      "Добрый день, уважаемый преподаватель, уважаемые одногруппники. Тема моего доклада — экранирование электрических и магнитных полей. " +
-      "Это один из базовых физических способов защиты информации от утечки по техническим каналам. " +
-      "За ближайшие несколько минут мы разберёмся, зачем вообще нужны экраны, как они работают в электрическом и в магнитном поле, " +
-      "чем эти два случая отличаются друг от друга, как измеряется эффективность экранирования и где всё это применяется на практике. " +
-      "Начнём с самого главного вопроса — зачем всё это нужно."
-    );
-  }
 
   // =================================================================
   // СЛАЙД 2. Зачем нужно экранирование
