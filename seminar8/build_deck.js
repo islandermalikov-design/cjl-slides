@@ -48,7 +48,7 @@ async function prepImg(file, left, cropW, outW, aspect, radiusFrac) {
     .resize(outW, outH)
     .toBuffer();
   const mask = Buffer.from(`<svg width="${outW}" height="${outH}"><rect width="${outW}" height="${outH}" rx="${r}" ry="${r}"/></svg>`);
-  const buf = await sharp(base).composite([{ input: mask, blend: "dest-in" }]).png().toBuffer();
+  const buf = await sharp(base).composite([{ input: mask, blend: "dest-in" }]).png({ compressionLevel: 9 }).toBuffer();
   return "image/png;base64," + buf.toString("base64");
 }
 
@@ -154,13 +154,13 @@ async function main() {
   for (const [k, [c, col]] of Object.entries(need)) ic[k] = await icon(c, col);
 
   // ---------- картинки ----------
-  const imgTitle = await prepImg("1.webp", 250, 899, 1100, 899 / 941, 0.05);
-  const imgCage = await prepImg("2.webp", 0, 1558, 1300, 5.3 / 3.2, 0.03);
+  const imgTitle = await prepImg("1.webp", 250, 899, 900, 899 / 941, 0.05);
+  const imgCage = await prepImg("2.webp", 0, 1558, 1100, 5.3 / 3.2, 0.03);
   const R = 0.05;
-  const imgCable = await prepImg("3.webp", 380, 1192, 900, 1.267, R);
-  const imgCase = await prepImg("4.webp", 240, 1192, 900, 1.267, R);
-  const imgRoom = await prepImg("5.webp", 380, 1192, 900, 1.267, R);
-  const imgRack = await prepImg("1.webp", 120, 1192, 900, 1.267, R);
+  const imgCable = await prepImg("3.webp", 380, 1192, 640, 1.267, R);
+  const imgCase = await prepImg("4.webp", 240, 1192, 640, 1.267, R);
+  const imgRoom = await prepImg("5.webp", 380, 1192, 640, 1.267, R);
+  const imgRack = await prepImg("1.webp", 120, 1192, 640, 1.267, R);
 
   // =================================================================
   // СЛАЙД 1. Титульный
