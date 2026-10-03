@@ -188,7 +188,7 @@ module.exports = function intro() {
       const x = 0.5 + (i % 3) * (cw + g), y = 1.3 + Math.floor(i / 3) * (ch + 0.2);
       card(s, it[0], x, y, cw, 0.65, { fill: { color: it[2] }, line: { color: it[2], width: 0.75 }, bold: true, fontSize: 16, align: "center", objectName: it[0] });
       const paras = it[1].map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < it[1].length - 1, paraSpaceAfter: 4 } }));
-      card(s, paras, x, y + 0.75, cw, ch - 0.75, { fontSize: 13.5, align: "left", valign: "top", margin: [8, 10, 6, 10], objectName: it[0] + " — перечень" });
+      card(s, paras, x, y + 0.75, cw, ch - 0.75, { fontSize: 13, align: "left", valign: "top", margin: [8, 10, 6, 10], objectName: it[0] + " — перечень" });
     });
   }
 
