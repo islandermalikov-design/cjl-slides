@@ -196,8 +196,9 @@ function chart(slide, type, series, cats, o = {}) {
     opts.radarStyle = "marker"; opts.lineSize = 2; opts.lineDataSymbolSize = 6;
     opts.showValue = false; opts.catAxisLabelFontSize = 13; opts.valAxisLabelFontSize = 9;
   }
+  const labelPos = opts.dataLabelPosition;
   slide.addChart(type, data, opts);
-  CHARTS.push({ name: o.name || o.title, marks, vals: ser.map((s) => s.vals), fmt: o.fmt || "General", pos: opts.dataLabelPosition });
+  CHARTS.push({ name: o.name || o.title, marks, vals: ser.map((s) => s.vals), fmt: o.fmt || "General", pos: labelPos });
 
   // овал вокруг основной группы (последние n категорий из ncatTotal)
   if (o.circle && !isRadar && o.dir !== "bar") {
@@ -236,12 +237,16 @@ async function applyMarks(file) {
         return '<c:dLbl><c:idx val="' + pt + '"/><c:tx><c:rich><a:bodyPr/><a:lstStyle/><a:p>' +
           '<a:r><a:rPr lang="ru-RU" sz="1100" b="0"><a:solidFill><a:srgbClr val="' + PAL.text + '"/></a:solidFill><a:latin typeface="+mn-lt"/></a:rPr><a:t>' + v + '</a:t></a:r>' +
           '<a:r><a:rPr lang="ru-RU" sz="1300" b="1"><a:solidFill><a:srgbClr val="' + PAL.mark + '"/></a:solidFill><a:latin typeface="+mn-lt"/></a:rPr><a:t> ' + sym + '</a:t></a:r>' +
-          '</a:p></c:rich></c:tx><c:dLblPos val="' + (meta.pos === "outEnd" ? "outEnd" : meta.pos) + '"/><c:showLegendKey val="0"/><c:showVal val="1"/><c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbl>';
+          '</a:p></c:rich></c:tx><c:dLblPos val="' + meta.pos + '"/><c:showLegendKey val="0"/><c:showVal val="1"/><c:showCatName val="0"/><c:showSerName val="0"/><c:showPercent val="0"/><c:showBubbleSize val="0"/></c:dLbl>';
       }).join("");
       if (!seg.includes("<c:dLbls>")) throw new Error("no dLbls in series " + m.s + " of " + meta.name);
       parts[m.s + 1] = seg.replace("<c:dLbls>", "<c:dLbls>" + dl);
     }
     zip.file(names[i], parts.join("<c:ser>"));
+  }
+  for (const n of names) {
+    const x = await zip.file(n).async("string");
+    if (/undefined|NaN|Infinity/.test(x)) throw new Error("invalid token in " + n);
   }
   const buf = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
   fs.writeFileSync(file, buf);
