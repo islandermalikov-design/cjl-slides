@@ -1,58 +1,65 @@
-// Вводная часть: титул, актуальность, цель, задачи, организация, критерии, дизайн, методы
-const { pres, C, PAL, tx, card, arrow, note, bar, GRP, addSlideC } = require("./lib");
+// Вводная часть: титул, актуальность, цель, задачи, критерии, дизайн, методы исследования, методы лечения
+const { pres, C, PAL, tx, card, arrow, note, addSlideC } = require("./lib");
+
+const T = (t, o = {}) => ({ text: t, options: o });
+const HDR = { bold: true, fill: { color: "DCE5F0" }, color: PAL.text, align: "center", valign: "middle" };
+const BORDER = { type: "solid", color: PAL.border, pt: 0.75 };
 
 module.exports = function intro() {
   pres.addSection({ title: "Введение" });
 
-  // ---------- 1. Титульный слайд ----------
+  // ---------- 1. Титульный слайд (по образцу презентации Горяева) ----------
   {
     const s = pres.addSlide({ masterName: "TITLE", sectionTitle: "Введение" });
-    tx(s, "Диссертация на соискание ученой степени кандидата медицинских наук", { x: 1.0, y: 0.55, w: 11.33, h: 0.4, fontSize: 16, color: C.text1, align: "center", objectName: "Вид работы" });
+    // шапка с названием организации
+    s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: 13.33, h: 1.6, fill: { color: C.accent1 }, line: { color: C.accent1, width: 0.5 }, objectName: "Шапка" });
+    card(s, "Логотип", 0.35, 0.15, 1.3, 1.3, { fill: { color: "FFFFFF" }, line: { color: "FFFFFF", width: 0.5 }, color: "8A97AB", fontSize: 14, align: "center", objectName: "Место для логотипа" });
+    tx(s, "[Наименование организации, в которой выполнена диссертационная работа]", { x: 2.0, y: 0.2, w: 10.9, h: 1.2, fontSize: 20, color: C.background1, align: "center", valign: "middle", objectName: "Наименование организации" });
+    tx(s, "Диссертация на соискание ученой степени кандидата медицинских наук", { x: 0.8, y: 1.95, w: 11.73, h: 0.4, fontSize: 18, align: "center", objectName: "Вид работы" });
     s.addText("КВЧ-терапия и амплипульстерапия в комплексном санаторно-курортном лечении пациентов с синдромом раздраженного кишечника", { placeholder: "title" });
     tx(s, [
       { text: "по специальности: ", options: { bold: true } },
       { text: "3.1.33. Восстановительная медицина, спортивная медицина, лечебная физкультура, курортология и физиотерапия, медико-социальная реабилитация" },
-    ], { x: 1.5, y: 3.8, w: 10.33, h: 0.9, fontSize: 15, align: "center", objectName: "Специальность" });
-    card(s, [
-      { text: "Привалова Наталья Ивановна", options: { bold: true, fontSize: 20, color: C.text2 } },
-    ], 0.9, 5.15, 4.6, 1.2, { align: "center", valign: "middle", objectName: "Соискатель" });
-    card(s, [
-      { text: "Научные руководители:", options: { bold: true, fontSize: 13, breakLine: true } },
-      { text: "Смирнова Ирина Николаевна, доктор медицинских наук, профессор", options: { fontSize: 13, breakLine: true } },
-      { text: "Поддубная Ольга Александровна, доктор медицинских наук, профессор", options: { fontSize: 13 } },
-    ], 5.8, 5.15, 6.63, 1.2, { align: "left", valign: "middle", objectName: "Научные руководители" });
+    ], { x: 1.2, y: 4.45, w: 10.93, h: 0.75, fontSize: 16, align: "center", objectName: "Специальность" });
+    tx(s, [
+      { text: "Соискатель: ", options: { bold: true, italic: true } },
+      { text: "Привалова Наталья Ивановна", options: { italic: true, breakLine: true } },
+      { text: "Научные руководители: ", options: { bold: true, italic: true } },
+      { text: "д.м.н., профессор Смирнова Ирина Николаевна;", options: { italic: true, breakLine: true } },
+      { text: "д.м.н., профессор Поддубная Ольга Александровна", options: { italic: true } },
+    ], { x: 0.8, y: 5.6, w: 11.7, h: 1.3, fontSize: 18, objectName: "Соискатель и руководители" });
   }
 
-  // ---------- 2. Актуальность ----------
+  // ---------- 2. Актуальность (+ 2 пустых блока под дополнение) ----------
   {
     const s = addSlideC("Актуальность", "Введение");
-    tx(s, "Синдром раздраженного кишечника (СРК) — одно из наиболее часто встречающихся заболеваний в гастроэнтерологической практике", { x: 0.5, y: 1.3, w: 12.33, h: 0.6, fontSize: 17, color: C.text2, bold: true, objectName: "Тезис" });
-    // два числовых акцента
+    tx(s, "Синдром раздраженного кишечника (СРК) — одно из наиболее часто встречающихся заболеваний в гастроэнтерологической практике", { x: 0.5, y: 1.2, w: 12.33, h: 0.65, fontSize: 18, color: C.text2, bold: true, objectName: "Тезис" });
     card(s, [
-      { text: "10–13 %", options: { fontSize: 44, bold: true, color: C.text2, breakLine: true } },
-      { text: "встречаемость СРК среди населения РФ", options: { fontSize: 15 } },
-    ], 0.5, 2.1, 6.05, 1.75, { align: "center", objectName: "Показатель 1" });
+      { text: "10–13 %", options: { fontSize: 38, bold: true, color: C.text2, breakLine: true } },
+      { text: "встречаемость СРК среди населения РФ", options: { fontSize: 16 } },
+    ], 0.5, 1.95, 6.05, 1.35, { align: "center", objectName: "Показатель 1" });
     card(s, [
-      { text: "18–44 года (до 35 %)", options: { fontSize: 36, bold: true, color: C.text2, breakLine: true } },
-      { text: "подъём заболеваемости СРК приходится на молодой возраст", options: { fontSize: 15 } },
-    ], 6.78, 2.1, 6.05, 1.75, { align: "center", objectName: "Показатель 2" });
-    // три факта
+      { text: "18–44 года (до 35 %)", options: { fontSize: 32, bold: true, color: C.text2, breakLine: true } },
+      { text: "подъём заболеваемости СРК приходится на молодой возраст", options: { fontSize: 16 } },
+    ], 6.78, 1.95, 6.05, 1.35, { align: "center", objectName: "Показатель 2" });
     const facts = [
       "Чаще страдают лица трудоспособного возраста",
       "Функциональные нарушения приобретают устойчивое рецидивирующее течение",
       "Признаки вегетативной дисфункции и психоэмоционального напряжения способствуют прогрессированию СРК",
     ];
-    facts.forEach((t, i) => card(s, t, 0.5 + i * 4.14, 4.1, 4.05, 1.05, { fontSize: 14, align: "left", objectName: "Факт " + (i + 1) }));
+    facts.forEach((t, i) => card(s, t, 0.5 + i * 4.14, 3.45, 4.05, 1.25, { fontSize: 16, align: "left", objectName: "Факт " + (i + 1) }));
     card(s, "Эффективность современной медикаментозной терапии СРК, даже с учетом регламентированных клинических рекомендаций, нельзя признать удовлетворительной, что обосновывает необходимость разработки новых подходов к лечению данной категории пациентов",
-      0.5, 5.4, 12.33, 1.15, { fontSize: 15, bold: true, color: C.text2, fill: { color: "E3EBF4" }, align: "left", objectName: "Вывод по актуальности" });
+      0.5, 4.85, 12.33, 1.1, { fontSize: 16, bold: true, color: C.text2, fill: { color: "E3EBF4" }, align: "left", objectName: "Вывод по актуальности" });
+    // два пустых блока для последующего заполнения
+    card(s, "", 0.5, 6.1, 6.05, 0.85, { objectName: "Пустой блок 1" });
+    card(s, "", 6.78, 6.1, 6.05, 0.85, { objectName: "Пустой блок 2" });
   }
 
   // ---------- 3. Цель ----------
   {
     const s = addSlideC("Цель исследования", "Введение");
     card(s, "Научное обоснование и оценка эффективности комбинированного применения КВЧ-терапии и амплипульстерапии в комплексном санаторно-курортном лечении пациентов молодого возраста c синдромом раздраженного кишечника",
-      1.0, 1.9, 11.33, 2.2, { fontSize: 24, color: C.text2, align: "center", objectName: "Цель" });
-    // схема сравниваемых комплексов
+      1.0, 1.7, 11.33, 2.4, { fontSize: 26, color: C.text2, align: "center", objectName: "Цель" });
     const x0 = 1.0, w = 3.55, gap = 0.34;
     const items = [
       ["Контрольная группа", "базисное СКЛ", PAL.ctrl],
@@ -60,9 +67,9 @@ module.exports = function intro() {
       ["Основная группа", "базисное СКЛ + амплипульстерапия + КВЧ-терапия", PAL.main],
     ];
     items.forEach((it, i) => card(s, [
-      { text: it[0], options: { bold: true, fontSize: 16, breakLine: true } },
-      { text: it[1], options: { fontSize: 14 } },
-    ], x0 + i * (w + gap), 4.6, w, 1.45, { fill: { color: it[2] }, line: { color: it[2], width: 0.75 }, align: "center", objectName: it[0] }));
+      { text: it[0], options: { bold: true, fontSize: 18, breakLine: true } },
+      { text: it[1], options: { fontSize: 16 } },
+    ], x0 + i * (w + gap), 4.5, w, 1.8, { fill: { color: it[2] }, line: { color: it[2], width: 0.75 }, align: "center", objectName: it[0] }));
   }
 
   // ---------- 4. Задачи ----------
@@ -74,43 +81,16 @@ module.exports = function intro() {
       "Оценить непосредственные и отдалённые результаты комплексного санаторно-курортного лечения с комбинированным применением КВЧ-терапии и амплипульстерапии в сравнении со стандартным комплексом у пациентов с синдромом раздражённого кишечника, в том числе с учётом клинических вариантов заболевания.",
       "Установить взаимосвязи эффективности комплексного санаторно-курортного лечения с включением КВЧ-терапии и амплипульстерапии с основными клинико-лабораторными и психовегетативными показателями, характеризующими течение заболевания.",
     ];
-    const hs = [1.05, 1.45, 1.45, 1.25];
-    let y = 1.4;
+    const hs = [1.0, 1.35, 1.45, 1.2];
+    let y = 1.3;
     tasks.forEach((t, i) => {
-      s.addText(String(i + 1), { isTextBox: false, shape: pres.ShapeType.ellipse, x: 0.5, y: y + (hs[i] - 0.6) / 2, w: 0.6, h: 0.6, fill: { color: C.accent1 }, line: { color: C.accent1, width: 0.5 }, color: C.background1, bold: true, fontSize: 18, align: "center", valign: "middle", margin: 0, objectName: "Номер задачи " + (i + 1) });
-      card(s, t, 1.3, y, 11.53, hs[i], { fontSize: 14, align: "left", objectName: "Задача " + (i + 1) });
-      y += hs[i] + 0.16;
+      s.addText(String(i + 1), { isTextBox: false, shape: pres.ShapeType.ellipse, x: 0.5, y: y + (hs[i] - 0.6) / 2, w: 0.6, h: 0.6, fill: { color: C.accent1 }, line: { color: C.accent1, width: 0.5 }, color: C.background1, bold: true, fontSize: 20, align: "center", valign: "middle", margin: 0, objectName: "Номер задачи " + (i + 1) });
+      card(s, t, 1.3, y, 11.53, hs[i], { fontSize: 16, align: "left", objectName: "Задача " + (i + 1) });
+      y += hs[i] + 0.14;
     });
   }
 
-  // ---------- 5. Организация исследования ----------
-  {
-    const s = addSlideC("Исследование проводилось на базах", "Введение");
-    card(s, [
-      { text: "Санаторий-профилакторий Научно-исследовательского Томского политехнического университета", options: { bold: true, fontSize: 16, breakLine: true } },
-      { text: "(НИ ТПУ)", options: { fontSize: 14 } },
-    ], 0.5, 1.5, 5.9, 1.9, { align: "left", objectName: "База 1" });
-    card(s, [
-      { text: "Томский научно-исследовательский институт курортологии и физиотерапии", options: { bold: true, fontSize: 16, breakLine: true } },
-      { text: "(Томский НИИКиФ ФФГБУ ФНКЦ МРИК ФМБА России)", options: { fontSize: 14 } },
-    ], 0.5, 3.65, 5.9, 1.9, { align: "left", objectName: "База 2" });
-    card(s, [
-      { text: "n = 135", options: { fontSize: 36, bold: true, color: C.text2, breakLine: true } },
-      { text: "пациентов с СРК, рандомизированных в 3 группы", options: { fontSize: 14 } },
-    ], 0.5, 5.8, 5.9, 0.95, { align: "center", objectName: "Объём выборки", margin: [2, 8, 2, 8] });
-
-    // распределение пациентов
-    bar(s, [
-      { name: "СРК-З (запор)", vals: [23, 25, 24] },
-      { name: "СРК-Д (диарея)", vals: [20, 22, 21] },
-    ], ["Контрольная (n=43)", "Сравнения (n=47)", "Основная (n=45)"], {
-      x: 6.7, y: 1.4, w: 6.13, h: 5.35, title: "Распределение пациентов по группам и клиническим вариантам СРК, n",
-      grouping: "stacked", colors: [PAL.sage, PAL.after], labelSize: 12, catSize: 11, gap: 55, name: "Распределение пациентов",
-    });
-    s.addNotes("Схема 1 диссертации. Подгруппы: 1а n=23, 1б n=20; 2а n=25, 2б n=22; 3а n=24, 3б n=21. ВНИМАНИЕ: в схеме дизайна в Word основная группа указана n=43, но 24+21=45 и 43+47+45=135 — в презентации взято n=45.");
-  }
-
-  // ---------- 6. Критерии ----------
+  // ---------- 5. Критерии ----------
   {
     const s = addSlideC("Критерии включения, невключения и исключения", "Введение");
     const colW = 4.0, gap = 0.165;
@@ -137,25 +117,29 @@ module.exports = function intro() {
     ];
     cols.forEach((c, i) => {
       const x = 0.5 + i * (colW + gap);
-      card(s, c[0], x, 1.4, colW, 0.6, { fill: { color: c[1] }, line: { color: c[1], width: 0.75 }, bold: true, fontSize: 16, align: "center", objectName: c[0] });
-      const paras = c[2].map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < c[2].length - 1, paraSpaceAfter: 5 } }));
-      card(s, paras, x, 2.1, colW, 4.75, { fontSize: 12.5, align: "left", valign: "top", margin: [8, 10, 6, 10], objectName: c[0] + " — перечень" });
+      card(s, c[0], x, 1.3, colW, 0.6, { fill: { color: c[1] }, line: { color: c[1], width: 0.75 }, bold: true, fontSize: 18, align: "center", objectName: c[0] });
+      const paras = c[2].map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < c[2].length - 1, paraSpaceAfter: 4 } }));
+      card(s, paras, x, 2.0, colW, 4.95, { fontSize: 14, align: "left", valign: "top", margin: [8, 10, 6, 10], objectName: c[0] + " — перечень" });
     });
   }
 
-  // ---------- 7. Дизайн исследования ----------
+  // ---------- 6. Дизайн исследования (с базами; без серых блоков обследования/базисного СКЛ) ----------
   {
-    const s = addSlideC("Дизайн исследования", "Введение");
+    const s = addSlideC("Дизайн исследования", "Введение", "Схема 1 диссертации. В Word основная группа указана n=43, но подгруппы 3а (24) и 3б (21) дают 45 (43+47+45=135). Блок «Обследование пациентов» (клинические симптомы, жалобы, пальпация живота, индекс Кердо, ортоклиностатическая проба, эпигастральный рефлекс, кардиоинтервалография, тест Люшера, анкета Спилбергера–Ханина, SF-36, общий анализ крови с адаптационными реакциями, микробиологическое исследование кала, УЗИ кишечника) вынесен в слайд «Методы исследования».");
     const X = 0.5, WW = 12.33;
-    const box = (text, x, y, w, h, o = {}) => card(s, text, x, y, w, h, Object.assign({ fontSize: 12, align: "center" }, o));
-    box([{ text: "Включение в исследование и рандомизация пациентов с СРК (n=135)", options: { bold: true } }], X, 1.35, WW, 0.5, { objectName: "Рандомизация" });
-    arrow(s, 6.665, 1.85, 6.665, 2.05);
+    const box = (text, x, y, w, h, o = {}) => card(s, text, x, y, w, h, Object.assign({ fontSize: 14, align: "center" }, o));
+    // базы исследования
     box([
-      { text: "Обследование пациентов включало: ", options: { bold: true } },
-      { text: "оценку клинических симптомов, жалоб, объективного статуса (пальпация живота), вегетативного (индекс Кердо, ортоклиностатическая проба, эпигастральный рефлекс, кардиоинтервалография) и психологического статуса (цветовой тест Макса Люшера, анкета Спилберга-Ханина), оценка качества жизни (опросник SF-36), лабораторные исследования (общеклинический анализ крови с определением неспецифической адаптационной реакции организма, микробиологическое исследование кала), инструментальные методы исследования (УЗИ кишечника)." },
-    ], X, 2.05, WW, 0.95, { align: "left", fontSize: 11.5, objectName: "Обследование" });
+      { text: "Исследование проводилось на базах: ", options: { bold: true } },
+      { text: "Санаторий-профилакторий Научно-исследовательского Томского политехнического университета (НИ ТПУ)" },
+    ], X, 1.2, 6.05, 0.95, { align: "left", fontSize: 13.5, objectName: "База 1" });
+    box([
+      { text: "Томский научно-исследовательский институт курортологии и физиотерапии ", options: { bold: true } },
+      { text: "(Томский НИИКиФ ФФГБУ ФНКЦ МРИК ФМБА России)" },
+    ], 6.78, 1.2, 6.05, 0.95, { align: "left", fontSize: 13.5, objectName: "База 2" });
+    arrow(s, 6.665, 2.15, 6.665, 2.35);
+    box([{ text: "Включение в исследование и рандомизация пациентов с СРК (n=135)", options: { bold: true } }], X, 2.35, WW, 0.5, { fontSize: 16, objectName: "Рандомизация" });
 
-    // три группы
     const gw = 3.95, gg = 0.24;
     const groups = [
       ["Группа контроля (n=43)", [["СРК-З", "1а (n=23)"], ["СРК-Д", "1б (n=20)"]], PAL.ctrl],
@@ -164,55 +148,101 @@ module.exports = function intro() {
     ];
     groups.forEach((g, i) => {
       const x = X + i * (gw + gg);
-      arrow(s, x + gw / 2, 3.0, x + gw / 2, 3.2);
-      box([{ text: g[0], options: { bold: true } }], x, 3.2, gw, 0.34, { fill: { color: g[2] }, line: { color: g[2], width: 0.75 }, fontSize: 12, objectName: g[0] });
+      arrow(s, x + gw / 2, 2.85, x + gw / 2, 3.05);
+      box([{ text: g[0], options: { bold: true } }], x, 3.05, gw, 0.4, { fill: { color: g[2] }, line: { color: g[2], width: 0.75 }, fontSize: 15, objectName: g[0] });
       g[1].forEach((sg, k) => box([
         { text: sg[0], options: { bold: true, breakLine: true } }, { text: sg[1] },
-      ], x + k * (gw / 2), 3.54, gw / 2 - 0.02, 0.62, { fill: { color: "FFFFFF" }, line: { color: g[2], width: 1 }, fontSize: 11.5, objectName: "Подгруппа " + sg[1] }));
+      ], x + k * (gw / 2), 3.45, gw / 2 - 0.02, 0.7, { fill: { color: "FFFFFF" }, line: { color: g[2], width: 1 }, fontSize: 14, objectName: "Подгруппа " + sg[1] }));
+      arrow(s, x + gw / 2, 4.15, x + gw / 2, 4.35);
     });
-    box([
-      { text: "Все пациенты получали комплексное базисное СКЛ: ", options: { bold: true } },
-      { text: "лечебное питание, внутренний прием маломинерализованной минеральной воды, пробиотик «аципол-форте», групповая ЛФК, массаж воротниковой области" },
-    ], X, 4.4, WW, 0.62, { objectName: "Базисное СКЛ" });
-    const mw = 3.95;
     const meth = [
-      ["Проводилось только базисное СКЛ", PAL.ctrl],
-      ["Дополнительно проводилась амплипульстерапия", PAL.comp],
-      ["Дополнительно проводилась амплипульстерапия и КВЧ-терапия", PAL.main],
+      [[{ text: "Проводилось только базисное лечение: ", options: { bold: true } }, { text: "лечебное питание, внутренний прием маломинерализованной минеральной воды, пробиотик «аципол-форте», групповая ЛФК, массаж воротниковой области" }], PAL.ctrl],
+      [[{ text: "Дополнительно проводилась амплипульстерапия", options: { bold: true } }], PAL.comp],
+      [[{ text: "Дополнительно проводилась амплипульстерапия и КВЧ-терапия", options: { bold: true } }], PAL.main],
     ];
     meth.forEach((m, i) => {
-      const x = X + i * (mw + gg);
-      arrow(s, x + mw / 2, 5.02, x + mw / 2, 5.2);
-      box(m[0], x, 5.2, mw, 0.6, { fill: { color: m[1] }, line: { color: m[1], width: 0.75 }, objectName: "Метод " + (i + 1) });
+      const x = X + i * (gw + gg);
+      box(m[0], x, 4.35, gw, 1.5, { fill: { color: m[1] }, line: { color: m[1], width: 0.75 }, fontSize: 13.5, objectName: "Метод " + (i + 1) });
     });
-    // этапы контроля
-    const ew = 3.95;
     const steps = ["Контрольное обследование сразу после завершения курса лечения", "Контрольное обследование через 6 месяцев после завершения курса лечения", "Завершение исследования, статистическая обработка результатов и анализ данных"];
     steps.forEach((t, i) => {
-      const x = X + i * (ew + gg);
-      box([{ text: t, options: { bold: true } }], x, 6.1, ew, 0.72, { objectName: "Этап " + (i + 1) });
-      if (i < 2) arrow(s, x + ew, 6.46, x + ew + gg, 6.46);
+      const x = X + i * (gw + gg);
+      box([{ text: t, options: { bold: true } }], x, 6.1, gw, 0.85, { fontSize: 14, objectName: "Этап " + (i + 1) });
+      if (i < 2) arrow(s, x + gw, 6.525, x + gw + gg, 6.525);
     });
-    s.addNotes("Схема 1 диссертации. В Word основная группа указана n=43; подгруппы 3а (24) и 3б (21) дают 45 (43+47+45=135).");
   }
 
-  // ---------- 8. Методы ----------
+  // ---------- 7. Методы исследования ----------
   {
     const s = addSlideC("Методы исследования", "Введение");
     const m = [
-      ["Клинические", ["оценка клинических симптомов по 5-балльной шкале Ликерта (Likert scale)", "оценка частоты и характера стула по Бристольской шкале"], PAL.sage],
+      ["Клинические", ["оценка клинических симптомов, жалоб, объективного статуса (пальпация живота); оценка по 5-балльной шкале Ликерта (Likert scale)", "оценка частоты и характера стула по Бристольской шкале"], PAL.sage],
       ["Лабораторные", ["общеклинический анализ крови с определением неспецифических адаптивных систем организма по методике Л.Х. Гаркави", "бактериологическое исследование количественного и качественного видового состава кишечной микрофлоры"], PAL.after],
       ["Инструментальные", ["ультразвуковое исследование толстого кишечника"], PAL.ctrl],
       ["Исследование вегетативной регуляции", ["вегетативный индекс Кердо", "ортоклиностатическая проба", "эпигастральный рефлекс", "кардиоинтервалография"], PAL.comp],
       ["Исследование психоэмоционального статуса", ["цветовой тест Макса Люшера (Lüscher-Test)", "опросник Спилбергера–Ханина (State-Trait Anxiety Inventory)"], PAL.rose],
       ["Исследование качества жизни", ["общий опросник MOS SF-36 (36-Item Short-Form Health Survey)"], PAL.main],
     ];
-    const cw = 3.95, ch = 2.6, g = 0.24;
+    const cw = 3.95, ch = 2.7, g = 0.24;
     m.forEach((it, i) => {
-      const x = 0.5 + (i % 3) * (cw + g), y = 1.45 + Math.floor(i / 3) * (ch + 0.25);
-      card(s, it[0], x, y, cw, 0.6, { fill: { color: it[2] }, line: { color: it[2], width: 0.75 }, bold: true, fontSize: 14, align: "center", objectName: it[0] });
+      const x = 0.5 + (i % 3) * (cw + g), y = 1.3 + Math.floor(i / 3) * (ch + 0.2);
+      card(s, it[0], x, y, cw, 0.65, { fill: { color: it[2] }, line: { color: it[2], width: 0.75 }, bold: true, fontSize: 16, align: "center", objectName: it[0] });
       const paras = it[1].map((t, k) => ({ text: t, options: { bullet: true, breakLine: k < it[1].length - 1, paraSpaceAfter: 4 } }));
-      card(s, paras, x, y + 0.7, cw, ch - 0.7, { fontSize: 13, align: "left", valign: "top", margin: [8, 10, 8, 10], objectName: it[0] + " — перечень" });
+      card(s, paras, x, y + 0.75, cw, ch - 0.75, { fontSize: 13.5, align: "left", valign: "top", margin: [8, 10, 6, 10], objectName: it[0] + " — перечень" });
     });
+  }
+
+  // ---------- 8. Методы лечения: базисный комплекс ----------
+  {
+    const s = addSlideC("Методы лечения: базисный комплекс (все группы)", "Введение", "Источник: описание лечебного комплекса из диссертации (правки от 3.10).");
+    const hdr = (t, o = {}) => T(t, Object.assign({}, HDR, { fontSize: 16 }, o));
+    const cell = (t, o = {}) => T(t, Object.assign({ align: "left", valign: "middle", fontSize: 15 }, o));
+    const both = (t) => T(t, { colspan: 2, align: "center", valign: "middle", fontSize: 15 });
+    const rows = [
+      [hdr("Компонент", { align: "left" }), hdr("СРК-З (с преобладанием запора)"), hdr("СРК-Д (с преобладанием диареи)")],
+      [cell("Режим", { bold: true }), both("щадяще-тренирующий")],
+      [cell("Лечебное питание", { bold: true }), cell("общеврачебная диета для пациентов с СРК-З"), cell("щадящая диета для пациентов с СРК-Д")],
+      [cell("Внутренний прием минеральной воды", { bold: true }), cell("хлоридно-гидрокарбонатная натриевая вода, общей минерализацией до 3 г/дм³ (Карачинская), дегазированная: 3 раза в день, за 90 мин до еды, 26–28 °С, по 200 мл"), cell("хлоридно-гидрокарбонатная натриевая вода, общей минерализацией до 3 г/дм³ (Карачинская), дегазированная: 3 раза в день, за 30–40 мин до еды, 34–36 °С, по 50 мл, постепенно доводя до 200 мл на прием")],
+      [cell("Пробиотик «Аципол-форте»", { bold: true }), both("по 1 капсуле во время еды в течение 21 дня")],
+      [cell("ЛФК", { bold: true }), both("курс ЛФК — по 20 мин ежедневно")],
+      [cell("Массаж шейно-воротниковой зоны", { bold: true }), cell("по тонизирующей методике, в утренние часы"), cell("по седативной методике, во второй половине дня")],
+    ];
+    s.addTable(rows, { x: 0.5, y: 1.35, w: 12.33, colW: [3.0, 4.6, 4.73], rowH: [0.5, 0.5, 0.6, 1.7, 0.55, 0.5, 0.85], color: PAL.text, border: BORDER, margin: [0.04, 0.1, 0.04, 0.1], objectName: "Методы лечения: базисный комплекс" });
+  }
+
+  // ---------- 9. Методы лечения: амплипульстерапия ----------
+  {
+    const s = addSlideC("Методы лечения: амплипульстерапия (группа сравнения и основная группа)", "Введение", "Аппарат «Амплипульс-5»; проекция восходящего и нисходящего отдела толстой кишки; на курс 10 процедур.");
+    const hdr = (t, o = {}) => T(t, Object.assign({}, HDR, { fontSize: 16 }, o));
+    const cell = (t, o = {}) => T(t, Object.assign({ align: "left", valign: "middle", fontSize: 15 }, o));
+    const both = (t) => T(t, { colspan: 2, align: "center", valign: "middle", fontSize: 15 });
+    const rows = [
+      [hdr("Параметр", { align: "left" }), hdr("СРК-З"), hdr("СРК-Д")],
+      [cell("Аппарат", { bold: true }), both("«Амплипульс-5»")],
+      [cell("Зона воздействия", { bold: true }), both("проекция восходящего и нисходящего отдела толстого кишечника")],
+      [cell("1-й этап", { bold: true }), cell("режим 1, род работы (РР) 1, частота модуляции (ЧМ) 50 Гц, глубина модуляции (ГМ) 50 %, 2–3 с, 5 мин; сила тока до выраженной безболезненной вибрации"), cell("режим 1, РР 3, ЧМ 50 Гц, ГМ 50 %, 1–1,5 с, 5 мин; сила тока до выраженной, но безболезненной вибрации")],
+      [cell("2-й этап", { bold: true }), cell("режим 1, РР 2, ЧМ 10 Гц, ГМ 100 %, 1–1,5 с, 5 мин; сила тока до ощущения сокращения под электродами"), cell("режим 1, РР 4, ЧМ 100 Гц, ГМ 25 %, 2–3 с, 5 мин; сила тока до выраженной, но безболезненной вибрации")],
+      [cell("Курс", { bold: true }), both("№ 10")],
+      [cell("Время процедуры", { bold: true }), cell("первая половина дня"), cell("вторая половина дня")],
+    ];
+    s.addTable(rows, { x: 0.5, y: 1.35, w: 12.33, colW: [2.4, 5.0, 4.93], rowH: [0.5, 0.5, 0.7, 1.4, 1.4, 0.5, 0.5], color: PAL.text, border: BORDER, margin: [0.04, 0.1, 0.04, 0.1], objectName: "Методы лечения: амплипульстерапия" });
+  }
+
+  // ---------- 10. Методы лечения: КВЧ-терапия ----------
+  {
+    const s = addSlideC("Методы лечения: КВЧ-терапия (основная группа)", "Введение", "Рисунки 1 и 2 диссертации (точки VC.17 и E.25) в файле правок не приложены — вставьте изображения в рамки.");
+    const hdr = (t, o = {}) => T(t, Object.assign({}, HDR, { fontSize: 16 }, o));
+    const cell = (t, o = {}) => T(t, Object.assign({ align: "left", valign: "middle", fontSize: 15 }, o));
+    const both = (t) => T(t, { colspan: 2, align: "center", valign: "middle", fontSize: 15 });
+    const rows = [
+      [hdr("Параметр", { align: "left" }), hdr("Методика")],
+      [cell("Аппарат", { bold: true }), cell("«СЕМ-ТЕСН-БФ», широкополосный шумовой излучатель, частота 40–63 ГГц")],
+      [cell("Зоны воздействия", { bold: true }), cell("проекция средней трети грудины — точка Тань-чжун VC.17 (рисунок 1); восходящий отдел толстого кишечника — точка Тянь-шу E.25 (рисунок 2)")],
+      [cell("Время и курс", { bold: true }), cell("30 мин, ежедневно, на курс 10 процедур")],
+      [cell("Время суток", { bold: true }), cell("СРК-З — в первой половине дня; СРК-Д — во второй половине дня")],
+    ];
+    s.addTable(rows, { x: 0.5, y: 1.35, w: 7.4, colW: [2.2, 5.2], rowH: [0.5, 1.0, 1.6, 0.8, 1.0], color: PAL.text, border: BORDER, margin: [0.04, 0.1, 0.04, 0.1], objectName: "Методы лечения: КВЧ-терапия" });
+    card(s, "Рисунок 1. Точка Тань-чжун VC.17", 8.15, 1.35, 4.68, 2.6, { fill: { color: "FFFFFF" }, line: { color: PAL.border, width: 1, dashType: "dash" }, color: "8A97AB", fontSize: 14, align: "center", objectName: "Место для рисунка 1" });
+    card(s, "Рисунок 2. Точка Тянь-шу E.25", 8.15, 4.15, 4.68, 2.6, { fill: { color: "FFFFFF" }, line: { color: PAL.border, width: 1, dashType: "dash" }, color: "8A97AB", fontSize: 14, align: "center", objectName: "Место для рисунка 2" });
   }
 };
