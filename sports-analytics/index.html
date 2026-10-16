@@ -389,7 +389,7 @@ details.flt[open]>summary{padding-bottom:0}
           <div class="row">
             <button class="btn primary" id="impParse">Разобрать текст</button>
 <!--AI{-->            <span id="aiBox" class="row" hidden>
-              <button class="btn" id="impAI">Распознать через Claude</button>
+              <button class="btn" id="impAI">Распознать через ИИ</button>
               <label class="btn" for="impImg" id="impImgLbl" hidden>Скриншоты…</label>
               <input type="file" id="impImg" accept="image/png,image/jpeg,image/webp" multiple hidden>
             </span><!--}AI-->
@@ -404,7 +404,7 @@ details.flt[open]>summary{padding-bottom:0}
           <p>Нужно для лиг, которых нет в автозагрузке (DEL, Евролига и другие). Одна строка — один матч: <code>дата Хозяева - Гости счёт (периоды) метки</code>.</p>
           <p><b>Периоды или таймы</b> в скобках: <code>(1:0, 0:2, 1:1)</code>. Лишняя пара после основных считается овертаймом.</p>
           <p><b>Метки:</b> <code>ОТ</code> — овертайм, <code>Б</code> — буллиты, <code>первая: Амур</code> — кто забил первым.</p>
-<!--AI{-->          <p><b>Скриншоты:</b> фото списка матчей Flashscore или страницы матча. Claude вытащит даты, счёт, периоды и первый гол, если они видны.</p><!--}AI-->
+<!--AI{-->          <p><b>Скриншоты:</b> фото списка матчей Flashscore или страницы матча. ИИ вытащит даты, счёт, периоды и первый гол, если они видны.</p><!--}AI-->
         </div>
       </div>
     </div>
@@ -1075,10 +1075,10 @@ function tabModel(m) {
 }
 
 function aiMatchPanel() {
-  /*AI{*/if (sample) return `<div class="body"><div class="row" style="justify-content:space-between"><span class="small muted">Claude объяснит уже рассчитанные показатели. Ему передаются только числа из этой страницы; новые числа он придумывать не должен — ответ проверяется автоматически.</span>
+  /*AI{*/if (sample) return `<div class="body"><div class="row" style="justify-content:space-between"><span class="small muted">ИИ-аналитик объяснит уже рассчитанные показатели. Ему передаются только числа из этой страницы; новые числа он придумывать не должен — ответ проверяется автоматически.</span>
     <span class="row"><button class="btn primary" id="aiMRun">Разобрать матч</button><button class="btn ghost" id="aiMStop" hidden>Стоп</button></span></div>
     <div class="ai-out" id="aiMOut" style="margin-top:12px"></div><div id="aiMCheck" class="small" style="margin-top:8px"></div></div>`;/*}AI*/
-  return `<div class="body"><div class="nodata"><b>ИИ-разбор недоступен</b>На этой странице нет доступа к Claude. Аналитический вывод по правилам — во вкладке «Обзор».</div></div>`;
+  return `<div class="body"><div class="nodata"><b>ИИ-разбор недоступен</b>ИИ-модуль сейчас недоступен. Аналитический вывод по правилам — во вкладке «Обзор».</div></div>`;
 }
 /** Проверенные данные для ИИ: только то, что посчитано на странице. */
 function matchPayload(m) {
@@ -1164,8 +1164,8 @@ function model(sa, sb, sp) {
 const pct = x => Math.round(x * 100) + '%';
 const f1 = x => x.toFixed(x >= 50 ? 1 : 2).replace('.', ',');
 
-function aiPanel() { /*AI{*/if (sample) return `<div class="panel" ><header><h2>Разбор от Claude</h2><div class="row"><button class="btn primary" id="aiRun">Разобрать матч</button><button class="btn ghost" id="aiStop" hidden>Стоп</button></div></header>
-    <div class="body"><div class="ai-out" id="aiOut"><span class="muted">Claude посмотрит на серии, форму и модель и коротко опишет, на что обратить внимание. Это расходует ваш лимит Claude.</span></div></div></div>`;/*}AI*/ return ''; }
+function aiPanel() { /*AI{*/if (sample) return `<div class="panel" ><header><h2>ИИ-разбор</h2><div class="row"><button class="btn primary" id="aiRun">Разобрать матч</button><button class="btn ghost" id="aiStop" hidden>Стоп</button></div></header>
+    <div class="body"><div class="ai-out" id="aiOut"><span class="muted">ИИ посмотрит на серии, форму и модель и коротко опишет, на что обратить внимание.</span></div></div></div>`;/*}AI*/ return ''; }
 function renderVs() {
   $('#vsA').value = S.vsA ? tName(S.vsA) : ''; $('#vsB').value = S.vsB ? tName(S.vsB) : '';
   const out = $('#vsOut'), A = S.vsA, B = S.vsB;
@@ -1337,23 +1337,23 @@ async function savePending() {
   catch (e) { $('#impMsg').innerHTML = `<span class="err">Не удалось сохранить: ${esc(e && (e.message || e.code) || e)}. Попробуйте ещё раз.</span>`; btn.disabled = false; btn.textContent = 'Сохранить'; }
 }
 
-/*AI{*//* ---------- Claude ---------- */
+/*AI{*//* ---------- ИИ ---------- */
 const aiSchema = sp => `Верни ТОЛЬКО JSON-массив объектов вида
 {"date":"YYYY-MM-DD","league":"КХЛ","home":"Трактор","away":"Амур","hs":0,"as":2,"p":[[0,1],[0,0],[0,1]],"ot":"","first":"away"}
 Правила: home — хозяева (на Flashscore в списке матчей верхняя команда — хозяева; в заголовке «А - Б» первая команда хозяева).
 hs/as — итоговый счёт. p — счёт ${SP[sp].seg} ${sp === 'football' ? 'таймов' : sp === 'basketball' ? 'четвертей' : 'периодов'} [хозяева, гости], если виден, иначе null. ot: "OT" если овертайм, "SO" если буллиты, иначе "".
 first: "home"/"away" — кто забил первым, только если это прямо видно, иначе "". Дата «08.10.26» = "2026-10-08".
 Названия команд пиши по-русски, как на источнике. Не выдумывай матчи и цифры: если не уверен в матче, пропусти его.`;
-const aiErr = e => ({ not_granted:'Доступ к Claude не разрешён на этой странице.', rate_limited:'Слишком много запросов. Подождите минуту.', images_unavailable:'Отправка изображений сейчас недоступна.', image_rejected:'Одно из изображений не подошло (нужен JPG, PNG или WebP).', prompt_too_large:'Слишком много данных за раз. Разделите на части.', invalid_json:'Claude ответил не в том формате. Попробуйте ещё раз.', cancelled:'Остановлено.' }[e && e.code] || ('Не получилось: ' + (e && (e.message || e.code) || 'ошибка')));
+const aiErr = e => ({ not_granted:'ИИ-модуль недоступен на этой странице.', rate_limited:'Слишком много запросов. Подождите минуту.', images_unavailable:'Отправка изображений сейчас недоступна.', image_rejected:'Одно из изображений не подошло (нужен JPG, PNG или WebP).', prompt_too_large:'Слишком много данных за раз. Разделите на части.', invalid_json:'ИИ ответил не в том формате. Попробуйте ещё раз.', cancelled:'Остановлено.' }[e && e.code] || ('Не получилось: ' + (e && (e.message || e.code) || 'ошибка')));
 async function aiImport(images) {
   const lg = norm($('#impLeague').value), sp = $('#impSport').value, txt = $('#impText').value.trim();
   if (!images && !txt) { $('#impMsg').innerHTML = '<span class="err">Вставьте текст или выберите скриншоты.</span>'; return; }
-  $('#impMsg').innerHTML = '<span class="muted">Claude читает данные… обычно до минуты.</span>'; $('#impPreview').innerHTML = '';
+  $('#impMsg').innerHTML = '<span class="muted">ИИ читает данные… обычно до минуты.</span>'; $('#impPreview').innerHTML = '';
   const prompt = `Извлеки результаты завершённых матчей (${SP[sp].name.toLowerCase()}) из ${images ? 'скриншотов' : 'текста ниже'}.${lg ? ` Лига по умолчанию: ${lg}.` : ''} Сегодня ${new Date().toISOString().slice(0,10)}.\n${aiSchema(sp)}` + (images ? '' : `\n\nТекст:\n${txt.slice(0, 60000)}`);
   try {
     const data = await sample.json(prompt, images ? { images } : {});
     const arr = (Array.isArray(data) ? data : (data && data.matches) || []).map(o => clean(Object.assign({}, o, { sport: sp, league: norm(o && o.league) || lg }))).filter(Boolean);
-    showPreview(arr, [], 'Claude');
+    showPreview(arr, [], 'ИИ');
   } catch (e) { $('#impMsg').innerHTML = `<span class="err">${esc(aiErr(e))}</span>`; }
 }
 let aiCtl = null;
