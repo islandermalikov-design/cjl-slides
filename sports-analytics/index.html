@@ -86,9 +86,22 @@ h2{font:700 13px/1.2 var(--f-body);text-transform:uppercase;letter-spacing:.08em
 .lgh:first-child{border-top:0}
 .lgh span{color:var(--muted);font-weight:500}
 .mr{border-top:1px solid var(--line)}
-.mr>button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;padding:9px 14px;cursor:pointer}
-.mr>button:hover{background:var(--sunk)}
-.mr>button:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.mrow{display:flex;align-items:stretch}
+.mrow>button.main{all:unset;box-sizing:border-box;flex:1;min-width:0;display:grid;grid-template-columns:64px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:9px 14px;cursor:pointer}
+.mrow>button.main:hover{background:var(--sunk)}
+.mrow>button.main:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.mrow .side{display:flex;align-items:center;gap:2px;padding-right:10px}
+.go{border:1px solid var(--blue);background:var(--surface);color:var(--blue);border-radius:6px;padding:5px 9px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
+.go:hover{background:var(--blue);color:#fff}
+.pin{border:0;background:none;cursor:pointer;color:var(--muted);font-size:17px;padding:4px 6px;border-radius:5px;line-height:1}
+.pin[aria-pressed="true"]{color:var(--warn)}
+.mx{display:flex;gap:2px}
+.mx .c{min-width:58px;text-align:right;font:600 12.5px/1.25 var(--f-num);padding:0 4px}
+.mx .c small{display:block;color:var(--muted);font:500 10.5px/1.2 var(--f-body);white-space:nowrap}
+.mx .c.dim{color:var(--muted);font-weight:500}
+.mr .lgb{display:block;font:500 11.5px var(--f-body);color:var(--muted)}
+.mr .sc{font:700 14px var(--f-num);color:var(--ink)}
+@media (max-width:760px){.mrow>button.main{grid-template-columns:48px minmax(0,1fr) auto}.mx{grid-column:1/-1;flex-wrap:wrap;justify-content:flex-start}.mx .c{text-align:left;min-width:54px}}
 .mr .t{font:600 13px var(--f-num);color:var(--muted)}
 .mr .t.live{color:var(--red)}
 .mr .teams{font-weight:600;min-width:0;overflow-wrap:anywhere}
@@ -161,6 +174,83 @@ code{font-family:var(--f-num);font-size:12.5px;background:var(--sunk);padding:1p
 .del:hover{color:var(--red);background:var(--sunk)}
 @media (max-width:480px){.dots b:nth-child(n+7){display:none}.top .wrap{gap:8px}.store{display:none}.tabs button{padding:7px 9px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Панель дня и фильтры */
+.dtool{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:10px 14px}
+.dtool+.dtool{border-top:1px solid var(--line)}
+.dtool input[type=number]{width:64px;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:5px 7px}
+.dtool input[type=date]{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:4px 7px}
+details.cols{position:relative}
+details.cols>summary{cursor:pointer;list-style:none;font-size:13.5px;font-weight:600;border:1px solid var(--line);border-radius:7px;padding:5px 10px}
+details.cols>summary::-webkit-details-marker{display:none}
+details.cols>div{position:absolute;z-index:4;top:calc(100% + 4px);right:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;min-width:220px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+@media (max-width:560px){details.cols>div{left:0;right:auto}}
+.cnt-line{font-size:13px;color:var(--muted)}
+
+/* Страница матча */
+.mh{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:start;padding:16px}
+.mh .tm{min-width:0}
+.mh .tm.r{text-align:right}
+.mh .tm.r .fms,.mh .tm.r .tline{justify-content:flex-end}
+.mh .nm{font:700 20px/1.2 var(--f-display);letter-spacing:-.01em;overflow-wrap:anywhere}
+.mh .mid{text-align:center;display:grid;gap:4px;justify-items:center}
+.mh .score{font:800 28px/1 var(--f-num)}
+.mh .when{font:600 14px var(--f-num);color:var(--muted)}
+.tline{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--muted);margin-top:6px}
+.tline b{color:var(--ink);font-family:var(--f-num)}
+.fms{display:flex;gap:3px;margin-top:8px;flex-wrap:wrap}
+.fm{font:700 11px/1 var(--f-body);padding:4px 5px;border-radius:4px;min-width:22px;text-align:center;border:1px solid transparent}
+.fm.w{background:var(--good-soft);color:var(--good)}
+.fm.l{background:#F9DDDF;color:var(--red)}
+.fm.o{background:var(--warn-soft);color:var(--warn)}
+.fm.d{background:var(--sunk);color:var(--muted);border-color:var(--line)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .fm.l{background:#3A1A1D}}
+:root[data-theme="dark"] .fm.l{background:#3A1A1D}
+@media (max-width:640px){.mh{grid-template-columns:1fr 1fr}.mh .mid{grid-column:1/-1;grid-row:1}.mh .nm{font-size:16px}}
+.subtabs{display:flex;gap:2px;overflow-x:auto;border-top:1px solid var(--line);padding:0 8px;scrollbar-width:thin}
+.subtabs button{flex:none;border:0;background:none;padding:10px 12px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;box-shadow:inset 0 -2px 0 transparent}
+.subtabs button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--red)}
+.mopts{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.lines{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.lines input{width:72px;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:4px 7px}
+table.cmp td:not(:first-child),table.cmp th:not(:first-child){text-align:right;font-family:var(--f-num)}
+table.cmp td small{color:var(--muted);font-size:11.5px;display:block}
+td .good{color:var(--good);font-weight:700}
+td .bad{color:var(--red);font-weight:700}
+tr.hl td{background:var(--blue-soft)}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--sunk)}
+tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--red)}
+tr.sel td{background:var(--sunk)}
+.ou{display:flex;gap:3px;flex-wrap:wrap}
+.ou button{all:unset;cursor:pointer;width:20px;height:20px;border-radius:4px;font:700 11px/20px var(--f-body);text-align:center;color:#fff}
+.ou button.o{background:var(--good)}
+.ou button.u{background:var(--red)}
+.ou button.p{background:var(--muted)}
+.ou button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+.tipline{font-size:12.5px;color:var(--muted);min-height:1.3em;margin-top:4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:14px}
+.card{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.card h3{margin:0 0 8px;font-size:15px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card h3 small{font-weight:500;color:var(--muted);font-size:12.5px}
+dl.kv{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;margin:0;font-size:14px}
+dl.kv dt{color:var(--muted)}
+dl.kv dd{margin:0;text-align:right;font-family:var(--f-num);font-weight:600}
+.nodata{border:1px dashed var(--line);border-radius:var(--r);padding:14px;background:var(--sunk);font-size:14px}
+.nodata b{display:block;margin-bottom:4px}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.facts h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.facts ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:6px;padding:8px 10px;font-size:13px}
+.lvl{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px;white-space:nowrap}
+.lvl.tiny,.lvl.none{background:#F9DDDF;color:var(--red)}
+.lvl.small{background:var(--warn-soft);color:var(--warn)}
+.lvl.ok{background:var(--good-soft);color:var(--good)}
+#tabMatch{max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details.flt{border-top:1px solid var(--line)}
+details.flt>summary{cursor:pointer;padding:9px 14px;font-size:13px;font-weight:600;color:var(--muted)}
+details.flt[open]>summary{padding-bottom:0}
+@media (max-width:560px){table.cmp th,table.cmp td{padding:6px 5px;font-size:13px}table.cmp th{white-space:normal}.lvl{display:inline-block;margin:2px 0 0}#tabMatch{max-width:200px}}
 </style>
 
 <header class="top">
@@ -168,6 +258,7 @@ code{font-family:var(--f-num);font-size:12.5px;background:var(--sunk);padding:1p
     <div class="brand"><i aria-hidden="true"></i>Серии матчей</div>
     <nav class="tabs" role="tablist" aria-label="Разделы">
       <button role="tab" data-tab="day" aria-selected="true">Матчи дня</button>
+      <button role="tab" data-tab="match" aria-selected="false" id="tabMatch" hidden>Матч</button>
       <button role="tab" data-tab="vs" aria-selected="false">Сравнение</button>
       <button role="tab" data-tab="all" aria-selected="false">Все серии</button>
       <button role="tab" data-tab="data" aria-selected="false">Данные</button>
@@ -207,6 +298,32 @@ code{font-family:var(--f-num);font-size:12.5px;background:var(--sunk);padding:1p
 
 <main>
   <div class="wrap" id="tab-day">
+    <div class="panel" id="picks" hidden></div>
+    <div class="panel">
+      <div class="dtool">
+        <div class="seg" id="daySeg" role="group" aria-label="День">
+          <button data-d="-1">Вчера</button><button data-d="0">Сегодня</button><button data-d="1">Завтра</button><button data-d="week">Неделя</button>
+        </div>
+        <input type="date" id="dayPick" aria-label="Выбрать дату">
+        <input type="search" id="dayQ" placeholder="Команда" aria-label="Поиск команды" style="width:150px">
+        <label class="ctl small"><span>Сортировка</span>
+          <select id="sortSel">
+            <option value="time">По времени</option><option value="league">По чемпионату</option><option value="avg">По среднему тоталу</option>
+            <option value="tb">По частоте ТБ</option><option value="prob">По вероятности ТБ (модель)</option>
+          </select></label>
+        <details class="cols"><summary>Колонки</summary><div id="colBox"></div></details>
+      </div>
+      <details class="flt" id="fltBox" open><summary>Форма, линия и фильтры</summary>
+      <div class="dtool" style="font-size:13.5px">
+        <label class="ctl"><span>Форма</span><select id="winSel"><option value="5">посл. 5</option><option value="10">посл. 10</option><option value="20">посл. 20</option><option value="all">сезон</option></select></label>
+        <label class="ctl"><span>Линия</span><span class="lines" id="listLine"></span></label>
+        <label class="ctl"><span>ТБ у обеих от</span><input type="number" id="fTb" min="0" max="100" step="5" aria-label="Минимальная частота ТБ у обеих команд, %">%</label>
+        <label class="ctl"><span>Ср. тотал у обеих от</span><input type="number" id="fAvg" min="0" step="0.5" aria-label="Минимальный средний тотал у обеих команд"></label>
+        <label class="ctl"><span>Модель ТБ от</span><input type="number" id="fProb" min="0" max="100" step="5" aria-label="Минимальная вероятность ТБ по модели, %">%</label>
+        <button class="btn ghost" id="fReset">Сбросить фильтры</button>
+        <span class="cnt-line" id="dayCount"></span>
+      </div></details>
+    </div>
     <div class="panel day" id="dayList"></div>
     <div class="panel">
       <header><h2>Свои матчи</h2>
@@ -221,6 +338,11 @@ code{font-family:var(--f-num);font-size:12.5px;background:var(--sunk);padding:1p
       <header><h2>Самые длинные серии сейчас</h2><span class="note" id="hotNote"></span></header>
       <div id="hotList"></div>
     </div>
+  </div>
+
+  <div class="wrap" id="tab-match" hidden>
+    <div class="panel" id="mHead"></div>
+    <div class="panel" id="mBody"></div>
   </div>
 
   <div class="wrap" id="tab-vs" hidden>
@@ -297,6 +419,7 @@ code{font-family:var(--f-num);font-size:12.5px;background:var(--sunk);padding:1p
 <datalist id="teamList"></datalist>
 <datalist id="leagueList"></datalist>
 
+<script src="engine.js"></script>
 <script>
 (() => {
 'use strict';
@@ -309,8 +432,15 @@ const dShort = iso => iso ? iso.slice(8,10) + '.' + iso.slice(5,7) : '';
 const lsGet = k => { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
-const S = Object.assign({ mode:'final', min:3, tag:'all', split:false, tab:'day', vsA:'', vsB:'', lg:'' }, lsGet('hs_prefs') || {});
-const savePrefs = () => lsSet('hs_prefs', { mode:S.mode, min:S.min, tag:S.tag, split:S.split, tab:S.tab, vsA:S.vsA, vsB:S.vsB, lg:S.lg });
+const E = window.HSEngine || null;
+const DEF_COLS = { avg:true, gfga:false, l0:true, l1:true, l2:true, prob:true };
+const S = Object.assign({ mode:'final', min:3, tag:'all', split:false, tab:'day', vsA:'', vsB:'', lg:'',
+  day:0, q:'', sort:'time', win:'10', cols:DEF_COLS, fTb:'', fAvg:'', fProb:'', picks:[],
+  m:null, mt:'ov', mw:'all', mv:'all', mlg:'one', tv:'all', lk:'match', lines:{ hockey:5.5, football:2.5, basketball:219.5 } }, lsGet('hs_prefs') || {});
+S.cols = Object.assign({}, DEF_COLS, S.cols); S.lines = Object.assign({ hockey:5.5, football:2.5, basketball:219.5 }, S.lines);
+if (!Array.isArray(S.picks)) S.picks = [];
+if (S.tab === 'match' && !S.m) S.tab = 'day';
+const savePrefs = () => lsSet('hs_prefs', S);
 let manual = [], fixtures = [], leagueDocs = [], matches = [], upcoming = [], db = null, sample = null, canImages = false;
 const open = new Set();
 
@@ -387,21 +517,24 @@ function rebuild() {
     out.push(Object.assign({}, m, { src:'manual', sport: SP[m.sport] ? m.sport : 'hockey', lid: 'm:' + (m.league || '') }));
   }
   for (const m of out) { m.hk = tk(m.sport, m.home); m.ak = tk(m.sport, m.away); }
-  matches = out; upcoming = up; memo.clear();
+  matches = out; upcoming = up; memo.clear(); fitMemo.clear(); btMemo.clear();
 }
-const memo = new Map();
+const memo = new Map(), fitMemo = new Map(), btMemo = new Map();
 function persp(m, team) {
   const h = m.hk === team, C = SP[m.sport];
   const per = Array.isArray(m.p) && m.p.length >= C.seg ? m.p.slice(0, C.seg).map(x => h ? { f:+x.h, a:+x.a } : { f:+x.a, a:+x.h }) : null;
-  const fh = h ? m.hs : m.as, fa = h ? m.as : m.hs;
-  let gf = fh, ga = fa;
-  if (S.mode === 'reg' && m.ot) {
-    if (per) { gf = per.reduce((s,x) => s + x.f, 0); ga = per.reduce((s,x) => s + x.a, 0); }
-    else if (m.sport === 'hockey') gf = ga = Math.min(m.hs, m.as);
-    else gf = ga = null;
+  const ff = h ? m.hs : m.as, fa = h ? m.as : m.hs;
+  // основное время: при ОТ/буллитах берём сумму периодов; в хоккее без периодов счёт осн. времени = меньшее из двух чисел
+  let rf = ff, ra = fa;
+  if (m.ot) {
+    if (per) { rf = per.reduce((s,x) => s + x.f, 0); ra = per.reduce((s,x) => s + x.a, 0); }
+    else if (m.sport === 'hockey') rf = ra = Math.min(m.hs, m.as);
+    else rf = ra = null;
   }
-  const first = m.first ? ((m.first === 'home') === h ? 'f' : 'a') : null;
-  return { id:m.id, date:m.date, league:m.league, opp: h ? tName(m.ak) : tName(m.hk), home:h, gf, ga, per, ot:m.ot || '', first };
+  const gf = S.mode === 'reg' ? rf : ff, ga = S.mode === 'reg' ? ra : fa;
+  let first = m.first ? ((m.first === 'home') === h ? 'f' : 'a') : null, firstSrc = first ? 'event' : '';
+  if (!first && C.first && E) { first = E.firstFromPeriods(per, m.ot, ff, fa); if (first) firstSrc = 'periods'; }
+  return { id:m.id, date:m.date, league:m.league, lid:m.lid, opp: h ? tName(m.ak) : tName(m.hk), home:h, gf, ga, ff, fa, rf, ra, per, ot:m.ot || '', first, firstSrc };
 }
 const byDate = (a, b) => (b.date || '').localeCompare(a.date || '') || String(b.id).localeCompare(String(a.id));
 function games(team, venue = 'all', lid = '') {
@@ -485,31 +618,162 @@ function dayLabel(iso) {
   return d.toLocaleDateString('ru-RU', { weekday:'short', day:'numeric', month:'long' });
 }
 
-function renderDay() {
-  const now = Date.now();
-  const list = upcoming.filter(u => { const t = Date.parse(u.time); return t > now - 3 * 36e5 && t < now + 7 * 864e5 && (!S.lg || u.lid === S.lg); })
-    .sort((a, b) => a.time.localeCompare(b.time) || a.order - b.order);
-  let html = '', lastDay = '', lastLg = '';
-  for (const u of list) {
-    const dl = dayLabel(u.time);
-    if (dl !== lastDay) { html += `<div class="lgh" style="background:var(--board);color:var(--board-ink)">${esc(dl)}<span style="color:inherit;opacity:.7">${esc(new Date(u.time).toLocaleDateString('ru-RU', { day:'numeric', month:'long' }))}</span></div>`; lastDay = dl; lastLg = ''; }
-    if (u.league !== lastLg) { html += `<div class="lgh">${esc(u.league)}<span>${esc(SP[u.sport].name)}</span></div>`; lastLg = u.league; }
-    const hk = tk(u.sport, u.home), ak = tk(u.sport, u.away), notes = noteLines(hk, ak), isOpen = open.has(u.id);
-    const lv = live.get(u.lid + '|' + u.home + '|' + u.away), started = lv || Date.parse(u.time) < now;
-    const tcell = lv ? `${esc(lv.hs)}:${esc(lv.as)}<small style="display:block;font-weight:500">${esc(lv.st || 'live')}</small>` : started ? 'идёт' : fmtTime(u.time);
-    html += `<div class="mr"><button data-row="${esc(u.id)}" aria-expanded="${isOpen}"><span class="t num${started ? ' live' : ''}">${tcell}</span>
-      <span class="teams">${esc(u.home)}<i>—</i>${esc(u.away)}</span>${notes.length ? `<span class="cnt" title="Серий от ${S.min}">${notes.length}</span>` : ''}</button>
-      ${notes.length ? `<div class="notes">${notes.slice(0, 3).map(x => `<div><b>${esc(x.who)}</b>: ${x.s.len} подряд — ${esc(x.s.label)}${isHot(x.s) ? ' (рекорд)' : ''}</div>`).join('')}</div>` : ''}
-      ${isOpen ? `<div class="detail">${detailCard(hk, ak)}<div class="row" style="padding:0 14px 12px"><button class="btn" data-vs="${esc(hk)}|${esc(ak)}">Полное сравнение</button></div></div>` : ''}</div>`;
+/* ---------- Список матчей дня ---------- */
+const LIST_LINES = { hockey:[3.5,4.5,5.5], football:[1.5,2.5,3.5], basketball:[209.5,219.5,229.5] };
+const LADDER = { hockey:[1.5,2.5,3.5,4.5,5.5,6.5,7.5], football:[0.5,1.5,2.5,3.5,4.5], basketball:[199.5,209.5,219.5,229.5,239.5] };
+const MIN_FIT = 20;
+const pc = x => x == null || isNaN(x) ? '—' : Math.round(x * 100) + '%';
+const f2 = x => x == null || isNaN(x) ? '—' : f1(x);
+const dFull = iso => iso ? iso.slice(8,10) + '.' + iso.slice(5,7) + '.' + iso.slice(2,4) : '';
+const lineOf = sp => { const L = +S.lines[sp]; return E && E.validLine(L) ? L : SP[sp].tot[2]; };
+const localISO = t => dayKey(new Date(t));
+function targetDay() {
+  if (S.day === 'week') return null;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(S.day))) return S.day;
+  return localISO(Date.now() + (+S.day || 0) * 864e5);
+}
+const lgOrder = lid => { const d = leagueDocs.find(x => x.id === lid); return d ? d.order ?? 50 : 90; };
+/** Игры команды до даты матча; tournament: lid или '' (все турниры). */
+function formOf(team, venue, before, lid) { const gs = games(team, venue, lid || ''); return before ? gs.filter(g => g.date < before) : gs; }
+function regOf(m) {
+  if (!m.ot) return [m.hs, m.as];
+  const C = SP[m.sport];
+  if (Array.isArray(m.p) && m.p.length >= C.seg) { const p = m.p.slice(0, C.seg); return [p.reduce((s, x) => s + +x.h, 0), p.reduce((s, x) => s + +x.a, 0)]; }
+  return m.sport === 'hockey' ? [Math.min(m.hs, m.as), Math.min(m.hs, m.as)] : [null, null];
+}
+const leagueRaw = lid => matches.filter(m => m.lid === lid).map(m => { const r = regOf(m); return { date:m.date, home:m.hk, away:m.ak, hs:m.hs, as:m.as, ot:m.ot, rh:r[0], ra:r[1], fh:m.hs, fa:m.as }; });
+function fitFor(lid, before, sp) {
+  if (!E || sp === 'basketball') return null;
+  const key = lid + '|' + before; if (fitMemo.has(key)) return fitMemo.get(key);
+  const raw = leagueRaw(lid), fit = E.fitStrengths(raw, { before });
+  fit.rho = sp === 'football' && fit.n >= MIN_FIT ? E.fitRho(raw, fit, before) : 0;
+  fitMemo.set(key, fit); return fit;
+}
+function predFor(lid, hk, ak, before, sp) { const fit = fitFor(lid, before, sp); if (!fit || fit.n < MIN_FIT) return null; return E.predict(fit, hk, ak, sp, { rho: fit.rho }); }
+const distKey = sp => sp === 'hockey' && S.mode !== 'reg' ? 'fin' : 'reg';
+
+/** Строки дня: расписание (не начавшиеся и идущие) + завершённые из результатов. */
+function dayRows() {
+  const now = Date.now(), day = targetDay(), rows = [], seen = new Set();
+  const resKey = new Set(matches.map(m => m.lid + '|' + m.home + '|' + m.away + '|' + m.date));
+  for (const u of upcoming) {
+    const t = Date.parse(u.time); if (isNaN(t)) continue;
+    if (day ? localISO(t) !== day : !(t > now - 3 * 36e5 && t < now + 7 * 864e5)) continue;
+    const ud = u.time.slice(0, 10), prev = new Date(Date.parse(ud) - 864e5).toISOString().slice(0, 10);
+    if (resKey.has(u.lid + '|' + u.home + '|' + u.away + '|' + ud) || resKey.has(u.lid + '|' + u.home + '|' + u.away + '|' + prev)) continue;
+    const lv = live.get(u.lid + '|' + u.home + '|' + u.away);
+    seen.add(u.lid + '|' + u.home + '|' + u.away);
+    rows.push({ id:u.id, sport:u.sport, league:u.league, lid:u.lid, order:u.order, time:u.time, date:ud, home:u.home, away:u.away, hk:tk(u.sport, u.home), ak:tk(u.sport, u.away),
+      status: lv ? 'live' : t < now ? 'started' : 'sched', lv });
   }
-  $('#dayList').innerHTML = html || `<div class="empty">${leagueDocs.length ? 'В ближайшие дни матчей нет' + (S.lg ? ' в этой лиге' : '') + '.' : 'Автоматические лиги ещё не загружены. Расписание и результаты появятся после первого обновления.'}</div>`;
+  if (day) for (const m of matches) {
+    if (m.date !== day || seen.has(m.lid + '|' + m.home + '|' + m.away)) continue;
+    rows.push({ id:m.id, sport:m.sport, league:m.league, lid:m.lid, order:lgOrder(m.lid), time:null, date:m.date, home:m.home, away:m.away, hk:m.hk, ak:m.ak, status:'done', m });
+  }
+  return rows.filter(r => !S.lg || r.lid === S.lg);
+}
+/** Показатели строки: форма обеих команд до матча и модель. */
+function rowStats(r) {
+  if (r._s) return r._s;
+  const lid = S.mlg === 'one' ? r.lid : '';
+  const ga = E.windowOf(formOf(r.hk, S.split ? 'home' : 'all', r.date, lid), S.win), gb = E.windowOf(formOf(r.ak, S.split ? 'away' : 'all', r.date, lid), S.win);
+  const sa = E.summary(ga), sb = E.summary(gb), L = lineOf(r.sport);
+  const lines = LIST_LINES[r.sport].map(x => [x, E.lineStats(ga, x), E.lineStats(gb, x)]);
+  const la = E.lineStats(ga, L), lb = E.lineStats(gb, L);
+  const pred = predFor(r.lid, r.hk, r.ak, r.date, r.sport), pOver = pred ? E.overProb(pred[distKey(r.sport)], L).over : null;
+  return (r._s = { sa, sb, lines, L, la, lb, pOver });
+}
+function colsHtml(r) {
+  const s = rowStats(r), c = S.cols, out = [];
+  const pair = (a, b) => `${a}<span class="muted">/</span>${b}`;
+  if (c.avg) out.push(`<span class="c${s.sa.n && s.sb.n ? '' : ' dim'}" title="Средний тотал матчей команд, ${s.sa.n} и ${s.sb.n} игр"><small>Ср. тотал</small>${pair(f2(s.sa.tot), f2(s.sb.tot))}</span>`);
+  if (c.gfga) out.push(`<span class="c" title="Забивает/пропускает за матч"><small>Заб./проп.</small>${f2(s.sa.gf)}:${f2(s.sa.ga)} · ${f2(s.sb.gf)}:${f2(s.sb.ga)}</span>`);
+  s.lines.forEach(([L, a, b], i) => { if (c['l' + i]) out.push(`<span class="c" title="Доля матчей с ТБ ${fmtL(L)}: ${a.over}/${a.n} и ${b.over}/${b.n}"><small>ТБ ${fmtL(L)}</small>${pair(pc(a.pctOver), pc(b.pctOver))}</span>`); });
+  if (c.prob) out.push(`<span class="c${s.pOver == null ? ' dim' : ''}" title="${s.pOver == null ? 'Модель недоступна: мало матчей лиги или баскетбол' : 'Вероятность ТБ ' + fmtL(s.L) + ' по модели Пуассона'}"><small>Модель ТБ ${fmtL(s.L)}</small>${pc(s.pOver)}</span>`);
+  return out.join('');
+}
+function filtersPass(r) {
+  if (S.q) { const q = S.q.toLowerCase(); if (!r.home.toLowerCase().includes(q) && !r.away.toLowerCase().includes(q)) return false; }
+  const s = rowStats(r);
+  if (S.fTb !== '' && +S.fTb > 0) { const t = +S.fTb / 100; if (!(s.la.pctOver >= t && s.lb.pctOver >= t)) return false; }
+  if (S.fAvg !== '' && +S.fAvg > 0) { if (!(s.sa.tot >= +S.fAvg && s.sb.tot >= +S.fAvg)) return false; }
+  if (S.fProb !== '' && +S.fProb > 0) { if (!(s.pOver >= +S.fProb / 100)) return false; }
+  return true;
+}
+const rowTime = r => r.time || (r.date + 'T23:59Z');
+function sortRows(rows) {
+  const k = S.sort, v = r => { const s = rowStats(r); return k === 'avg' ? (s.sa.tot ?? -1) + (s.sb.tot ?? -1) : k === 'tb' ? ((s.la.pctOver ?? -1) + (s.lb.pctOver ?? -1)) / 2 : s.pOver ?? -1; };
+  if (k === 'time') return rows.sort((a, b) => rowTime(a).localeCompare(rowTime(b)) || a.order - b.order);
+  if (k === 'league') return rows.sort((a, b) => a.order - b.order || a.league.localeCompare(b.league, 'ru') || rowTime(a).localeCompare(rowTime(b)));
+  return rows.sort((a, b) => v(b) - v(a));
+}
+const rowById = new Map();
+function rowHtml(r, showLg) {
+  const now = Date.now(), notes = noteLines(r.hk, r.ak), isOpen = open.has(r.id), pinned = S.picks.some(p => p.id === r.id);
+  let tcell;
+  if (r.status === 'done') tcell = `<span class="sc">${r.m.hs}:${r.m.as}</span><small style="display:block;font-weight:500">${r.m.ot ? (r.m.ot === 'SO' ? 'Б' : 'ОТ') : 'зав.'}</small>`;
+  else if (r.status === 'live') tcell = `${esc(r.lv.hs)}:${esc(r.lv.as)}<small style="display:block;font-weight:500">${esc(r.lv.st || 'live')}</small>`;
+  else tcell = r.status === 'started' ? 'идёт' : fmtTime(r.time) + (S.day === 'week' ? `<small style="display:block;font-weight:500">${esc(dShort(localISO(Date.parse(r.time))))}</small>` : '');
+  return `<div class="mr"><div class="mrow"><button class="main" data-row="${esc(r.id)}" aria-expanded="${isOpen}"><span class="t num${r.status === 'live' || r.status === 'started' ? ' live' : ''}">${tcell}</span>
+      <span class="teams">${showLg ? `<span class="lgb">${esc(r.league)}</span>` : ''}${esc(r.home)}<i>—</i>${esc(r.away)}</span>
+      <span class="mx">${E ? colsHtml(r) : ''}</span>${notes.length ? `<span class="cnt" title="Серий от ${S.min}">${notes.length}</span>` : '<span></span>'}</button>
+      <span class="side"><button class="pin" data-pin="${esc(r.id)}" aria-pressed="${pinned}" title="${pinned ? 'Убрать из выбранных' : 'В список для сравнения'}" aria-label="В список для сравнения">★</button><button class="go" data-open="${esc(r.id)}">Анализ</button></span></div>
+    ${notes.length ? `<div class="notes">${notes.slice(0, 3).map(x => `<div><b>${esc(x.who)}</b>: ${x.s.len} подряд — ${esc(x.s.label)}${isHot(x.s) ? ' (рекорд)' : ''}</div>`).join('')}</div>` : ''}
+    ${isOpen ? `<div class="detail">${detailCard(r.hk, r.ak)}<div class="row" style="padding:0 14px 12px"><button class="btn primary" data-open="${esc(r.id)}">Подробный анализ</button><button class="btn" data-vs="${esc(r.hk)}|${esc(r.ak)}">Полное сравнение</button></div></div>` : ''}</div>`;
+}
+function renderCols() {
+  const sp = curLeague()?.sport || 'hockey', L = LIST_LINES[sp];
+  const items = [['avg', 'Средний тотал'], ['gfga', 'Забивает / пропускает'], ...L.map((x, i) => ['l' + i, `ТБ ${fmtL(x)} (хоккей ${fmtL(LIST_LINES.hockey[i])} · футбол ${fmtL(LIST_LINES.football[i])})`]), ['prob', 'Вероятность ТБ по модели']];
+  $('#colBox').innerHTML = items.map(([k, t]) => `<label class="small"><input type="checkbox" data-col="${k}"${S.cols[k] ? ' checked' : ''}> ${esc(t)}</label>`).join('');
+  const lsp = curLeague()?.sport;
+  $('#listLine').innerHTML = lsp ? lineInput(lsp, 'listL') : ['hockey', 'football'].map(s => `<span class="small muted">${SP[s].name}</span>${lineInput(s, 'listL')}`).join(' ');
+}
+const lineInput = (sp, cls) => `<input type="number" class="${cls}" data-sp="${sp}" step="0.25" min="0" value="${lineOf(sp)}" aria-label="Линия тотала, ${SP[sp].name}">`;
+function renderPicks() {
+  const box = $('#picks');
+  const list = S.picks.map(p => rowById.get(p.id) || p.row).filter(Boolean);
+  if (!list.length || !E) { box.hidden = true; return; }
+  box.hidden = false;
+  let prod = 1, ok = true;
+  const rows = list.map(r => { const s = rowStats(r); if (s.pOver == null) ok = false; else prod *= s.pOver;
+    return `<tr><td>${esc(r.home)} — ${esc(r.away)}<small class="muted" style="display:block">${esc(r.league)} · ${dFull(r.date)}</small></td><td class="r num">ТБ ${fmtL(s.L)}</td><td class="r num">${pc(s.la.pctOver)} / ${pc(s.lb.pctOver)}</td><td class="r num">${pc(s.pOver)}</td>
+      <td class="r"><button class="go" data-open="${esc(r.id)}">Анализ</button> <button class="del" data-unpin="${esc(r.id)}" aria-label="Убрать">×</button></td></tr>`; }).join('');
+  box.innerHTML = `<header><h2>Выбранные матчи <span class="num muted">· ${list.length}</span></h2><button class="btn ghost" id="picksClear">Очистить</button></header>
+    <div class="tw"><table><thead><tr><th>Матч</th><th class="r">Линия</th><th class="r">История (A / B)</th><th class="r">Модель</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+    ${list.length > 1 ? `<div class="body note">Произведение модельных вероятностей: <b class="num">${ok ? pc(prod) : '—'}</b>. Это верно только если исходы независимы; матчи одной лиги и одного дня могут быть связаны (общий судейский стиль, погода, мотивация), поэтому оценка приблизительная.</div>` : ''}`;
+}
+
+function renderDay() {
+  rowById.clear();
+  document.querySelectorAll('#daySeg button').forEach(b => b.setAttribute('aria-pressed', String(String(S.day) === b.dataset.d)));
+  $('#dayPick').value = /^\d{4}/.test(String(S.day)) ? S.day : (targetDay() || '');
+  $('#dayQ').value = S.q; $('#sortSel').value = S.sort; $('#winSel').value = String(S.win);
+  $('#fTb').value = S.fTb; $('#fAvg').value = S.fAvg; $('#fProb').value = S.fProb;
+  renderCols();
+  const allRows = dayRows(); allRows.forEach(r => rowById.set(r.id, r));
+  const list = E ? sortRows(allRows.filter(filtersPass)) : allRows.sort((a, b) => rowTime(a).localeCompare(rowTime(b)));
+  const filtered = S.q || +S.fTb > 0 || +S.fAvg > 0 || +S.fProb > 0;
+  $('#dayCount').textContent = allRows.length ? (filtered ? `Подходит ${list.length} из ${allRows.length}` : `Матчей: ${allRows.length}`) : '';
+  let html = '', lastDay = '', lastLg = '';
+  const grouped = S.sort === 'time' || S.sort === 'league';
+  for (const r of list) {
+    if (grouped) {
+      const dl = r.time ? dayLabel(r.time) : dayLabel(r.date + 'T12:00');
+      if (S.day === 'week' && S.sort === 'time' && dl !== lastDay) { html += `<div class="lgh" style="background:var(--board);color:var(--board-ink)">${esc(dl)}<span style="color:inherit;opacity:.7">${esc(new Date(r.time || r.date).toLocaleDateString('ru-RU', { day:'numeric', month:'long' }))}</span></div>`; lastDay = dl; lastLg = ''; }
+      if (r.league !== lastLg) { html += `<div class="lgh">${esc(r.league)}<span>${esc(SP[r.sport].name)}${E ? ' · форма: ' + (S.win === 'all' ? 'сезон' : 'посл. ' + S.win) + (S.mlg === 'one' ? ', этот турнир' : ', все турниры') : ''}</span></div>`; lastLg = r.league; }
+    }
+    html += rowHtml(r, !grouped);
+  }
+  const td = targetDay(), when = S.day === 'week' ? 'В ближайшие 7 дней' : td ? 'На ' + new Date(td + 'T12:00').toLocaleDateString('ru-RU', { day:'numeric', month:'long' }) : '';
+  $('#dayList').innerHTML = html || `<div class="empty">${!leagueDocs.length ? 'Автоматические лиги ещё не загружены. Расписание и результаты появятся после первого обновления.' : filtered && allRows.length ? 'Под фильтры не подходит ни один матч. Ослабьте условия или нажмите «Сбросить фильтры».' : when + ' матчей нет' + (S.lg ? ' в этой лиге' : '') + '.'}${staleNote()}</div>`;
+  renderPicks();
 
   // свои матчи
   $('#fxList').innerHTML = fixtures.length ? fixtures.slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).map(f => {
     const hk = resolveTeam(f.home) || tk('hockey', f.home), ak = resolveTeam(f.away, tSport(hk)) || tk(tSport(hk), f.away);
     return `<article style="border-top:1px solid var(--line)">
       <div class="row" style="justify-content:space-between;padding:12px 14px 0"><span class="fx-title">${esc(f.home)}<span class="vs">—</span>${esc(f.away)}</span>
-        <span class="row"><button class="btn" data-vs="${esc(hk)}|${esc(ak)}">Подробно</button><button class="del" data-delfx="${esc(f.id)}" aria-label="Убрать матч" title="Убрать матч">×</button></span></div>
+        <span class="row"><button class="go" data-openfx="${esc(hk)}|${esc(ak)}">Анализ</button><button class="btn" data-vs="${esc(hk)}|${esc(ak)}">Подробно</button><button class="del" data-delfx="${esc(f.id)}" aria-label="Убрать матч" title="Убрать матч">×</button></span></div>
       ${detailCard(hk, ak)}</article>`;
   }).join('') : `<div class="empty">Для лиг без автозагрузки (например, КХЛ) добавьте пару команд: «Амур - Лада».</div>`;
 
@@ -518,6 +782,363 @@ function renderDay() {
   all.sort((a, b) => b.s.len - a.s.len || isHot(b.s) - isHot(a.s));
   $('#hotNote').textContent = matches.length ? `${teamKeys(S.lg).length} команд · ${matches.filter(m => !S.lg || m.lid === S.lg).length} матчей` : '';
   $('#hotList').innerHTML = all.length ? `<ul class="sl" style="padding:10px 8px">${all.slice(0, 15).map(x => stItem(x.s, tName(x.t))).join('')}</ul>` : `<div class="empty">Пока нечего показать.</div>`;
+}
+
+/* ---------- Страница матча ---------- */
+const MT = [['ov','Обзор'],['tot','Тоталы'],['first','Первые голы'],['str','Серии'],['draw','Ничьи'],['tab','Таблица'],['h2h','Очные'],['model','Мат. анализ'],['ai','ИИ-разбор']];
+const unitW = sp => sp === 'hockey' ? 'шайбы' : sp === 'football' ? 'голы' : 'очки';
+const winLabel = w => w === 'all' ? 'весь сезон' : 'последние ' + w;
+const modeLabel = sp => sp === 'hockey' ? (S.mode === 'reg' ? 'основное время (60 минут)' : 'итоговый счёт с овертаймом и буллитами') : 'итоговый счёт';
+const kindLabel = k => k === 'for' ? 'индивидуальный тотал команды' : k === 'against' ? 'пропущенные (ИТ соперника)' : 'тотал матча';
+const lvl = n => { const l = E.sampleLevel(n); return `<span class="lvl ${l}" title="Размер выборки">${l === 'ok' ? n + ' игр' : l === 'small' ? n + ' игр · мало' : l === 'tiny' ? n + ' игр · очень мало' : 'нет игр'}</span>`; };
+function staleNote() {
+  const ts = leagueDocs.map(d => Date.parse(d.updated || '')).filter(x => !isNaN(x));
+  if (!ts.length) return '';
+  const last = Math.max(...ts), h = (Date.now() - last) / 36e5;
+  return h > 6 ? `<div class="warnbox" style="margin-top:10px">Данные лиг последний раз обновлялись ${esc(new Date(last).toLocaleString('ru-RU', { day:'numeric', month:'long', hour:'2-digit', minute:'2-digit' }))}. Свежие результаты и расписание могут отсутствовать.</div>` : '';
+}
+/** Игры команды до матча с учётом переключателей: side — 'home' для хозяев, 'away' для гостей. */
+function mGames(team, side, venue) {
+  const m = S.m, v = venue || (S.mv === 'split' ? side : 'all');
+  return formOf(team, v, m.date, S.mlg === 'one' ? m.lid : '');
+}
+const gTip = (g, v, kind) => `${dFull(g.date)} · ${g.home ? 'дома' : 'в гостях'} · ${g.opp} · ${g.gf}:${g.ga}${g.ot ? ' ' + (g.ot === 'SO' ? 'Б' : 'ОТ') : ''}${v != null ? ' · ' + (kind === 'match' ? 'тотал ' : kind === 'for' ? 'забито ' : 'пропущено ') + v : ''}`;
+function ouHtml(st, n = 10) {
+  if (!st.items.length) return '<span class="muted small">нет матчей</span>';
+  return `<div class="dotsbox"><div class="ou">${st.items.slice(0, n).map(it => {
+    const c = it.r === 'over' || it.r === 'half-over' ? 'o' : it.r === 'push' ? 'p' : 'u', t = c === 'o' ? 'Б' : c === 'u' ? 'М' : 'В', tip = gTip(it.g, it.v, st.kind);
+    return `<button class="${c}" data-tip="${esc(tip)}" title="${esc(tip)}" aria-label="${esc(tip)}: ${c === 'o' ? 'больше' : c === 'u' ? 'меньше' : 'возврат'}">${t}</button>`; }).join('')}</div>
+    <div class="tipline" aria-live="polite">Б — больше ${fmtL(st.line)}, М — меньше, В — возврат. Слева новые. Нажмите на квадрат, чтобы увидеть матч.</div></div>`;
+}
+const frac = (k, n) => n ? `${pc(k / n)}<small>${k} из ${n}</small>` : '—';
+const pctCell = (p, k, n, extra = '') => n ? `<span class="${p >= 0.6 ? 'good' : p <= 0.4 ? 'bad' : ''}">${pc(p)}</span><small>${k} из ${n}${extra}</small>` : '—';
+const fmBadge = (g, sp) => { const o = E.outcome(g, sp); if (!o) return ''; const cls = o === 'В' ? 'w' : o === 'П' ? 'l' : o === 'Н' ? 'd' : 'o';
+  return `<span class="fm ${cls}" title="${esc(gTip(g))}">${o}</span>`; };
+
+function openMatch(r) {
+  S.m = { id:r.id, sport:r.sport, league:r.league, lid:r.lid, date:r.date, time:r.time, home:r.home, away:r.away, hk:r.hk, ak:r.ak, status:r.status,
+    score: r.m ? { hs:r.m.hs, as:r.m.as, ot:r.m.ot, p:r.m.p } : null, lv: r.lv || null };
+  S.tab = 'match'; savePrefs(); render(); window.scrollTo(0, 0);
+}
+function openFixture(hk, ak) {
+  const last = matches.filter(m => m.hk === hk || m.ak === hk).sort(byDate)[0];
+  const date = new Date(Date.now() + 864e5).toISOString().slice(0, 10);
+  openMatch({ id:'fx:' + hk + ':' + ak, sport:tSport(hk), league: last ? last.league : '', lid: last ? last.lid : '', date, time:null, home:tName(hk), away:tName(ak), hk, ak, status:'sched' });
+}
+
+function matchHead(m) {
+  const sp = m.sport, st = E.standings(leagueRaw(m.lid).filter(x => x.date < m.date), sp);
+  const box = (k, right) => {
+    const r = st.find(x => x.team === k), last5 = formOf(k, 'all', m.date, m.lid).slice(0, 5);
+    const rec = r ? (sp === 'hockey' ? `<span>В <b>${r.w}</b></span><span>ВО/ВБ <b>${r.otw}</b></span><span>ПО/ПБ <b>${r.otl}</b></span><span>П <b>${r.l}</b></span>` : `<span>В <b>${r.w}</b></span><span>Н <b>${r.d}</b></span><span>П <b>${r.l}</b></span>`) : '';
+    return `<div class="tm${right ? ' r' : ''}"><div class="nm">${esc(tName(k))}</div>
+      ${r ? `<div class="tline"><span>Место <b>${r.pos}</b>/${st.length}</span><span>И <b>${r.gp}</b></span>${rec}<span>${unitW(sp)} <b>${r.gf}:${r.ga}</b></span><span>Очки <b>${r.pts}</b></span></div>` : `<div class="tline">Нет сыгранных матчей в этом турнире</div>`}
+      <div class="fms" aria-label="Последние 5 матчей, слева новые">${last5.map(g => fmBadge(g, sp)).join('')}</div></div>`;
+  };
+  let mid;
+  if (m.score) mid = `<div class="score">${m.score.hs}:${m.score.as}</div><div class="when">${m.score.ot ? (m.score.ot === 'SO' ? 'по буллитам' : 'в овертайме') : 'завершён'}${m.score.p ? ' · ' + m.score.p.map(x => x.h + ':' + x.a).join(', ') : ''}</div>`;
+  else if (m.lv) mid = `<div class="score" style="color:var(--red)">${esc(m.lv.hs)}:${esc(m.lv.as)}</div><div class="when">${esc(m.lv.st || 'идёт')}</div>`;
+  else mid = `<div class="score">${m.time ? fmtTime(m.time) : '—'}</div>`;
+  return `<div class="mh">${box(m.hk, false)}<div class="mid"><span class="small muted">${esc(m.league || 'Турнир не определён')} · ${esc(SP[sp].name)}</span>${mid}
+      <span class="when">${m.time ? esc(new Date(m.time).toLocaleDateString('ru-RU', { weekday:'short', day:'numeric', month:'long' })) : m.id.startsWith('fx:') ? 'свой матч' : dFull(m.date)}</span>
+      <button class="btn ghost small" data-back>← К списку</button></div>${box(m.ak, true)}</div>
+    <div class="subtabs" role="tablist" aria-label="Разделы анализа">${MT.map(([k, t]) => `<button role="tab" data-mt="${k}" aria-selected="${S.mt === k}">${t}</button>`).join('')}</div>`;
+}
+function matchOpts(m) {
+  const seg = (id, cur, opts) => `<div class="seg" data-seg="${id}">${opts.map(([v, t]) => `<button data-v="${v}" aria-pressed="${String(cur) === String(v)}">${t}</button>`).join('')}</div>`;
+  const needLine = ['tot', 'tab', 'h2h', 'model', 'ov'].includes(S.mt);
+  return `<div class="mopts">
+    <div class="ctl"><span>Выборка</span>${seg('mw', S.mw, [['all','Сезон'],[20,'20'],[10,'10'],[5,'5']])}</div>
+    <div class="ctl"><span>Матчи</span>${seg('mv', S.mv, [['all','Все'],['split','Хозяева дома · гости в гостях']])}</div>
+    <div class="ctl"><span>Турнир</span>${seg('mlg', S.mlg, [['one','Только этот'],['all','Все турниры']])}</div>
+    ${needLine ? `<div class="ctl"><span>Линия</span><span class="lines">${LADDER[m.sport].map(L => `<button class="chip" data-line="${L}" aria-pressed="${L === lineOf(m.sport)}">${fmtL(L)}</button>`).join('')}${lineInput(m.sport, 'mLine')}</span></div>` : ''}
+    ${S.mt === 'tot' ? `<div class="ctl"><span>Тотал</span>${seg('lk', S.lk, [['match','Матча'],['for','ИТ команды'],['against','Пропущенные']])}</div>` : ''}
+  </div><div class="body note" style="padding-bottom:0">Счёт: <b>${esc(modeLabel(m.sport))}</b> (переключатель «Счёт» вверху) · выборка: ${winLabel(S.mw)} · ${S.mv === 'split' ? 'хозяева — домашние матчи, гости — выездные' : 'все матчи'} · ${S.mlg === 'one' ? 'только матчи этого турнира' : 'матчи всех турниров в базе'} · только матчи до ${dFull(m.date)}</div>`;
+}
+
+function conclusions(m, ga, gb, sa, sb, pred) {
+  const sp = m.sport, L = lineOf(sp), A = tName(m.hk), B = tName(m.ak), la = E.lineStats(ga, L), lb = E.lineStats(gb, L);
+  const hi = [], lo = [], mix = [], unc = [];
+  const hist = (n, st) => { if (!st.n) return; const d = st.n - st.push;
+    if (st.pctOver >= 0.6) hi.push(`${n}: ТБ ${fmtL(L)} прошёл в ${st.over} из ${d} матчей (${pc(st.pctOver)}).`);
+    else if (st.pctOver <= 0.4) lo.push(`${n}: ТМ ${fmtL(L)} — в ${st.under} из ${d} матчей (${pc(st.pctUnder)}).`); };
+  hist(A, la); hist(B, lb);
+  if (sa.n && sb.n) {
+    const cross = (sa.gf + sb.ga) / 2 + (sb.gf + sa.ga) / 2;
+    if (cross > L + 0.5) hi.push(`Средние «забивает × пропускает соперник» дают ≈ ${f1(cross)} ${unitW(sp)} за матч.`);
+    else if (cross < L - 0.5) lo.push(`Средние «забивает × пропускает соперник» дают ≈ ${f1(cross)} ${unitW(sp)} за матч.`);
+  }
+  let pOver = null;
+  if (pred) { pOver = E.overProb(pred[distKey(sp)], L).over;
+    if (pOver >= 0.55) hi.push(`Модель: P(ТБ ${fmtL(L)}) = ${pc(pOver)}, ожидаемый тотал ${f1(E.expect(pred[distKey(sp)]))}.`);
+    else if (pOver <= 0.45) lo.push(`Модель: P(ТМ ${fmtL(L)}) = ${pc(1 - pOver)}, ожидаемый тотал ${f1(E.expect(pred[distKey(sp)]))}.`); }
+  const fit = fitFor(m.lid, m.date, sp);
+  if (fit && fit.n >= MIN_FIT && sa.n && sb.n) {
+    const avg = (fit.H + fit.A) / 2;
+    if (sa.gf > avg * 1.15 && sb.ga < avg * 0.85) mix.push(`Результативная атака ${A} (${f1(sa.gf)} за матч) против надёжной обороны ${B} (пропускает ${f1(sb.ga)}; в среднем по лиге ≈ ${f1(avg)}).`);
+    if (sb.gf > avg * 1.15 && sa.ga < avg * 0.85) mix.push(`Результативная атака ${B} (${f1(sb.gf)} за матч) против надёжной обороны ${A} (пропускает ${f1(sa.ga)}).`);
+  }
+  if (hi.length && lo.length) mix.push('Есть показатели и за высокий, и за низкий тотал — однозначной картины нет.');
+  if (pOver != null && la.n && lb.n) { const h = (la.pctOver + lb.pctOver) / 2; if (Math.abs(h - pOver) > 0.15) mix.push(`Исторические частоты (в среднем ${pc(h)}) и модель (${pc(pOver)}) расходятся: модель учитывает силу соперников и домашний фактор, частоты — нет.`); }
+  unc.push(`Выборка: ${A} — ${sa.n} игр, ${B} — ${sb.n} игр${Math.min(sa.n, sb.n) < 10 ? ' — этого мало для устойчивых выводов' : ''}.`);
+  const fa = E.firstGoal(ga), fb = E.firstGoal(gb);
+  if (!fa.n && !fb.n && SP[sp].first) unc.push('Нет данных о первом голе — источник не передаёт события матча.');
+  if (!pred) unc.push(sp === 'basketball' ? 'Вероятностная модель для баскетбола не построена.' : `Для модели мало матчей лиги в базе (нужно от ${MIN_FIT}).`);
+  unc.push('Серии — описательная статистика: длинная серия сама по себе не делает противоположный исход вероятнее.');
+  const li = a => a.length ? `<ul>${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '<p class="small muted" style="margin:0">Нет выраженных факторов.</p>';
+  return `<div class="facts"><div><h4 style="color:var(--good)">За высокий тотал (ТБ ${fmtL(L)})</h4>${li(hi)}</div><div><h4 style="color:var(--red)">За низкий тотал (ТМ ${fmtL(L)})</h4>${li(lo)}</div>
+    <div><h4 style="color:var(--warn)">Противоречия</h4>${li(mix)}</div><div><h4 class="muted">Неопределённость</h4>${li(unc)}</div></div>`;
+}
+
+function tabOverview(m) {
+  const sp = m.sport, A = tName(m.hk), B = tName(m.ak), fullA = mGames(m.hk, 'home'), fullB = mGames(m.ak, 'away');
+  const ga = E.windowOf(fullA, S.mw), gb = E.windowOf(fullB, S.mw), sa = E.summary(ga), sb = E.summary(gb);
+  const fa = E.firstGoal(ga), fb = E.firstGoal(gb), da = E.draws(ga, sp), db = E.draws(gb, sp);
+  const wins = gs => { const g = gs.filter(x => x.ff != null); return [g.filter(x => x.ff > x.fa).length, g.length]; };
+  const wa = wins(ga), wb = wins(gb), pred = predFor(m.lid, m.hk, m.ak, m.date, sp);
+  const r5a = E.summary(fullA.slice(0, 5)), r5b = E.summary(fullB.slice(0, 5)), sea = E.summary(fullA), seb = E.summary(fullB);
+  const delta = (s, r) => s.n && r.n ? `${f1(r.tot)} <small>сезон ${f1(s.tot)} · ${r.tot >= s.tot ? '+' : ''}${f1(r.tot - s.tot)}</small>` : '—';
+  const rows = [
+    ['Матчей в выборке', `${sa.n}<small>${lvl(sa.n)}</small>`, `${sb.n}<small>${lvl(sb.n)}</small>`],
+    [`Забивает за матч`, f2(sa.gf), f2(sb.gf)],
+    [`Пропускает за матч`, f2(sa.ga), f2(sb.ga)],
+    ['Средний тотал', f2(sa.tot), f2(sb.tot)],
+    ['Медиана тотала', f2(sa.med), f2(sb.med)],
+    ['Мин. – макс. тотал', sa.n ? sa.min + ' – ' + sa.max : '—', sb.n ? sb.min + ' – ' + sb.max : '—'],
+    ['Тотал: посл. 5 против сезона', delta(sea, r5a), delta(seb, r5b)],
+    ...LIST_LINES[sp].map(L => { const x = E.lineStats(ga, L), y = E.lineStats(gb, L); return [`ТБ ${fmtL(L)}`, pctCell(x.pctOver, x.over, x.n - x.push), pctCell(y.pctOver, y.over, y.n - y.push)]; }),
+    ...(SP[sp].first ? [['Забивает первой', fa.n ? frac(fa.f, fa.n) : '<small>нет данных</small>', fb.n ? frac(fb.f, fb.n) : '<small>нет данных</small>']] : []),
+    ...(sp !== 'basketball' ? [[sp === 'hockey' ? 'Ничьи в основное время' : 'Ничьи', frac(da.d, da.n), frac(db.d, db.n)]] : []),
+    ['Победы' + (sp === 'hockey' ? ' (с ОТ и Б)' : ''), frac(...wa), frac(...wb)],
+  ];
+  return `<div class="body"><div class="tw"><table class="cmp"><thead><tr><th>Показатель · ${esc(winLabel(S.mw))}</th><th>${esc(A)}${S.mv === 'split' ? ' (дома)' : ''}</th><th>${esc(B)}${S.mv === 'split' ? ' (в гостях)' : ''}</th></tr></thead>
+    <tbody>${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table></div>
+    <p class="note">Среднее забитых = всего забито / матчей; средний тотал = все ${unitW(sp)} обеих команд / матчей. Частоты — по фактическим результатам, не по линиям букмекеров.</p></div>
+    <div class="body" style="border-top:1px solid var(--line)"><h2 style="margin-bottom:10px">Аналитический вывод по линии ${fmtL(lineOf(sp))}</h2>${conclusions(m, ga, gb, sa, sb, pred)}</div>`;
+}
+
+function tabTotals(m) {
+  const sp = m.sport, L = lineOf(sp), k = S.lk, A = tName(m.hk), B = tName(m.ak), lid = S.mlg === 'one' ? m.lid : '';
+  const fullA = mGames(m.hk, 'home'), fullB = mGames(m.ak, 'away');
+  const cellO = st => pctCell(st.pctOver, st.over + (st.halfOver ? 0 : 0), st.n - st.push, st.halfOver ? `, ½: ${st.halfOver}` : st.push ? `, возвр. ${st.push}` : '');
+  const cellU = st => pctCell(st.pctUnder, st.under, st.n - st.push, st.halfUnder ? `, ½: ${st.halfUnder}` : '');
+  const wins = [['Весь сезон', 'all'], ['Последние 20', 20], ['Последние 10', 10], ['Последние 5', 5]];
+  const rowsW = wins.map(([t, w]) => { const a = E.lineStats(E.windowOf(fullA, w), L, k), b = E.lineStats(E.windowOf(fullB, w), L, k); return `<tr><td>${t}</td><td>${cellO(a)}</td><td>${cellU(a)}</td><td>${cellO(b)}</td><td>${cellU(b)}</td></tr>`; }).join('');
+  const venueRows = [['Дома', 'home'], ['В гостях', 'away']].map(([t, v]) => { const a = E.lineStats(E.windowOf(formOf(m.hk, v, m.date, lid), S.mw), L, k), b = E.lineStats(E.windowOf(formOf(m.ak, v, m.date, lid), S.mw), L, k);
+    return `<tr><td>${t} <small class="muted">(${winLabel(S.mw)})</small></td><td>${cellO(a)}</td><td>${cellU(a)}</td><td>${cellO(b)}</td><td>${cellU(b)}</td></tr>`; }).join('');
+  const card = (name, gs) => { const st = E.lineStats(E.windowOf(gs, S.mw), L, k);
+    const cur = st.cur ? `${st.cur === 'over' ? 'ТБ' : 'ТМ'} ${fmtL(L)} — ${st.curLen} подряд` : '—';
+    return `<div class="card"><h3>${esc(name)} <small>${esc(kindLabel(k))} · ${winLabel(S.mw)} ${lvl(st.n)}</small></h3>
+      <dl class="kv"><dt>Текущая серия</dt><dd>${cur}</dd><dt>Макс. серия ТБ</dt><dd>${st.maxOver}</dd><dt>Макс. серия ТМ</dt><dd>${st.maxUnder}</dd>
+      <dt>Последний ТБ</dt><dd>${st.lastOver ? dFull(st.lastOver.date) + ' · ' + esc(st.lastOver.opp) : '—'}</dd><dt>Последний ТМ</dt><dd>${st.lastUnder ? dFull(st.lastUnder.date) + ' · ' + esc(st.lastUnder.opp) : '—'}</dd></dl>
+      <div style="margin-top:10px">${ouHtml(st, 10)}</div></div>`; };
+  // лесенка всех линий
+  const pred = predFor(m.lid, m.hk, m.ak, m.date, sp), dk = distKey(sp), fin = dk === 'fin';
+  const hh = h2hGames(m.hk, m.ak).filter(g => g.date < m.date);
+  const lines = [...new Set([...LADDER[sp], L])].sort((a, b) => a - b);
+  const modelCols = k === 'match' ? ['Модель'] : [`Модель ${A}`, `Модель ${B}`];
+  const modelVals = x => { if (!pred) return modelCols.map(() => '—');
+    if (k === 'match') return [pc(E.overProb(pred[dk], x).over)];
+    const hD = fin ? pred.homeFin : pred.home, aD = fin ? pred.awayFin : pred.away;
+    return k === 'for' ? [pc(E.overProb(hD, x).over), pc(E.overProb(aD, x).over)] : [pc(E.overProb(aD, x).over), pc(E.overProb(hD, x).over)]; };
+  const ladder = lines.map(x => { const a = E.lineStats(E.windowOf(fullA, S.mw), x, k), b = E.lineStats(E.windowOf(fullB, S.mw), x, k), h = E.lineStats(hh, x, k);
+    return `<tr class="click${x === L ? ' sel' : ''}" data-line="${x}"><td><b>ТБ ${fmtL(x)}</b></td><td>${pctCell(a.pctOver, a.over, a.n - a.push)}</td><td>${pctCell(b.pctOver, b.over, b.n - b.push)}</td><td>${h.n ? pctCell(h.pctOver, h.over, h.n - h.push) : '—'}</td>${modelVals(x).map(v => `<td>${v}</td>`).join('')}</tr>`; }).join('');
+  return `<div class="body"><h2 style="margin-bottom:8px">${esc(kindLabel(k))} · линия ${fmtL(L)}</h2>
+    <div class="tw"><table class="cmp"><thead><tr><th>Период</th><th>${esc(A)} ТБ</th><th>${esc(A)} ТМ</th><th>${esc(B)} ТБ</th><th>${esc(B)} ТМ</th></tr></thead><tbody>${rowsW}${venueRows}</tbody></table></div>
+    <p class="note">${S.mv === 'split' ? 'Строки периодов: хозяева — дома, гости — в гостях. ' : ''}Целая линия: возврат не входит в процент. Четвертная (x,25 / x,75): половина ставки на соседних линиях, «½» — выигрыш или проигрыш половины.</p></div>
+    <div class="body" style="border-top:1px solid var(--line)"><div class="cards">${card(A, fullA)}${card(B, fullB)}</div></div>
+    <div class="body" style="border-top:1px solid var(--line)"><h2 style="margin-bottom:8px">Все линии · ${winLabel(S.mw)}</h2>
+      <div class="tw"><table class="cmp"><thead><tr><th>Линия</th><th>${esc(A)}</th><th>${esc(B)}</th><th>Очные (${hh.length})</th>${modelCols.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${ladder}</tbody></table></div>
+      <p class="note">Нажмите на строку, чтобы выбрать линию. «Модель» — вероятность по модели Пуассона, а не частота.${k !== 'match' && fin ? ' Для ИТ в итоговом счёте гол в ОТ/Б делится между командами поровну — это допущение.' : ''}</p></div>`;
+}
+
+function tabFirst(m) {
+  const sp = m.sport, A = tName(m.hk), B = tName(m.ak);
+  if (!SP[sp].first) return `<div class="body"><div class="nodata"><b>Не применяется</b>Для баскетбола статистика первого гола не ведётся.</div></div>`;
+  const fullA = mGames(m.hk, 'home'), fullB = mGames(m.ak, 'away'), fa = E.firstGoal(E.windowOf(fullA, S.mw)), fb = E.firstGoal(E.windowOf(fullB, S.mw));
+  if (!E.firstGoal(fullA).n && !E.firstGoal(fullB).n) return `<div class="body"><div class="nodata"><b>Недостаточно данных</b>
+    Ни в одном из ${fullA.length + fullB.length} матчей этих команд в базе не известно, кто забил первым. По итоговому счёту это определить нельзя, поэтому показатель не рассчитывается.
+    <p class="small" style="margin:8px 0 0">Данные появятся, когда сборщик начнёт сохранять счёт по периодам или события голов. Для своих лиг можно внести вручную во вкладке «Данные» меткой <code>первая: Команда</code>.</p></div></div>`;
+  const wins = [['Весь сезон', 'all'], ['Последние 20', 20], ['Последние 10', 10], ['Последние 5', 5]];
+  const lid = S.mlg === 'one' ? m.lid : '';
+  const rows = [...wins.map(([t, w]) => [t, E.firstGoal(E.windowOf(fullA, w)), E.firstGoal(E.windowOf(fullB, w))]),
+    ['Дома', E.firstGoal(formOf(m.hk, 'home', m.date, lid)), E.firstGoal(formOf(m.ak, 'home', m.date, lid))],
+    ['В гостях', E.firstGoal(formOf(m.hk, 'away', m.date, lid)), E.firstGoal(formOf(m.ak, 'away', m.date, lid))]]
+    .map(([t, a, b]) => `<tr><td>${t}</td><td>${a.n ? frac(a.f, a.n) : '—'}</td><td>${a.n ? frac(a.a, a.n) : '—'}</td><td>${b.n ? frac(b.f, b.n) : '—'}</td><td>${b.n ? frac(b.a, b.n) : '—'}</td></tr>`).join('');
+  const pn = i => i < SP[sp].seg ? `${i + 1}-й ${SP[sp].sw}` : 'ОТ / без голов в осн. время';
+  const card = (name, s) => `<div class="card"><h3>${esc(name)} <small>${winLabel(S.mw)} · известно в ${s.n} из ${s.total}</small></h3>
+    <dl class="kv"><dt>Текущая серия</dt><dd>${s.cur ? (s.cur === 'f' ? 'забивает первой' : 'пропускает первой') + ' — ' + s.curLen + ' подряд' : '—'}</dd>
+    <dt>Макс. серия «забивает первой»</dt><dd>${s.maxF}</dd><dt>Макс. серия «пропускает первой»</dt><dd>${s.maxA}</dd><dt>Матчи 0:0</dt><dd>${s.noGoals}</dd>
+    ${s.byPeriod.length ? s.byPeriod.map((c, i) => c ? `<dt>Первый гол — ${pn(i)}</dt><dd>${c}</dd>` : '').join('') : ''}
+    <dt>Среднее время первого гола</dt><dd class="muted" style="font-weight:400">нет минут в источнике</dd></dl>
+    ${s.fromPeriods ? `<p class="note">Из них ${s.fromPeriods} определено по счёту периодов (когда в первом результативном периоде забивала только одна команда).</p>` : ''}</div>`;
+  const say = fa.n && fb.n ? `<p class="small">${esc(A)} первой забивала в ${fa.f} из ${fa.n} матчей, ${esc(B)} первой пропускала в ${fb.a} из ${fb.n}. Это описание прошлых матчей: перед выводами учитывайте силу соперников и размер выборки.</p>` : '';
+  return `<div class="body">${say}<div class="tw"><table class="cmp"><thead><tr><th>Период</th><th>${esc(A)}: забила первой</th><th>пропустила первой</th><th>${esc(B)}: забила первой</th><th>пропустила первой</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="note">Учитываются только матчи, где известно, кто забил первым; матчи 0:0 и матчи без данных не входят в знаменатель.</p></div>
+    <div class="body" style="border-top:1px solid var(--line)"><div class="cards">${card(A, fa)}${card(B, fb)}</div></div>`;
+}
+
+function tabStreaks(m) {
+  const sp = m.sport, L = lineOf(sp);
+  const col = (k, side) => { const gs = mGames(k, side), list = streaks(gs, sp).filter(s => tagOk(s.mt) && s.len >= S.min).sort((a, b) => b.len - a.len);
+    return `<div class="card"><h3>${esc(tName(k))} <small>${gs.length} игр · серии от ${S.min} · фильтр «Ставки» сверху</small></h3>${list.length ? `<ul class="sl">${list.slice(0, 40).map(s => stItem(s)).join('')}</ul>` : `<div class="empty" style="padding:4px 0">Нет серий от ${S.min}.</div>`}</div>`; };
+  return `<div class="body"><div class="warnbox" style="margin-bottom:12px">Серия — это описание прошлых матчей. Длинная серия сама по себе не делает противоположный результат «положенным»; её прогностическую ценность нужно проверять отдельно на истории. Метка «рекорд» значит лишь, что серия сравнялась с самой длинной в выборке.</div>
+    <div class="cards">${col(m.hk, 'home')}${col(m.ak, 'away')}</div><p class="note">Линии тоталов в сериях — ${SP[sp].tot.map(fmtL).join(', ')}; произвольную линию (сейчас ${fmtL(L)}) смотрите во вкладке «Тоталы».</p></div>`;
+}
+
+function tabDraws(m) {
+  const sp = m.sport;
+  if (sp === 'basketball') return `<div class="body"><div class="nodata"><b>Не применяется</b>В баскетболе ничьих нет.</div></div>`;
+  const card = (k, side) => { const d = E.draws(E.windowOf(mGames(k, side), S.mw), sp);
+    return `<div class="card"><h3>${esc(tName(k))} <small>${winLabel(S.mw)} ${lvl(d.n)}</small></h3>
+    <dl class="kv"><dt>Ничьих</dt><dd>${d.d} из ${d.n} · ${pc(d.pct)}</dd><dt>Последняя ничья</dt><dd>${d.last ? dFull(d.last.date) + ' · ' + esc(d.last.opp) + ' · ' + (d.last.rf ?? '?') + ':' + (d.last.ra ?? '?') : '—'}</dd>
+    <dt>Сейчас без ничьих</dt><dd>${d.curNoDraw}</dd><dt>Ничьих подряд сейчас</dt><dd>${d.curDraw}</dd><dt>Макс. серия без ничьих</dt><dd>${d.maxNoDraw}</dd><dt>Макс. серия ничьих</dt><dd>${d.maxDraw}</dd>
+    <dt>Дома</dt><dd>${d.home.d} из ${d.home.n}</dd><dt>В гостях</dt><dd>${d.away.d} из ${d.away.n}</dd>
+    ${Object.entries(d.scores).filter(([s, c]) => c || ['0:0','1:1','2:2','3:3'].includes(s)).map(([s, c]) => `<dt>Счёт ${s}</dt><dd>${c}</dd>`).join('')}</dl></div>`; };
+  return `<div class="body"><p class="note" style="margin-top:0">${sp === 'hockey' ? 'Ничья — по счёту основного времени: матч ушёл в овертайм или буллиты. Режим «Счёт» сверху на это не влияет.' : 'Ничья — по итоговому счёту матча.'} Отсутствие ничьих в последних матчах не делает ничью в следующем более вероятной.</p>
+    <div class="cards">${card(m.hk, 'home')}${card(m.ak, 'away')}</div></div>`;
+}
+
+function tabTable(m) {
+  const sp = m.sport, L = lineOf(sp), raw = leagueRaw(m.lid).filter(x => x.date < m.date);
+  if (!raw.length) return `<div class="body"><div class="nodata"><b>Нет данных</b>В базе нет сыгранных матчей этого турнира.</div></div>`;
+  const st = E.standings(raw, sp, S.tv), hl = r => r.team === m.hk || r.team === m.ak ? ' class="hl"' : '';
+  const seg = `<div class="seg" data-seg="tv">${[['all','Общая'],['home','Дома'],['away','В гостях']].map(([v, t]) => `<button data-v="${v}" aria-pressed="${S.tv === v}">${t}</button>`).join('')}</div>`;
+  const head = sp === 'hockey' ? '<th class="r">В</th><th class="r">ВО/Б</th><th class="r">ПО/Б</th><th class="r">П</th>' : '<th class="r">В</th><th class="r">Н</th><th class="r">П</th>';
+  const rows = st.map(r => `<tr${hl(r)}><td class="num">${r.pos}</td><td><b>${esc(tName(r.team))}</b></td><td class="r num">${r.gp}</td>${sp === 'hockey' ? `<td class="r num">${r.w}</td><td class="r num">${r.otw}</td><td class="r num">${r.otl}</td><td class="r num">${r.l}</td>` : `<td class="r num">${r.w}</td><td class="r num">${r.d}</td><td class="r num">${r.l}</td>`}
+    <td class="r num">${r.gf}:${r.ga}</td><td class="r num"><b>${r.pts}</b></td><td><span class="fms" style="margin:0">${r.form.map(o => `<span class="fm ${o === 'В' ? 'w' : o === 'П' ? 'l' : o === 'Н' ? 'd' : 'o'}">${o}</span>`).join('')}</span></td></tr>`).join('');
+  const teams = st.map(r => r.team), ou = teams.map(t => { const gs = formOf(t, S.tv, m.date, m.lid); return { t, s: E.lineStats(gs, L), a: E.summary(gs) }; }).filter(x => x.s.n).sort((a, b) => b.s.pctOver - a.s.pctOver || b.a.tot - a.a.tot);
+  return `<div class="body"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h2>Таблица по матчам в базе</h2>${seg}</div>
+    <div class="tw"><table><thead><tr><th>#</th><th>Команда</th><th class="r">И</th>${head}<th class="r">${unitW(sp)}</th><th class="r">О</th><th>Форма</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="note">Рассчитана по ${raw.length} матчам из базы до ${dFull(m.date)}; ${sp === 'hockey' ? 'победа — 2 очка, поражение в ОТ/по буллитам — 1' : 'победа — 3 очка, ничья — 1'}. Если часть матчей не загружена, таблица может отличаться от официальной.</p></div>
+    <div class="body" style="border-top:1px solid var(--line)"><h2 style="margin-bottom:8px">Больше / меньше ${fmtL(L)} · ${S.tv === 'home' ? 'дома' : S.tv === 'away' ? 'в гостях' : 'все матчи'}</h2>
+    <div class="tw"><table><thead><tr><th>Команда</th><th class="r">И</th><th class="r">ТБ</th><th class="r">ТМ</th><th class="r">% ТБ</th><th class="r">Ср. тотал</th><th>Последние</th></tr></thead><tbody>${
+      ou.map(x => `<tr${x.t === m.hk || x.t === m.ak ? ' class="hl"' : ''}><td><b>${esc(tName(x.t))}</b></td><td class="r num">${x.s.n}</td><td class="r num">${x.s.over}</td><td class="r num">${x.s.under}</td><td class="r num">${pc(x.s.pctOver)}</td><td class="r num">${f2(x.a.tot)}</td><td>${ouHtml(x.s, 5).replace(/<div class="tipline"[^]*?<\/div>/, '<div class="tipline"></div>')}</td></tr>`).join('')}</tbody></table></div>
+    <p class="note">Счёт: ${esc(modeLabel(sp))}. Линию можно сменить выше.</p></div>`;
+}
+
+function tabH2H(m) {
+  const sp = m.sport, L = lineOf(sp), A = tName(m.hk), B = tName(m.ak), hh = h2hGames(m.hk, m.ak).filter(g => g.date < m.date);
+  if (!hh.length) return `<div class="body"><div class="nodata"><b>Очных встреч нет</b>В базе нет матчей между этими командами.</div></div>`;
+  const s = E.summary(hh), ls = E.lineStats(hh, L), d = E.draws(hh, sp);
+  const wa = hh.filter(g => g.ff > g.fa).length, wb = hh.filter(g => g.ff < g.fa).length;
+  return `<div class="body"><div class="kpis">
+    <div class="kpi"><div class="k">Встреч</div><div class="v">${hh.length}</div></div>
+    <div class="kpi"><div class="k">Победы ${esc(A)} / ${esc(B)}</div><div class="v">${wa} / ${wb}</div></div>
+    ${sp !== 'basketball' ? `<div class="kpi"><div class="k">Ничьи${sp === 'hockey' ? ' (осн. время)' : ''}</div><div class="v">${d.d}</div></div>` : ''}
+    <div class="kpi"><div class="k">Средний тотал</div><div class="v">${f2(s.tot)}</div></div>
+    <div class="kpi"><div class="k">ТБ ${fmtL(L)}</div><div class="v">${ls.over} из ${ls.n - ls.push} <small>${pc(ls.pctOver)}</small></div></div></div>
+    <div class="tw" style="margin-top:12px"><table><thead><tr><th>Дата</th><th>Турнир</th><th>Матч</th><th class="r">Счёт</th><th class="r">Тотал</th><th>ТБ ${fmtL(L)}</th></tr></thead><tbody>${
+      ls.items.map(it => { const g = it.g, h = g.home ? A : B, a = g.home ? B : A, sc = g.home ? `${g.gf}:${g.ga}` : `${g.ga}:${g.gf}`;
+        return `<tr><td class="num">${dFull(g.date)}</td><td class="small">${esc(g.league)}</td><td>${esc(h)} — ${esc(a)}</td><td class="r num"><b>${sc}</b>${g.ot ? ` <span class="muted">${g.ot === 'SO' ? 'Б' : 'ОТ'}</span>` : ''}</td><td class="r num">${it.v}</td><td>${it.r === 'over' || it.r === 'half-over' ? '<span class="good">прошёл</span>' : it.r === 'push' ? 'возврат' : '<span class="bad">не прошёл</span>'}</td></tr>`; }).join('')
+    }</tbody></table></div><p class="note">Очные встречи всех турниров в базе. Счёт: ${esc(modeLabel(sp))}.</p></div>`;
+}
+
+function tabModel(m) {
+  const sp = m.sport, L = lineOf(sp), A = tName(m.hk), B = tName(m.ak);
+  const fit = fitFor(m.lid, m.date, sp), pred = predFor(m.lid, m.hk, m.ak, m.date, sp);
+  if (!pred) return `<div class="body"><div class="nodata"><b>Модель недоступна</b>${sp === 'basketball' ? 'Для баскетбола модель Пуассона не подходит; отдельная модель пока не реализована.' : `В базе ${fit ? fit.n : 0} матчей этого турнира до ${dFull(m.date)}, а для оценки сил команд нужно минимум ${MIN_FIT}.`}</div></div>`;
+  const dk = distKey(sp), ga = E.windowOf(mGames(m.hk, 'home'), S.mw), gb = E.windowOf(mGames(m.ak, 'away'), S.mw);
+  const lines = [...new Set([...LADDER[sp], L])].sort((a, b) => a - b);
+  const rows = lines.map(x => { const p = E.overWithRange(pred, x, dk, sp), a = E.lineStats(ga, x), b = E.lineStats(gb, x);
+    return `<tr class="click${x === L ? ' sel' : ''}" data-line="${x}"><td><b>${fmtL(x)}</b></td><td><b>${pc(p.over)}</b>${p.lo != null ? `<small>${pc(p.lo)}–${pc(p.hi)}</small>` : ''}</td><td>${pc(p.under)}${p.push > 0.001 ? `<small>возврат ${pc(p.push)}</small>` : ''}</td><td>${pctCell(a.pctOver, a.over, a.n - a.push)}</td><td>${pctCell(b.pctOver, b.over, b.n - b.push)}</td></tr>`; }).join('');
+  const btKey = m.lid + '|' + L + '|' + dk + '|' + m.date;
+  if (!btMemo.has(btKey)) btMemo.set(btKey, E.backtest(leagueRaw(m.lid).filter(x => x.date < m.date), sp, { line: L, which: dk }));
+  const bt = btMemo.get(btKey);
+  const better = (a, b) => a < b ? '<span class="good">лучше базы</span>' : '<span class="bad">не лучше базы</span>';
+  const btHtml = bt.n ? `<div class="tw"><table class="cmp"><thead><tr><th>Метрика (меньше — лучше)</th><th>Модель</th><th>Наивная база</th><th></th></tr></thead><tbody>
+      <tr><td>Brier, ТБ ${fmtL(L)}</td><td>${bt.brier.toFixed(3)}</td><td>${bt.brierBase.toFixed(3)}</td><td>${better(bt.brier, bt.brierBase)}</td></tr>
+      <tr><td>Log Loss, ТБ ${fmtL(L)}</td><td>${bt.logloss.toFixed(3)}</td><td>${bt.loglossBase.toFixed(3)}</td><td>${better(bt.logloss, bt.loglossBase)}</td></tr>
+      <tr><td>Log Loss, исход осн. времени</td><td>${bt.ll1x2.toFixed(3)}</td><td>${bt.ll1x2Base.toFixed(3)}</td><td>${better(bt.ll1x2, bt.ll1x2Base)}</td></tr>
+      <tr><td>Средняя ошибка тотала, ${unitW(sp)}</td><td>${bt.maeTotal.toFixed(2)}</td><td>—</td><td></td></tr></tbody></table></div>
+    <div class="tw" style="margin-top:8px"><table class="cmp"><thead><tr><th>Калибровка: прогноз ТБ</th><th>Матчей</th><th>Средний прогноз</th><th>Факт</th></tr></thead><tbody>${
+      bt.bins.map(b => `<tr><td>${pc(b.from)}–${pc(b.to)}</td><td>${b.n}</td><td>${pc(b.pred)}</td><td>${pc(b.obs)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="note">Проверено на ${bt.n} матчах (${dFull(bt.from)}–${dFull(bt.to)}): для каждого матча модель обучалась только на более ранних матчах. База — доля ТБ среди всех прошлых матчей лиги. ${bt.n < 100 ? 'Выборка проверки мала: разница между моделью и базой может быть случайной.' : ''}</p>`
+    : '<div class="nodata">Пока мало матчей для хронологической проверки (нужно от 30 матчей обучения на каждый прогноз).</div>';
+  return `<div class="body"><div class="kpis">
+      <div class="kpi"><div class="k">Ожидаемые ${unitW(sp)} ${esc(A)}</div><div class="v">${f1(pred.lh)}</div></div>
+      <div class="kpi"><div class="k">Ожидаемые ${unitW(sp)} ${esc(B)}</div><div class="v">${f1(pred.la)}</div></div>
+      <div class="kpi"><div class="k">Ожидаемый тотал${dk === 'fin' ? ' (с ОТ)' : ''}</div><div class="v">${f1(E.expect(pred[dk]))}</div></div>
+      <div class="kpi"><div class="k">П1 / X / П2${sp === 'hockey' ? ' (осн. время)' : ''}</div><div class="v" style="font-size:17px">${pc(pred.w)} / ${pc(pred.d)} / ${pc(pred.l)}</div></div>
+      <div class="kpi"><div class="k">Обучение</div><div class="v" style="font-size:17px">${pred.nTrain} <small>матчей лиги · ${pred.gamesH} и ${pred.gamesA} у команд</small></div></div></div>
+    <div class="tw" style="margin-top:12px"><table class="cmp"><thead><tr><th>Линия</th><th>Модель ТБ <small>диапазон</small></th><th>Модель ТМ</th><th>${esc(A)}: история</th><th>${esc(B)}: история</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <p class="note">История — доля прошлых матчей (${winLabel(S.mw)}), модель — расчётная вероятность. Это разные величины. Диапазон отражает только погрешность оценки силы команд (95%), а не все факторы.</p></div>
+    <div class="body" style="border-top:1px solid var(--line)"><h2 style="margin-bottom:8px">Проверка модели на истории этой лиги</h2>${btHtml}</div>
+    <div class="body" style="border-top:1px solid var(--line)"><h2 style="margin-bottom:8px">Сравнение с коэффициентами</h2>
+      <p class="small muted" style="margin-top:0">Источника коэффициентов не подключено. Можно ввести десятичные коэффициенты на ТБ/ТМ ${fmtL(L)} вручную:</p>
+      <div class="row"><label class="small">ТБ <input type="number" id="oOver" step="0.01" min="1.01" style="width:80px"></label><label class="small">ТМ <input type="number" id="oUnder" step="0.01" min="1.01" style="width:80px"></label></div>
+      <div id="oOut" class="small" style="margin-top:8px" data-p="${E.overProb(pred[dk], L).over}"></div></div>
+    <div class="body note" style="border-top:1px solid var(--line)">
+      <b>Как считается.</b> Сила атаки и обороны каждой команды — отношение забитых и пропущенных к ожидаемым с учётом соперника (итеративно), свежие матчи весомее (полураспад 150 дней), малые выборки сжимаются к среднему лиги. Домашнее преимущество — через раздельные средние хозяев (${f1(fit.H)}) и гостей (${f1(fit.A)}). Голы команд — распределение Пуассона: P(X=k) = e<sup>−λ</sup>·λ<sup>k</sup>/k!.
+      ${sp === 'football' ? `Для низких счетов — поправка Диксона — Коулза, ρ = ${pred.rho.toFixed(2)} (подобрана по прошлым матчам лиги).` : 'Хоккей: модель описывает 60 минут; удаления, пустые ворота и смена вратаря отдельно не учитываются, поэтому крупные счета модель может недооценивать. В режиме итогового счёта ничья основного времени даёт +1 гол (ОТ или буллиты).'}
+      Данные: матчи до ${dFull(m.date)}.</div>`;
+}
+
+function aiMatchPanel() {
+  /*AI{*/if (sample) return `<div class="body"><div class="row" style="justify-content:space-between"><span class="small muted">Claude объяснит уже рассчитанные показатели. Ему передаются только числа из этой страницы; новые числа он придумывать не должен — ответ проверяется автоматически.</span>
+    <span class="row"><button class="btn primary" id="aiMRun">Разобрать матч</button><button class="btn ghost" id="aiMStop" hidden>Стоп</button></span></div>
+    <div class="ai-out" id="aiMOut" style="margin-top:12px"></div><div id="aiMCheck" class="small" style="margin-top:8px"></div></div>`;/*}AI*/
+  return `<div class="body"><div class="nodata"><b>ИИ-разбор недоступен</b>На этой странице нет доступа к Claude. Аналитический вывод по правилам — во вкладке «Обзор».</div></div>`;
+}
+/** Проверенные данные для ИИ: только то, что посчитано на странице. */
+function matchPayload(m) {
+  const sp = m.sport, L = lineOf(sp), fullA = mGames(m.hk, 'home'), fullB = mGames(m.ak, 'away'), ga = E.windowOf(fullA, S.mw), gb = E.windowOf(fullB, S.mw);
+  const pred = predFor(m.lid, m.hk, m.ak, m.date, sp), dk = distKey(sp);
+  const r2 = x => x == null ? null : Math.round(x * 100) / 100, p = x => x == null ? null : Math.round(x * 100);
+  const team = (k, gs) => { const s = E.summary(gs), f = E.firstGoal(gs), d = E.draws(gs, sp);
+    return { команда: tName(k), матчей: s.n, забивает_в_среднем: r2(s.gf), пропускает_в_среднем: r2(s.ga), средний_тотал: r2(s.tot), медиана_тотала: s.med,
+      тоталы: LADDER[sp].map(x => { const t = E.lineStats(gs, x); return { линия: x, ТБ_проходов: t.over, решённых_матчей: t.n - t.push, ТБ_процент: p(t.pctOver), текущая_серия: t.cur ? (t.cur === 'over' ? 'ТБ' : 'ТМ') + ' ' + t.curLen : null }; }),
+      первый_гол: f.n ? { известно_матчей: f.n, забивала_первой: f.f, пропускала_первой: f.a } : 'нет данных',
+      ничьи: sp === 'basketball' ? null : { ничьих: d.d, из: d.n, процент: p(d.pct), без_ничьих_подряд: d.curNoDraw },
+      длинные_серии: streaks(gs, sp).filter(x => x.len >= Math.max(3, S.min)).sort((a, b) => b.len - a.len).slice(0, 8).map(x => ({ серия: x.label, подряд: x.len, рекорд_в_выборке: x.rec, из_матчей: x.n })) }; };
+  const hh = h2hGames(m.hk, m.ak).filter(g => g.date < m.date), hs = E.summary(hh), hl = E.lineStats(hh, L);
+  return { матч: `${tName(m.hk)} (хозяева) — ${tName(m.ak)} (гости)`, турнир: m.league, вид_спорта: SP[sp].name, дата: m.date, счёт_в_расчётах: modeLabel(sp), выборка: winLabel(S.mw), выбранная_линия: L,
+    хозяева: team(m.hk, ga), гости: team(m.ak, gb),
+    очные: { встреч: hh.length, средний_тотал: r2(hs.tot), ТБ_выбранной_линии: hh.length ? `${hl.over} из ${hl.n - hl.push}` : null },
+    модель: pred ? { ожидаемые_голы_хозяев: r2(pred.lh), ожидаемые_голы_гостей: r2(pred.la), ожидаемый_тотал: r2(E.expect(pred[dk])),
+      вероятность_ТБ: Object.fromEntries(LADDER[sp].map(x => [String(x), p(E.overProb(pred[dk], x).over)])), П1_X_П2: [p(pred.w), p(pred.d), p(pred.l)], обучено_на_матчах: pred.nTrain } : 'недоступна',
+    данных_нет: [...(SP[sp].first && !E.firstGoal(ga).n && !E.firstGoal(gb).n ? ['события голов (первый гол)'] : []), 'составы и травмы', 'вратари', 'коэффициенты'] };
+}
+/*AI{*/const BANNED = ['гарантир', 'железн', '100%', 'точно зайд', 'верняк', 'беспроигрыш'];
+function numbersIn(s) { return (String(s).match(/\d+(?:[.,]\d+)?/g) || []).map(x => x.replace(',', '.')); }
+async function runMatchAI() {
+  const m = S.m, out = $('#aiMOut'), run = $('#aiMRun'), stop = $('#aiMStop'), chk = $('#aiMCheck');
+  const data = matchPayload(m), json = JSON.stringify(data, null, 1);
+  const prompt = `Ты спортивный аналитик. Объясни по-русски уже рассчитанную статистику матча новичку. Используй ТОЛЬКО числа из JSON ниже — не придумывай, не пересчитывай и не округляй по-новому. Если чего-то нет в данных, так и скажи.
+Структура ответа (заголовки ровно такие, под каждым 2–4 коротких пункта):
+Общая характеристика
+Тоталы
+Первые голы
+Серии
+Противоречивые факторы
+Неопределённость
+Правила: не обещай исход; не используй слова «гарантированный», «железная ставка», «100%», «точно зайдёт»; не утверждай, что после длинной серии противоположный исход становится вероятнее — серия лишь описывает прошлое; различай историческую частоту и вероятность модели; обязательно упомяни размер выборки. Без вступлений, всего до 220 слов.
+
+JSON:
+${json}`;
+  aiCtl = new AbortController(); run.disabled = true; stop.hidden = false; stop.onclick = () => aiCtl.abort();
+  out.textContent = 'Думаю…'; chk.innerHTML = '';
+  let text = '';
+  try { const r = await sample(prompt, { signal: aiCtl.signal, onText: ({ text: t }) => { text = t; out.textContent = t; } }); if (r && typeof r === 'object' && r.text) text = r.text; else if (typeof r === 'string') text = r; }
+  catch (e) { out.textContent = (e && e.text) || text || ''; if (!e || e.code !== 'cancelled') out.insertAdjacentHTML('beforeend', `<div class="err">${esc(aiErr(e))}</div>`); }
+  finally { run.disabled = false; stop.hidden = true; }
+  text = out.textContent;
+  // проверка: числа, которых нет в исходных данных, и запрещённые формулировки
+  const known = new Set(numbersIn(json).flatMap(x => [x, String(+x), String(Math.round(+x))]));
+  const bad = [...new Set(numbersIn(text).filter(x => +x > 3 && !known.has(x) && !known.has(String(+x))))];
+  const ban = BANNED.filter(w => text.toLowerCase().includes(w));
+  chk.innerHTML = bad.length || ban.length ? `<div class="warnbox">${bad.length ? `В ответе есть числа, которых нет в рассчитанных данных: ${esc(bad.join(', '))}. Сверьтесь с таблицами страницы.` : ''}${ban.length ? ` Обнаружены недопустимые формулировки: ${esc(ban.join(', '))}.` : ''}</div>` : (text ? '<span class="ok">Проверка: все числа ответа есть в рассчитанных данных.</span>' : '');
+}/*}AI*/
+
+function renderMatch() {
+  const m = S.m;
+  if (!m || !E) { $('#mHead').innerHTML = `<div class="empty">${E ? 'Матч не выбран. Нажмите «Анализ» в списке матчей.' : 'Не загрузился модуль расчётов (engine.js). Обновите страницу.'}</div>`; $('#mBody').innerHTML = ''; return; }
+  $('#mHead').innerHTML = matchHead(m);
+  const T = { ov:tabOverview, tot:tabTotals, first:tabFirst, str:tabStreaks, draw:tabDraws, tab:tabTable, h2h:tabH2H, model:tabModel, ai:aiMatchPanel }[S.mt] || tabOverview;
+  let body;
+  try { body = T(m); } catch (e) { body = `<div class="body err">Ошибка расчёта: ${esc(e && e.message || e)}</div>`; console.error(e); }
+  $('#mBody').innerHTML = (S.mt === 'ai' ? '' : matchOpts(m)) + body + (S.mt === 'ov' ? `<div class="body">${staleNote()}</div>` : '');
+  /*AI{*/const r = $('#aiMRun'); if (r) r.onclick = runMatchAI;/*}AI*/
 }
 
 function stats(gs) {
@@ -631,12 +1252,14 @@ function refreshLists() {
 }
 function render() {
   renderLeagues(); refreshLists();
+  $('#tabMatch').hidden = !S.m;
+  if (S.m) $('#tabMatch').textContent = 'Матч: ' + S.m.home + ' — ' + S.m.away;
   document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === S.tab)));
-  for (const t of ['day','vs','all','data']) $('#tab-' + t).hidden = S.tab !== t;
+  for (const t of ['day','match','vs','all','data']) $('#tab-' + t).hidden = S.tab !== t;
   document.querySelectorAll('#modeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === S.mode)));
   document.querySelectorAll('#tagChips .chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.t === S.tag)));
   $('#minSel').value = String(S.min); $('#splitChk').checked = S.split;
-  if (S.tab === 'day') renderDay(); else if (S.tab === 'vs') renderVs(); else if (S.tab === 'all') renderAll(); else renderData();
+  if (S.tab === 'day') renderDay(); else if (S.tab === 'match') renderMatch(); else if (S.tab === 'vs') renderVs(); else if (S.tab === 'all') renderAll(); else renderData();
 }
 let rq = 0; const schedule = () => { if (!rq) rq = requestAnimationFrame(() => { rq = 0; rebuild(); render(); }); };
 
@@ -741,7 +1364,7 @@ async function runAI(A, B, sp, sa, sb, sh, xa, xb, md) {
   out.textContent = 'Думаю…';
   const prompt = `Ты аналитик спортивной статистики (${SP[sp].name.toLowerCase()}). Дай короткий разбор матча ${A} (хозяева) — ${B} (гости) по-русски: 6–10 пунктов простым языком.
 Учёт счёта: ${S.mode === 'reg' ? 'только основное время' : 'с овертаймом'}. ${S.split ? 'Хозяева — только домашние матчи, гости — только выездные.' : 'Все матчи команд.'}
-Скажи: какие серии самые длинные и близки к рекорду (такие часто прерываются), где серии обеих команд совпадают, что говорит модель про тотал и чёт/нечёт, на какие рынки смотреть и где данных мало. Не обещай результат, называй это вероятностями. Без вступлений.
+Скажи: какие серии самые длинные, где серии обеих команд совпадают, что говорит модель про тотал и чёт/нечёт и где данных мало. Серия — описание прошлого: не утверждай, что длинная серия скоро прервётся или что противоположный исход стал вероятнее. Используй только числа ниже, не придумывай новые. Не обещай результат, не используй слова «гарантированный», «железная ставка», «100%». Различай частоты прошлых матчей и вероятности модели. Без вступлений.
 
 ${A}: ${xa.n} матч., забивает ${f1(xa.gf)}, пропускает ${f1(xa.ga)}, чётный тотал ${pct(xa.even)}.
 Текущие серии ${A}:
@@ -800,6 +1423,7 @@ async function loadSeed() {
   schedule();
 }
 function boot() {
+  if (innerWidth < 640 && !(+S.fTb || +S.fAvg || +S.fProb)) $('#fltBox').open = false;
   manual = lsGet('hs_matches') || []; fixtures = lsGet('hs_fixtures') || [];
   $('#storeNote').textContent = 'Загрузка данных…';
   rebuild(); render();
@@ -837,10 +1461,52 @@ $('#allVenue').addEventListener('change', renderAll);
 $('#allQ').addEventListener('input', renderAll);
 $('#dbQ').addEventListener('input', renderData);
 const goVs = v => { const i = v.indexOf('|', v.indexOf('|') + 1); S.vsA = v.slice(0, i); S.vsB = v.slice(i + 1); S.tab = 'vs'; savePrefs(); render(); window.scrollTo(0, 0); };
+const togglePin = id => {
+  const i = S.picks.findIndex(p => p.id === id);
+  if (i >= 0) S.picks.splice(i, 1);
+  else { const r = rowById.get(id); if (r) { const { _s, ...row } = r; S.picks.push({ id, row }); } }
+  savePrefs(); renderDay();
+};
 $('#dayList').addEventListener('click', e => {
+  const o = e.target.closest('[data-open]'); if (o) { const r = rowById.get(o.dataset.open); if (r) openMatch(r); return; }
+  const p = e.target.closest('[data-pin]'); if (p) { togglePin(p.dataset.pin); return; }
   const v = e.target.closest('[data-vs]'); if (v) { goVs(v.dataset.vs); return; }
   const r = e.target.closest('[data-row]'); if (!r) return;
   const id = r.dataset.row; open.has(id) ? open.delete(id) : open.add(id); renderDay();
+});
+$('#picks').addEventListener('click', e => {
+  const o = e.target.closest('[data-open]'); if (o) { const p = S.picks.find(x => x.id === o.dataset.open); const r = rowById.get(o.dataset.open) || (p && p.row); if (r) openMatch(r); return; }
+  const u = e.target.closest('[data-unpin]'); if (u) { S.picks = S.picks.filter(x => x.id !== u.dataset.unpin); savePrefs(); renderDay(); return; }
+  if (e.target.closest('#picksClear')) { S.picks = []; savePrefs(); renderDay(); }
+});
+// панель дня
+const setPref = (k, v) => { S[k] = v; savePrefs(); render(); };
+$('#daySeg').addEventListener('click', e => { const b = e.target.closest('button[data-d]'); if (!b) return; setPref('day', b.dataset.d === 'week' ? 'week' : +b.dataset.d); });
+$('#dayPick').addEventListener('change', e => { if (e.target.value) setPref('day', e.target.value); });
+let qT = 0; $('#dayQ').addEventListener('input', e => { clearTimeout(qT); qT = setTimeout(() => { S.q = norm(e.target.value); savePrefs(); renderDay(); $('#dayQ').focus(); }, 200); });
+$('#sortSel').addEventListener('change', e => setPref('sort', e.target.value));
+$('#winSel').addEventListener('change', e => setPref('win', e.target.value));
+for (const id of ['fTb', 'fAvg', 'fProb']) $('#' + id).addEventListener('change', e => setPref(id, e.target.value));
+$('#fReset').addEventListener('click', () => { S.fTb = S.fAvg = S.fProb = ''; S.q = ''; savePrefs(); render(); });
+$('#colBox').addEventListener('change', e => { const c = e.target.closest('[data-col]'); if (!c) return; S.cols[c.dataset.col] = c.checked; savePrefs(); renderDay(); });
+const setLine = (sp, v) => { const L = +String(v).replace(',', '.'); if (!E || !E.validLine(L)) return false; S.lines[sp] = L; savePrefs(); render(); return true; };
+$('#listLine').addEventListener('change', e => { const i = e.target.closest('.listL'); if (i && !setLine(i.dataset.sp, i.value)) { i.setCustomValidity('Линия кратна 0,25'); i.reportValidity(); } });
+// страница матча
+$('#tab-match').addEventListener('click', e => {
+  const t = e.target.closest('[data-tip]'); if (t) { const box = t.closest('.dotsbox'); const tl = box && box.querySelector('.tipline'); if (tl) tl.textContent = t.dataset.tip; return; }
+  if (e.target.closest('[data-back]')) { S.tab = 'day'; savePrefs(); render(); return; }
+  const mt = e.target.closest('[data-mt]'); if (mt) { S.mt = mt.dataset.mt; savePrefs(); renderMatch(); return; }
+  const ln = e.target.closest('[data-line]'); if (ln && S.m) { setLine(S.m.sport, ln.dataset.line); return; }
+  const sb = e.target.closest('[data-seg] button'); if (sb) { const k = sb.parentElement.dataset.seg, v = sb.dataset.v; S[k] = /^\d+$/.test(v) ? +v : v; savePrefs(); renderMatch(); }
+});
+$('#tab-match').addEventListener('change', e => { const i = e.target.closest('.mLine'); if (i && !setLine(i.dataset.sp, i.value)) { i.setCustomValidity('Линия кратна 0,25, например 4.5, 5 или 5.25'); i.reportValidity(); } });
+$('#tab-match').addEventListener('input', e => {
+  if (!e.target.matches('#oOver,#oUnder')) return;
+  const out = $('#oOut'), ko = +$('#oOver').value, ku = +$('#oUnder').value, pm = +out.dataset.p;
+  if (!(ko > 1)) { out.innerHTML = ''; return; }
+  const d = ku > 1 ? E.devig([ko, ku]) : null, imp = E.implied(ko);
+  out.innerHTML = `Подразумеваемая вероятность ТБ (1/K): <b class="num">${pc(imp)}</b>` + (d ? ` · маржа букмекера: <b class="num">${(d.margin * 100).toFixed(1)}%</b> · без маржи: <b class="num">${pc(d.fair[0])}</b>` : ' · введите и ТМ, чтобы учесть маржу') +
+    ` · модель: <b class="num">${pc(pm)}</b> (разница ${((pm - (d ? d.fair[0] : imp)) * 100).toFixed(1)} п.п.)<div class="note">Разница между моделью и рынком не означает гарантированного преимущества: модель не знает составов, травм и мотивации, а её точность ограничена (см. проверку на истории).</div>`;
 });
 const fxSubmit = async () => {
   const inp = $('#fxInput'), parts = inp.value.split(/\s+[-–—]\s+|\s+vs\s+/i).map(norm).filter(Boolean);
@@ -853,6 +1519,7 @@ $('#fxAdd').addEventListener('click', fxSubmit);
 $('#fxInput').addEventListener('keydown', e => { if (e.key === 'Enter') fxSubmit(); });
 $('#fxInput').addEventListener('input', e => e.target.setCustomValidity(''));
 $('#fxList').addEventListener('click', e => {
+  const of = e.target.closest('[data-openfx]'); if (of) { const v = of.dataset.openfx, i = v.indexOf('|', v.indexOf('|') + 1); openFixture(v.slice(0, i), v.slice(i + 1)); return; }
   const v = e.target.closest('[data-vs]'), d = e.target.closest('[data-delfx]');
   if (v) goVs(v.dataset.vs);
   if (d) delFixture(d.dataset.delfx).catch(() => {});
