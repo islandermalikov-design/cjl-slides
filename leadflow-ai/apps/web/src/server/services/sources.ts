@@ -49,8 +49,9 @@ export async function setSourceStatus(organizationId: string, id: string, status
   if (!source) throw notFound("Источник");
   if (status === "ACTIVE") {
     if (!source.termsReviewed) throw new AppError("Подтвердите, что условия использования источника проверены");
-    if (source.type === "WEBSITE" || source.type === "CATALOG") {
-      if (!source.robotsChecked) throw new AppError("Подтвердите проверку robots.txt");
+    // robots.txt относится к адаптерам, которые читают сайты; API-справочники подчиняются условиям тарифа.
+    if (["website", "yandex_search"].includes(source.adapterKey) && !source.robotsChecked) {
+      throw new AppError("Подтвердите проверку robots.txt");
     }
     if (!source.legalBasis) throw new AppError("Опишите основание использования данных источника");
   }
@@ -59,4 +60,28 @@ export async function setSourceStatus(organizationId: string, id: string, status
 
 export async function deleteSource(organizationId: string, id: string) {
   await prisma.leadSource.deleteMany({ where: { id, organizationId } });
+}
+
+const SOURCE_TYPES = new Set(["WEBSITE", "OFFICIAL_API", "CATALOG", "PROVIDER"]);
+
+/** Для каждого адаптера collector создаёт «ожидающий проверки» источник, чтобы его можно было активировать в UI. */
+export async function ensureAdapterSources(
+  organizationId: string,
+  adapters: Array<{ key: string; name: string; sourceType: string; legalNotes: string }>,
+) {
+  const existing = await prisma.leadSource.findMany({ where: { organizationId }, select: { adapterKey: true } });
+  const have = new Set(existing.map((s) => s.adapterKey));
+  const missing = adapters.filter((a) => a.key !== "demo" && !have.has(a.key));
+  if (!missing.length) return;
+  await prisma.leadSource.createMany({
+    data: missing.map((a) => ({
+      organizationId,
+      name: a.name,
+      adapterKey: a.key,
+      type: (SOURCE_TYPES.has(a.sourceType) ? a.sourceType : "PROVIDER") as SourceType,
+      status: "PENDING_REVIEW" as const,
+      notes: a.legalNotes,
+    })),
+    skipDuplicates: true,
+  });
 }

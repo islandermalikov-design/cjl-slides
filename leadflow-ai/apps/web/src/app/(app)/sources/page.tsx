@@ -8,13 +8,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SourcesList } from "@/features/sources/sources-client";
 import { hasRole, requirePageContext } from "@/server/context";
 import { listAdapters } from "@/server/services/discovery";
-import { listSources } from "@/server/services/sources";
+import { ensureAdapterSources, listSources } from "@/server/services/sources";
 
 export const metadata: Metadata = { title: "Источники данных" };
 
 export default async function SourcesPage() {
   const ctx = await requirePageContext();
-  const [sources, { adapters, collectorError }] = await Promise.all([listSources(ctx.organizationId), listAdapters()]);
+  const { adapters, collectorError } = await listAdapters();
+  await ensureAdapterSources(ctx.organizationId, adapters);
+  const sources = await listSources(ctx.organizationId);
   return (
     <div className="flex flex-col gap-5">
       <PageHeader title="Источники данных" description="Подключаемые адаптеры: официальные API, разрешённые каталоги, публичные сайты компаний. Каждый источник активируется только после проверки." />

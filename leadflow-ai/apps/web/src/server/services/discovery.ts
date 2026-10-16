@@ -1,7 +1,7 @@
 import "server-only";
 import { dedupeKeys, normalizeCompanyName, normalizeEmail, normalizeInn, normalizePhone, normalizeWebsite, parseMarketplace } from "@leadflow/shared";
 import { z } from "zod";
-import type { Prisma } from "@/generated/prisma/client";
+import type { Prisma, SourceType } from "@/generated/prisma/client";
 import { prisma } from "../db";
 import { AppError, notFound } from "../errors";
 import { logActivity, notify } from "./activity";
@@ -159,7 +159,7 @@ export async function importCandidates(ctx: { organizationId: string; userId: st
         publicEmail: normalizeEmail(c.publicEmail),
         publicPhone: normalizePhone(c.publicPhone),
         sourceUrl: c.sourceUrl ?? null,
-        sourceType: c.isDemo ? "DEMO" : job.adapterKey === "website" ? "WEBSITE" : job.adapterKey === "dadata" ? "OFFICIAL_API" : "PROVIDER",
+        sourceType: c.isDemo ? "DEMO" : (({ website: "WEBSITE", yandex_search: "WEBSITE", dadata: "OFFICIAL_API", "2gis": "CATALOG" }) as Record<string, SourceType>)[job.adapterKey] ?? "PROVIDER",
         verifiedAt: new Date(),
         isDemo: c.isDemo,
         evidence: {

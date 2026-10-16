@@ -12,14 +12,16 @@ import { sp, type SearchParams } from "@/lib/search-params";
 import { hasRole, requirePageContext } from "@/server/context";
 import { prisma } from "@/server/db";
 import { listAdapters } from "@/server/services/discovery";
+import { ensureAdapterSources } from "@/server/services/sources";
 
 export const metadata: Metadata = { title: "Поиск клиентов" };
 
 export default async function DiscoveryPage({ searchParams }: { searchParams: SearchParams }) {
   const ctx = await requirePageContext();
   const params = await searchParams;
-  const [{ adapters, collectorError }, sources, history] = await Promise.all([
-    listAdapters(),
+  const { adapters, collectorError } = await listAdapters();
+  await ensureAdapterSources(ctx.organizationId, adapters);
+  const [sources, history] = await Promise.all([
     prisma.leadSource.findMany({ where: { organizationId: ctx.organizationId }, select: { id: true, name: true, adapterKey: true, status: true } }),
     prisma.discoveryJob.findMany({ where: { organizationId: ctx.organizationId }, orderBy: { createdAt: "desc" }, take: 12 }),
   ]);

@@ -10,6 +10,9 @@ class Settings(BaseSettings):
 
     collector_token: str = ""
     dadata_api_key: str = ""
+    yandex_search_api_key: str = ""
+    yandex_folder_id: str = ""
+    twogis_api_key: str = ""
     # Честный User-Agent: сервис представляется и даёт контакт для владельцев сайтов.
     user_agent: str = "LeadFlowCollector/0.1 (+https://github.com/leadflow-ai; business-contacts-only)"
     request_timeout: float = 10.0

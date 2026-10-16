@@ -38,6 +38,9 @@ services:
     environment:
       COLLECTOR_TOKEN: ${COLLECTOR_TOKEN:?COLLECTOR_TOKEN обязателен}
       DADATA_API_KEY: ${DADATA_API_KEY:-}
+      YANDEX_SEARCH_API_KEY: ${YANDEX_SEARCH_API_KEY:-}
+      YANDEX_FOLDER_ID: ${YANDEX_FOLDER_ID:-}
+      TWOGIS_API_KEY: ${TWOGIS_API_KEY:-}
     ports: ["127.0.0.1:8001:8001"]
 
   migrate:
