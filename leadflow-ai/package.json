@@ -1,0 +1,37 @@
+{
+  "name": "leadflow-ai",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @leadflow/web dev",
+    "build": "pnpm db:generate && pnpm --filter @leadflow/web build",
+    "start": "pnpm --filter @leadflow/web start",
+    "worker": "pnpm --filter @leadflow/web worker",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm db:generate && pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm --filter @leadflow/web test:e2e",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:reset": "prisma migrate reset --force",
+    "db:studio": "prisma studio"
+  },
+  "devDependencies": {
+    "prisma": "7.10.0",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "dotenv": "17.4.2",
+    "@types/node": "22.20.4"
+  },
+  "dependencies": {
+    "@prisma/client": "7.10.0",
+    "@prisma/adapter-pg": "7.10.0",
+    "pg": "8.23.1"
+  }
+}

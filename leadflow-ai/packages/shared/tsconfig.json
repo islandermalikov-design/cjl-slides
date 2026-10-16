@@ -1,0 +1,4 @@
+{
+  "extends": "@leadflow/config/tsconfig.base.json",
+  "include": ["src/**/*.ts", "tests/**/*.ts", "vitest.config.ts"]
+}
