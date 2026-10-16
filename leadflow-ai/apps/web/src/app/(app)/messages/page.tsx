@@ -70,14 +70,14 @@ export default async function MessagesPage({ searchParams }: { searchParams: Sea
       {drafts.length === 0 && !selected ? (
         <EmptyState icon={MessagesSquare} title="Сообщений нет" description="Создайте черновик из карточки компании или КП." />
       ) : (
-        <div className="grid gap-5 lg:grid-cols-[360px_1fr]">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[360px_minmax(0,1fr)]">
           <Card className="max-h-[calc(100vh-260px)] overflow-y-auto lg:sticky lg:top-20">
             <DraftList
               selectedId={selected?.id}
               items={drafts.map((d) => ({ id: d.id, status: d.status, subject: d.subject, body: d.body, recipient: d.recipient, updatedAt: d.updatedAt.toISOString(), company: d.company }))}
             />
           </Card>
-          <div>
+          <div className="min-w-0">
             {selected ? (
               <DraftPanel
                 key={`${selected.id}-${selected.updatedAt.toISOString()}`}

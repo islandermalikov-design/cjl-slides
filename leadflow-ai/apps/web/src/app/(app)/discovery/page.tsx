@@ -34,8 +34,8 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Se
         title="Поиск клиентов"
         description="Поиск компаний в подключённых разрешённых источниках. Новые компании добавляются в базу только после вашего выбора; дубли отмечаются автоматически."
       />
-      <div className="grid gap-5 xl:grid-cols-[360px_1fr]">
-        <div className="flex flex-col gap-5">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <div className="flex min-w-0 flex-col gap-5">
           {canEdit ? <DiscoveryForm adapters={adapters} sources={sources} collectorError={collectorError} /> : null}
           <Card>
             <CardHeader>
@@ -57,7 +57,7 @@ export default async function DiscoveryPage({ searchParams }: { searchParams: Se
             </CardContent>
           </Card>
         </div>
-        <div>
+        <div className="min-w-0">
           {!job ? (
             <EmptyState icon={Radar} title="Запустите поиск" description="Выберите источник и параметры слева. Для демонстрации доступен DEMO-каталог вымышленных компаний." />
           ) : job.status === "FAILED" ? (

@@ -113,7 +113,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
         </div>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[1fr_380px]">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex min-w-0 flex-col gap-5">
           <Tabs defaultValue="analysis">
             <TabsList>

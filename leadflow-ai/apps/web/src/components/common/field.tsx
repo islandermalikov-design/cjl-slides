@@ -17,7 +17,7 @@ export function Field({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
       <Label htmlFor={htmlFor}>{label}</Label>
       {children}
       {error ? <p className="text-xs text-destructive">{error}</p> : hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}

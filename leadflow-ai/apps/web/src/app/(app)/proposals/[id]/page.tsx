@@ -48,7 +48,7 @@ export default async function ProposalPage({ params, searchParams }: { params: P
         </div>
         <ProposalToolbar id={proposal.id} companyId={proposal.companyId} status={proposal.status} version={version.version} canEdit={canEdit} aiLive={ai.mode === "live"} />
       </div>
-      <div className="grid gap-5 xl:grid-cols-[1fr_280px]">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
         <Tabs defaultValue="preview">
           <TabsList>
             <TabsTrigger value="preview">Превью</TabsTrigger>
