@@ -52,6 +52,11 @@ export async function listAdapters(): Promise<{ adapters: CollectorAdapterInfo[]
 
 export async function startDiscovery(ctx: { organizationId: string; userId: string | null }, raw: unknown) {
   const input = DiscoveryQuerySchema.parse(raw);
+  if (!input.sourceId) {
+    // Запуск без явного источника привязывается к активному источнику этого адаптера (для статистики).
+    const active = await prisma.leadSource.findFirst({ where: { organizationId: ctx.organizationId, adapterKey: input.adapter, status: "ACTIVE" } });
+    input.sourceId = active?.id ?? null;
+  }
   if (input.sourceId) {
     const source = await prisma.leadSource.findFirst({ where: { id: input.sourceId, organizationId: ctx.organizationId } });
     if (!source) throw notFound("Источник");

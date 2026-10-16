@@ -6,7 +6,7 @@ import { prisma } from "../db";
 import { AppError } from "../errors";
 import { getRedis } from "../redis";
 import { isWorkerAlive } from "../jobs/queue";
-import { collectorHealth } from "./collector";
+import { collectorAdapters, collectorHealth } from "./collector";
 
 export interface IntegrationState {
   provider: IntegrationProvider | "REDIS" | "POSTGRES";
@@ -28,6 +28,7 @@ export async function getIntegrations(organizationId: string): Promise<Integrati
   const smtp = byProvider.get("SMTP");
   const redisConfigured = Boolean(process.env.REDIS_URL);
   const worker = await isWorkerAlive();
+  const dadata = process.env.COLLECTOR_URL ? await collectorAdapters().then((list) => list.find((a) => a.key === "dadata")).catch(() => undefined) : undefined;
   return [
     {
       provider: "POSTGRES",
@@ -83,8 +84,8 @@ export async function getIntegrations(organizationId: string): Promise<Integrati
       provider: "DADATA",
       name: "DaData (реквизиты компаний)",
       description: "Официальный API поиска организаций по названию или ИНН. Ключ задаётся в окружении collector.",
-      status: "CONFIGURED",
-      message: "Доступность адаптера видна на странице «Источники данных»",
+      status: dadata?.available ? "CONFIGURED" : "NOT_CONFIGURED",
+      message: dadata ? (dadata.available ? "Ключ задан в collector, адаптер доступен" : (dadata.reason ?? "Адаптер недоступен")) : "Collector недоступен — состояние адаптера неизвестно",
       configurable: false,
       envVar: "DADATA_API_KEY (collector)",
     },
@@ -97,9 +98,10 @@ export async function saveCredential(
   secret: string,
   config?: Prisma.InputJsonValue,
 ) {
-  const value = secret.trim();
-  if (value.length < 8) throw new AppError("Секрет слишком короткий");
-  if (provider === "ANTHROPIC" && !value.startsWith("sk-ant-")) throw new AppError("Ключ Anthropic должен начинаться с sk-ant-");
+  // Пароль SMTP сохраняется как есть; ключ API — без пробелов по краям.
+  const value = provider === "ANTHROPIC" ? secret.trim() : secret;
+  if (!value) throw new AppError("Секрет не указан");
+  if (provider === "ANTHROPIC" && (!value.startsWith("sk-ant-") || value.length < 20)) throw new AppError("Ключ Anthropic должен начинаться с sk-ant-");
   return prisma.integrationCredential.upsert({
     where: { organizationId_provider: { organizationId, provider } },
     create: { organizationId, provider, encryptedSecret: encryptSecret(value), secretHint: secretHint(value), status: "CONFIGURED", config },

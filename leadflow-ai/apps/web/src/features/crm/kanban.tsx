@@ -17,7 +17,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { CRM_STATUSES, CRM_STATUS_LABELS, formatPhone, type CrmStatusValue } from "@leadflow/shared";
 import { CalendarClock, GripVertical, Mail, Phone } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CRM_STATUS_DOT, DemoBadge, ScoreBadge } from "@/components/common/badges";
 import { cn, formatDate, formatMoney } from "@/lib/utils";
@@ -111,8 +111,13 @@ function Column({ status, cards, disabled }: { status: CrmStatusValue; cards: Ka
 
 export function Kanban({ initial, canEdit, hidden }: { initial: KanbanCard[]; canEdit: boolean; hidden: CrmStatusValue[] }) {
   const [cards, setCards] = useState(initial);
+  const [source, setSource] = useState(initial);
   const [activeId, setActiveId] = useState<string | null>(null);
-  useEffect(() => setCards(initial), [initial]);
+  // Новые данные с сервера (после router.refresh) заменяют локальное состояние.
+  if (source !== initial) {
+    setSource(initial);
+    setCards(initial);
+  }
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
   const byStatus = useMemo(() => {
     const map = new Map<CrmStatusValue, KanbanCard[]>();

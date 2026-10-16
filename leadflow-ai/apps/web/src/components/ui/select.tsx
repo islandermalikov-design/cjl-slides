@@ -6,7 +6,9 @@ import { cn } from "@/lib/utils";
 
 const Select = SelectPrimitive.Root;
 const SelectGroup = SelectPrimitive.Group;
-const SelectValue = SelectPrimitive.Value;
+function SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>) {
+  return <SelectPrimitive.Value data-slot="select-value" {...props} />;
+}
 
 function SelectTrigger({
   className,
@@ -17,7 +19,7 @@ function SelectTrigger({
   return (
     <SelectPrimitive.Trigger
       className={cn(
-        "flex w-full items-center justify-between gap-2 rounded-[10px] border border-input bg-card px-3 text-sm whitespace-nowrap shadow-soft outline-none transition-[color,box-shadow] duration-150 focus-visible:border-primary/50 focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground/70 *:data-[slot=select-value]:line-clamp-1 [&_svg]:size-4 [&_svg]:shrink-0",
+        "flex w-full min-w-0 items-center justify-between gap-2 rounded-[10px] border border-input bg-card px-3 text-sm whitespace-nowrap shadow-soft outline-none transition-[color,box-shadow] duration-150 focus-visible:border-primary/50 focus-visible:ring-[3px] focus-visible:ring-ring/40 disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground/70 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:min-w-0 *:data-[slot=select-value]:text-left [&_svg]:size-4 [&_svg]:shrink-0",
         size === "sm" ? "h-8 text-[13px]" : "h-9",
         className,
       )}

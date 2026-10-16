@@ -11,7 +11,8 @@ export function getRedis(): IORedis | null {
     globalForRedis.redis = null;
     return null;
   }
-  const client = new IORedis(url, { maxRetriesPerRequest: null, lazyConnect: false, enableOfflineQueue: false });
+  // Команды ждут подключения, но при недоступном Redis быстро завершаются ошибкой.
+  const client = new IORedis(url, { maxRetriesPerRequest: 1, connectTimeout: 2000, enableOfflineQueue: true });
   client.on("error", () => {
     /* ошибки подключения обрабатываются в местах использования */
   });

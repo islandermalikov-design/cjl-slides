@@ -14,6 +14,10 @@ import { CompanyListQuerySchema, listCompanies } from "@/server/services/compani
 
 export const metadata: Metadata = { title: "CRM" };
 
+function followUpCutoff() {
+  return new Date(Date.now() - 4 * 86400000);
+}
+
 export default async function CrmPage({ searchParams }: { searchParams: SearchParams }) {
   const ctx = await requirePageContext();
   const params = await searchParams;
@@ -23,7 +27,7 @@ export default async function CrmPage({ searchParams }: { searchParams: SearchPa
   const canEdit = hasRole(ctx.role, "MEMBER");
 
   // «Требуют повторного контакта»: связались > 4 дней назад и нет ответа.
-  const followupWhere: Prisma.CompanyWhereInput = followup ? { crmStatus: "CONTACTED", lastContactedAt: { lt: new Date(Date.now() - 4 * 86400000) } } : {};
+  const followupWhere: Prisma.CompanyWhereInput = followup ? { crmStatus: "CONTACTED", lastContactedAt: { lt: followUpCutoff() } } : {};
 
   let content: React.ReactNode;
   if (view === "kanban") {

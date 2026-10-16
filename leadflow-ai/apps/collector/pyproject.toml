@@ -1,0 +1,40 @@
+[project]
+name = "leadflow-collector"
+version = "0.1.0"
+description = "LeadFlow AI — сервис сбора данных из разрешённых источников"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.142.2",
+  "uvicorn[standard]>=0.54.0",
+  "httpx>=0.28.1",
+  "beautifulsoup4>=4.15.0",
+  "lxml>=6.1.3",
+  "pydantic>=2.13.5",
+  "pydantic-settings>=2.15.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=9.1.1",
+  "respx>=0.23.1",
+  "ruff>=0.16.9",
+]
+
+[tool.uv]
+package = false
+# Устанавливаются только версии, опубликованные не позднее этой даты (защита цепочки поставок).
+exclude-newer = "2026-10-01T00:00:00Z"
+
+[tool.ruff]
+line-length = 160
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["S101"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S104", "S105", "S106"]

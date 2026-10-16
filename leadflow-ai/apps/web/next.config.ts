@@ -26,7 +26,11 @@ const nextConfig: NextConfig = {
     serverActions: { bodySizeLimit: "6mb" },
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      // Превью КП встраивается в iframe того же origin — для него X-Frame-Options задаёт сам обработчик.
+      { source: "/((?!api/proposals/[^/]+/html).*)", headers: securityHeaders },
+      { source: "/api/proposals/:id/html", headers: securityHeaders.filter((h) => h.key !== "X-Frame-Options") },
+    ];
   },
 };
 

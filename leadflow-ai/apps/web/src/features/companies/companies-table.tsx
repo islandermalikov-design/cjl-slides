@@ -185,6 +185,8 @@ export function CompaniesTable({ rows, canEdit }: { rows: CompanyRow[]; canEdit:
     [],
   );
 
+  // TanStack Table несовместим с React Compiler-мемоизацией; компонент просто не оптимизируется компилятором.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: rows,
     columns,

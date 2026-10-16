@@ -93,3 +93,11 @@ export async function collectorEnrichWebsite(url: string) {
     { method: "POST", body: { url }, timeoutMs: 60000 },
   );
 }
+
+export async function collectorRobotsCheck(url: string) {
+  return call(
+    "/robots/check",
+    z.object({ url: z.string(), allowed: z.boolean(), robotsUrl: z.string(), crawlDelay: z.number().nullable().optional(), message: z.string() }),
+    { method: "POST", body: { url }, timeoutMs: 20000 },
+  );
+}

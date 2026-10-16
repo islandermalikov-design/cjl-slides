@@ -47,8 +47,3 @@ export function env(): Env {
   cached = parsed.data;
   return cached;
 }
-
-/** DEMO_MODE включён явно — или нет ключа AI (тогда AI-функции работают в демо-режиме). */
-export function isDemoMode(): boolean {
-  return env().DEMO_MODE;
-}

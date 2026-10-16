@@ -19,3 +19,4 @@ __pycache__/
 backups/
 *.log
 .DS_Store
+dump.rdb

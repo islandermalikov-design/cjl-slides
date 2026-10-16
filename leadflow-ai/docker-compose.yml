@@ -1,0 +1,80 @@
+# LeadFlow AI — локальная инфраструктура и полный стек.
+#
+# Только инфраструктура для разработки (рекомендуется на Mac):
+#   docker compose up -d postgres redis
+# Полный стек в контейнерах (web + worker + collector):
+#   docker compose --profile app up -d --build
+name: leadflow
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: leadflow
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-leadflow}
+      POSTGRES_DB: leadflow
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/postgres-init.sql:/docker-entrypoint-initdb.d/10-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leadflow"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: [redisdata:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  collector:
+    profiles: ["app"]
+    build: { context: ./apps/collector }
+    environment:
+      COLLECTOR_TOKEN: ${COLLECTOR_TOKEN:?COLLECTOR_TOKEN обязателен}
+      DADATA_API_KEY: ${DADATA_API_KEY:-}
+    ports: ["127.0.0.1:8001:8001"]
+
+  migrate:
+    profiles: ["app"]
+    build: { context: ., dockerfile: apps/web/Dockerfile, target: worker }
+    command: ["pnpm", "exec", "prisma", "migrate", "deploy"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://leadflow:${POSTGRES_PASSWORD:-leadflow}@postgres:5432/leadflow
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  web:
+    profiles: ["app"]
+    build: { context: ., dockerfile: apps/web/Dockerfile, target: runner }
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://leadflow:${POSTGRES_PASSWORD:-leadflow}@postgres:5432/leadflow
+      REDIS_URL: redis://redis:6379
+      COLLECTOR_URL: http://collector:8001
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+
+  worker:
+    profiles: ["app"]
+    build: { context: ., dockerfile: apps/web/Dockerfile, target: worker }
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://leadflow:${POSTGRES_PASSWORD:-leadflow}@postgres:5432/leadflow
+      REDIS_URL: redis://redis:6379
+      COLLECTOR_URL: http://collector:8001
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+
+volumes:
+  pgdata:
+  redisdata:

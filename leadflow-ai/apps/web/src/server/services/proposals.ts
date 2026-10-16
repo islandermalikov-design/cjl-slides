@@ -1,18 +1,16 @@
 import "server-only";
 import {
   ProposalGenerationSchema,
-  SERVICE_TIER_LABELS,
   type OutreachTexts,
   type ProposalContent,
   type ProposalGeneration,
 } from "@leadflow/shared";
 import { z } from "zod";
-import type { Prisma, Service } from "@/generated/prisma/client";
+import type { Prisma } from "@/generated/prisma/client";
 import { callStructured, getAiStatus, wrapUntrusted } from "../ai/client";
 import { prisma } from "../db";
 import { AppError, notFound } from "../errors";
 import { logActivity } from "./activity";
-import { formatMoneyPlain } from "./format";
 import { getSenderProfile } from "./settings";
 import { templateProposal } from "../domain/proposal-template";
 export { templateProposal };

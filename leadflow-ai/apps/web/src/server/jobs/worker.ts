@@ -9,11 +9,12 @@ loadEnv({ path: path.resolve(here, "../../../../../.env"), quiet: true });
 
 async function main() {
   const { Worker } = await import("bullmq");
-  const { getRedis } = await import("../redis");
+  const IORedis = (await import("ioredis")).default;
   const { executeJob, QUEUE_NAME, WORKER_HEARTBEAT_KEY } = await import("./queue");
   const { prisma } = await import("../db");
 
-  const redis = getRedis();
+  // Отдельное подключение worker: с офлайн-очередью, чтобы переживать переподключения Redis.
+  const redis = process.env.REDIS_URL ? new IORedis(process.env.REDIS_URL, { maxRetriesPerRequest: null }) : null;
   if (!redis) {
     console.error("REDIS_URL не задан — worker не нужен: задания выполняются внутри веб-сервера.");
     process.exit(1);

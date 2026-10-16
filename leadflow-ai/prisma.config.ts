@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -7,7 +7,8 @@ export default defineConfig({
     path: "prisma/migrations",
     seed: "tsx prisma/seed.ts",
   },
+  // URL нужен только для миграций; prisma generate (например, при сборке Docker) работает без БД.
   datasource: {
-    url: env("DATABASE_URL"),
+    url: process.env.DATABASE_URL,
   },
 });

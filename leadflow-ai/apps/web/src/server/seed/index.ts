@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // DEMO seed: демонстрационная организация с явно помеченными данными (isDemo = true, «(DEMO)» в названиях).
 // Запуск: pnpm db:seed  (идемпотентен — пересоздаёт демо-организацию).
 import path from "node:path";
@@ -140,7 +139,8 @@ async function main() {
     "PROPOSAL_READY", "PROPOSAL_READY", "CONTACTED", "CONTACTED", "CONTACTED", "REPLIED", "REPLIED", "NEGOTIATION", "NEGOTIATION",
     "WON", "WON", "WON", "LOST", "DO_NOT_CONTACT",
   ];
-  const candidates = allDemoCandidates();
+  // Половина DEMO-каталога загружается в базу, вторая половина остаётся доступной в «Поиске клиентов».
+  const candidates = allDemoCandidates().filter((_, idx) => idx % 2 === 0);
   const stagesByName = new Map(org.stages.map((s) => [s.name, s]));
   const serviceByTier = new Map(org.services.map((s) => [s.tier, s]));
   let companiesCreated = 0;

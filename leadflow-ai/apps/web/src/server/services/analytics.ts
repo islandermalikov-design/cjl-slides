@@ -182,3 +182,45 @@ export async function getRecentActivity(organizationId: string, take = 12) {
     include: { company: { select: { id: true, name: true } }, user: { select: { name: true } } },
   });
 }
+
+/** Конверсия по нишам: сколько компаний дошли до контакта, ответа и сделки. */
+export async function getNicheConversion(organizationId: string) {
+  const rows = await prisma.company.groupBy({
+    by: ["niche", "crmStatus"],
+    where: { organizationId, deletedAt: null },
+    _count: true,
+  });
+  const map = new Map<string, { niche: string; total: number; contacted: number; replied: number; won: number }>();
+  const contactedSet = new Set(["CONTACTED", "REPLIED", "NEGOTIATION", "WON", "LOST"]);
+  const repliedSet = new Set(["REPLIED", "NEGOTIATION", "WON"]);
+  for (const r of rows) {
+    const key = r.niche ?? "Не указана";
+    const e = map.get(key) ?? { niche: key, total: 0, contacted: 0, replied: 0, won: 0 };
+    e.total += r._count;
+    if (contactedSet.has(r.crmStatus)) e.contacted += r._count;
+    if (repliedSet.has(r.crmStatus)) e.replied += r._count;
+    if (r.crmStatus === "WON") e.won += r._count;
+    map.set(key, e);
+  }
+  return [...map.values()].sort((a, b) => b.total - a.total);
+}
+
+export async function getTeamActivity(organizationId: string, from: Date, to: Date) {
+  const rows = await prisma.activity.groupBy({
+    by: ["userId", "type"],
+    where: { organizationId, createdAt: { gte: from, lte: to }, userId: { not: null } },
+    _count: true,
+  });
+  const users = await prisma.user.findMany({ where: { id: { in: [...new Set(rows.map((r) => r.userId!))] } }, select: { id: true, name: true } });
+  const names = new Map(users.map((u) => [u.id, u.name]));
+  const byUser = new Map<string, { name: string; total: number; messages: number; proposals: number; deals: number }>();
+  for (const r of rows) {
+    const e = byUser.get(r.userId!) ?? { name: names.get(r.userId!) ?? "—", total: 0, messages: 0, proposals: 0, deals: 0 };
+    e.total += r._count;
+    if (r.type === "MESSAGE") e.messages += r._count;
+    if (r.type === "PROPOSAL") e.proposals += r._count;
+    if (r.type === "DEAL") e.deals += r._count;
+    byUser.set(r.userId!, e);
+  }
+  return [...byUser.values()].sort((a, b) => b.total - a.total);
+}
